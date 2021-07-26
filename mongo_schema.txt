@@ -1,0 +1,46 @@
+Profiles: {
+    {
+        id: _dffgdefg,
+        account_type: User/Artist,
+        email_authencation: bool,
+        profile_image: ,
+        first_name, last_name, country etc. from settings page,
+        wallets: [array of wallets previously connected]
+        socails: [social accounts connected for login]
+        activities: {}            //we will be loggin their activites in the app here
+        transaction_history: {}
+        following: [] //list to artists they subscribe to
+    }
+
+    // if account_type == Artist, then redirect to artist management page
+
+}
+
+Artist: {
+    {
+        name
+        genre
+        profile_image
+        cover_image
+        fans: counter
+        social_token: id_of_the_token
+        nfts: [list of nft ids]
+        polling:
+    }
+}
+
+Labels: {
+    {
+        label_name
+        artists: [list of artist ids]
+    }
+}
+
+NFT: {
+    title,
+    description,
+    preview_image,
+    media_url
+
+}
+

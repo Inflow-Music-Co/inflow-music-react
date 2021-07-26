@@ -1,0 +1,155 @@
+{
+  "id": "c4a2dd46d0bfcedd90c903d4a488950c",
+  "_format": "hh-sol-build-info-1",
+  "solcVersion": "0.8.4",
+  "solcLongVersion": "0.8.4+commit.c7e474f2",
+  "input": {
+    "language": "Solidity",
+    "sources": {
+      "contracts/rarible/libs/LibRoyaltiesV1.sol": {
+        "content": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.8.4;\n\nlibrary LibRoyaltiesV1 {\n    /*\n     * bytes4(keccak256('getFeeBps(uint256)')) == 0x0ebd4c7f\n     * bytes4(keccak256('getFeeRecipients(uint256)')) == 0xb9c4d9fb\n     *\n     * => 0x0ebd4c7f ^ 0xb9c4d9fb == 0xb7799584\n     */\n    bytes4 constant _INTERFACE_ID_FEES = 0xb7799584;\n}\n"
+      }
+    },
+    "settings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "none"
+      },
+      "outputSelection": {
+        "*": {
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers"
+          ],
+          "": [
+            "ast"
+          ]
+        }
+      }
+    }
+  },
+  "output": {
+    "contracts": {
+      "contracts/rarible/libs/LibRoyaltiesV1.sol": {
+        "LibRoyaltiesV1": {
+          "abi": [],
+          "evm": {
+            "bytecode": {
+              "generatedSources": [],
+              "linkReferences": {},
+              "object": "602d6037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea164736f6c6343000804000a",
+              "opcodes": "PUSH1 0x2D PUSH1 0x37 PUSH1 0xB DUP3 DUP3 DUP3 CODECOPY DUP1 MLOAD PUSH1 0x0 BYTE PUSH1 0x73 EQ PUSH1 0x2A JUMPI PUSH4 0x4E487B71 PUSH1 0xE0 SHL PUSH1 0x0 MSTORE PUSH1 0x0 PUSH1 0x4 MSTORE PUSH1 0x24 PUSH1 0x0 REVERT JUMPDEST ADDRESS PUSH1 0x0 MSTORE PUSH1 0x73 DUP2 MSTORE8 DUP3 DUP2 RETURN INVALID PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG1 PUSH5 0x736F6C6343 STOP ADDMOD DIV STOP EXP ",
+              "sourceMap": "58:278:0:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;58:278:0;;;;;;;;;;;;;;;;;"
+            },
+            "deployedBytecode": {
+              "generatedSources": [],
+              "immutableReferences": {},
+              "linkReferences": {},
+              "object": "73000000000000000000000000000000000000000030146080604052600080fdfea164736f6c6343000804000a",
+              "opcodes": "PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG1 PUSH5 0x736F6C6343 STOP ADDMOD DIV STOP EXP ",
+              "sourceMap": "58:278:0:-:0;;;;;;;;"
+            },
+            "methodIdentifiers": {}
+          }
+        }
+      }
+    },
+    "sources": {
+      "contracts/rarible/libs/LibRoyaltiesV1.sol": {
+        "ast": {
+          "absolutePath": "contracts/rarible/libs/LibRoyaltiesV1.sol",
+          "exportedSymbols": {
+            "LibRoyaltiesV1": [
+              5
+            ]
+          },
+          "id": 6,
+          "license": "MIT",
+          "nodeType": "SourceUnit",
+          "nodes": [
+            {
+              "id": 1,
+              "literals": [
+                "solidity",
+                "^",
+                "0.8",
+                ".4"
+              ],
+              "nodeType": "PragmaDirective",
+              "src": "33:23:0"
+            },
+            {
+              "abstract": false,
+              "baseContracts": [],
+              "contractDependencies": [],
+              "contractKind": "library",
+              "fullyImplemented": true,
+              "id": 5,
+              "linearizedBaseContracts": [
+                5
+              ],
+              "name": "LibRoyaltiesV1",
+              "nameLocation": "66:14:0",
+              "nodeType": "ContractDefinition",
+              "nodes": [
+                {
+                  "constant": true,
+                  "id": 4,
+                  "mutability": "constant",
+                  "name": "_INTERFACE_ID_FEES",
+                  "nameLocation": "302:18:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5,
+                  "src": "286:47:0",
+                  "stateVariable": true,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes4",
+                    "typeString": "bytes4"
+                  },
+                  "typeName": {
+                    "id": 2,
+                    "name": "bytes4",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "286:6:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes4",
+                      "typeString": "bytes4"
+                    }
+                  },
+                  "value": {
+                    "hexValue": "30786237373939353834",
+                    "id": 3,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "number",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "323:10:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_rational_3078198660_by_1",
+                      "typeString": "int_const 3078198660"
+                    },
+                    "value": "0xb7799584"
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "scope": 6,
+              "src": "58:278:0",
+              "usedErrors": []
+            }
+          ],
+          "src": "33:304:0"
+        },
+        "id": 0
+      }
+    }
+  }
+}

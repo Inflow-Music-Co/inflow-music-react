@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56">
+  <g id="naxt" transform="translate(0 56)">
+    <g id="Oval_5" data-name="Oval 5" transform="translate(56) rotate(180)" fill="none" stroke="#5e82f1" stroke-miterlimit="10" stroke-width="2">
+      <circle cx="28" cy="28" r="28" stroke="none"/>
+      <circle cx="28" cy="28" r="27" fill="none"/>
+    </g>
+    <path id="Path_2" data-name="Path 2" d="M-9.643,0,0,9.643l-9.643,9.643" transform="translate(23 -18) rotate(180)" fill="none" stroke="#5e82f1" stroke-miterlimit="10" stroke-width="2"/>
+  </g>
+</svg>

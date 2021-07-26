@@ -1,0 +1,13 @@
+node_modules
+
+build/
+
+design/.DS_Store
+
+.DS_Store
+
+yarn.lock
+
+package-lock.json
+
+.env

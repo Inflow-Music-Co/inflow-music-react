@@ -1,0 +1,10 @@
+<svg id="depth" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="202.001" height="96.002" viewBox="0 0 202.001 96.002">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.498" y1="1.417" x2="0.498" y2="-0.427" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-opacity="0.051"/>
+      <stop offset="1" stop-opacity="0.149"/>
+    </linearGradient>
+  </defs>
+  <path id="depth-2" data-name="depth" d="M0,48A48,48,0,0,1,82.471,14.6,29.9,29.9,0,0,0,101,21a29.768,29.768,0,0,0,12.328-2.642,29.927,29.927,0,0,0,9.852-7.158,48,48,0,1,1,49.5,81.028,47.946,47.946,0,0,1-49.5-7.426,29.98,29.98,0,0,0-40.7-3.409A48,48,0,0,1,0,48Z" fill="rgba(0,0,0,0)"/>
+  <path id="depth-3" data-name="depth" d="M0,48A48,48,0,0,1,82.471,14.6,29.9,29.9,0,0,0,101,21a30.072,30.072,0,0,0,22.182-9.8,48.029,48.029,0,1,1,0,73.6A30.07,30.07,0,0,0,101,75a29.737,29.737,0,0,0-18.508,6.382A48,48,0,0,1,0,48Z" fill="url(#linear-gradient)"/>
+</svg>
