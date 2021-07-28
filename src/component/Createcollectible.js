@@ -149,7 +149,7 @@ const Createcollectible = (props) => {
         //         console.error(err);
         //     }
         // }
-		window.location.href(`https://inflow-music-react.vercel.app/collectible/${ipfsHash}`)
+		window.location.href(`/collectible/${ipfsHash}`)
 
     };
 
@@ -193,7 +193,7 @@ const Createcollectible = (props) => {
 				// 	royalties: royalitiesToSend,
 				//   });
 
-                window.location.href(`https://inflow-music-react.vercel.app/collectible/${ipfsHash}`)
+                window.location.href(`/collectible/${ipfsHash}`)
 				// return  mintERC1155
             // } catch (err) {
             //     console.error(err);
