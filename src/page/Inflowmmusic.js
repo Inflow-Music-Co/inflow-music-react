@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '../component/Banner';
 import Artistpic from '../component/Artistpic';
-// import Song from '../component/Song';
+import Song from '../component/Song';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import Loader from '../component/Loader';
-// import { assetsImages } from "../constants/images";
+import { assetsImages } from "../constants/images";
 
 const Inflowmusic = () => {
     const [artists, setArtists] = useState();
@@ -41,10 +41,7 @@ const Inflowmusic = () => {
             <div className="dashboard-wrapper-main inner-music-wrapper">
                 <div className="artist-heading">Featured Artists</div>
                 <div className="grid-for-artist">
-                    {displayArtists()}
-                    {/* <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link>
+                    {/* {displayArtists()} */}
                     <Link to="/artist">
                         <Artistpic imglink={assetsImages.artist} />
                     </Link>
@@ -62,12 +59,15 @@ const Inflowmusic = () => {
                     </Link>
                     <Link to="/artist">
                         <Artistpic imglink={assetsImages.artist} />
-                    </Link> */}
+                    </Link>
+                    <Link to="/artist">
+                        <Artistpic imglink={assetsImages.artist} />
+                    </Link>
                 </div>
-                {/* <div className="see-all-artist">
+                <div className="see-all-artist">
                     <a href="#">See All Artists</a>
-                </div> */}
-                {/* <div className="artist-heading">NFT Drops</div>
+                </div>
+                <div className="artist-heading">NFT Drops</div>
                 <div className="songs-grid-main">
                     <Song />
                     <Song />
@@ -77,7 +77,7 @@ const Inflowmusic = () => {
                 </div>
                 <div className="see-all-artist see-all-nft">
                     <a href="#">See All NFTs</a>
-                </div> */}
+                </div>
             </div>
         </div>
     );

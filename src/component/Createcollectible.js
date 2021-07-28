@@ -9,6 +9,7 @@ import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
 import axios from 'axios'
 
 const Createcollectible = (props) => {
+    const uid = useSelector((state) => state.auth.data.uid);
     const wallet = useSelector(state => state.wallet);
 	const [quantity, setQuantity] = useState('');
 	const [fileToMint, setFileToMint] = useState();
@@ -28,10 +29,26 @@ const Createcollectible = (props) => {
 	const [maxSupply, setMaxSupply] = useState()
 	const [artistRoyalty, setArtistRoyalty] = useState(100)
 	const [royaltySplits, setRoyaltySplits] = useState({})
+	const [firstName, setfirstname] = useState({})
+	const [profileImage, setprofileimage] = useState({})
 	const [royaltyWallets, setRoyaltyWallets] = useState({})
 	const [splitRoyaltiesArray, setSplitRoyaltiesArray] = useState([])
 	const [pricingType, setPricingType] = useState('fixed-price') // fixed-price || unlimited-collection 
 	const uploadButtonRed = useRef();
+
+    useEffect(() => {
+        getdata();
+    }, [])
+
+    const getdata = async () => {
+        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`, { firebase_user_id: uid })
+        const { user } = data
+        if (user) {
+			
+            setfirstname(user.first_name ? user.first_name : user.name);
+            setprofileimage(user.profile_image)
+        }
+    }
 
     useEffect(() => {
         if (!wallet.wallet_connected) {
@@ -87,103 +104,106 @@ const Createcollectible = (props) => {
     }
 
 	const createERC721 = async (ipfsHash) => {
-		const send = {
-			price,
-			unlockOncePurchased,
-			pricingType,
+		// const send = {
+		// 	price,
+		// 	unlockOncePurchased,
+		// 	pricingType,
 
-			royalty,
-			royaltySplits,
-			royaltyWallets,				
-		}
+		// 	royalty,
+		// 	royaltySplits,
+		// 	royaltyWallets,				
+		// }
 
-        if (typeof window.ethereum !== 'undefined' ) {
-            try {
-                await requestAccount();
+        // if (typeof window.ethereum !== 'undefined' ) {
+        //     try {
+        //         await requestAccount();
 				
-                const provider = new ethers.providers.Web3Provider(
-                    window.ethereum
-                );
-				const signer = provider.getSigner();
-                const inflow = new Inflow(provider, 80001);
+        //         const provider = new ethers.providers.Web3Provider(
+        //             window.ethereum
+        //         );
+		// 		const signer = provider.getSigner();
+        //         const inflow = new Inflow(provider, 80001);
 
-                const inflow721Address = await inflow.addresses.Inflow721
-                const inflow721 = new Contract(
-                    inflow721Address,
-                    Inflow721ABI.abi,
-                    signer
-                )
+        //         const inflow721Address = await inflow.addresses.Inflow721
+        //         const inflow721 = new Contract(
+        //             inflow721Address,
+        //             Inflow721ABI.abi,
+        //             signer
+        //         )
 
-				const royalitiesToSend = convertRoyalties()
+		// 		const royalitiesToSend = convertRoyalties()
 				
-				const mintERC721= await inflow721.mint(`https://ipfs.io/ipfs/${ipfsHash}`, royalitiesToSend);
+		// 		const mintERC721= await inflow721.mint(`https://ipfs.io/ipfs/${ipfsHash}`, royalitiesToSend);
 
-                console.log({mintERC721});
-				return  mintERC721
-            } catch (err) {
-                console.error(err);
-            }
-        }
+        //         console.log({mintERC721});
+		// 		return  mintERC721
+        //     } catch (err) {
+        //         console.error(err);
+        //     }
+        // }
+		window.location.replace(`http://localhost:3000/collectible/${ipfsHash}`)
+
     };
 
 	const createERC1155 = async (ipfsHash) => {
-		const send = {
-			price,
-			unlockOncePurchased,
-			pricingType,
+		// const send = {
+		// 	price,
+		// 	unlockOncePurchased,
+		// 	pricingType,
 
-			royalty,
-			royaltySplits,
-			royaltyWallets,				
-		}
+		// 	royalty,
+		// 	royaltySplits,
+		// 	royaltyWallets,				
+		// }
 
-        if (typeof window.ethereum !== 'undefined' ) {
-            try {
-				const tokenId = Date.now()
-				
-                const provider = new ethers.providers.Web3Provider(
-                    window.ethereum
-                );
-				const signer = provider.getSigner();
-				const signerAddress = await signer.getAddress()
-                const inflow = new Inflow(provider, 80001);
+        // if (typeof window.ethereum !== 'undefined' ) {
+        //     try {				
+        //         const provider = new ethers.providers.Web3Provider(
+        //             window.ethereum
+        //         );
+		// 		const signer = provider.getSigner();
+		// 		const signerAddress = await signer.getAddress()
+        //         const inflow = new Inflow(provider, 80001);
 
-                const inflow1155Address = await inflow.addresses.Inflow1155
-                const inflow1155 = new Contract(
-                    inflow1155Address,
-                    Inflow1155ABI.abi,
-                    signer
-                )
-				const royalitiesToSend = convertRoyalties()
+                // const inflow1155Address = await inflow.addresses.Inflow1155
+                // const inflow1155 = new Contract(
+                //     inflow1155Address,
+                //     Inflow1155ABI.abi,
+                //     signer
+                // )
+				// const royalitiesToSend = convertRoyalties()
 
-				const whitelistAddress = await inflow1155.whitelist(
-                    signerAddress
-                );
+				// const whitelistAddress = await inflow1155.whitelist(
+                //     signerAddress
+                // );
 
-                whitelistAddress.wait();
-				const mintERC1155 = await inflow1155.create({
-					supply: parseInt(supply),
-					maxSupply: parseInt(maxSupply),
-					uri: `http://localhost:3000/collectible/${ipfsHash}`,
-					royalties: royalitiesToSend,
-				  });
+                // whitelistAddress.wait();
+				// const mintERC1155 = await inflow1155.create({
+				// 	supply: parseInt(supply),
+				// 	maxSupply: parseInt(maxSupply),
+				// 	uri: `http://localhost:3000/collectible/${ipfsHash}`,
+				// 	royalties: royalitiesToSend,
+				//   });
 
                 window.location.replace(`http://localhost:3000/collectible/${ipfsHash}`)
-				return  mintERC1155
-            } catch (err) {
-                console.error(err);
-            }
-        }
+				// return  mintERC1155
+            // } catch (err) {
+            //     console.error(err);
+            // }
+        // }
     };
 
-	const sendToIPFS = async () => {
+	const sendToIPFS = async (type) => {
 		const metadata = {
 			name: title,
 			title,
 			description,
 			properties,
 			supply,
-			maxSupply
+			maxSupply,
+			type,
+			firstName,
+			profileImage
 		}
 
 
@@ -389,13 +409,15 @@ const Createcollectible = (props) => {
 							<input type="text" className="input" name="title" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)}/>
 							<input type="text" className="input" name="description" placeholder="Description (Optional)" value={description} onChange={(e) => setDescription(e.target.value)}/>
 							<input type="number" className="input" name="royalties-number" placeholder="Royalties (e.g. 10%, 20%, 30%)" required value={royalty} onChange={(e) => setRoyalty(e.target.value)}/>
-							<input type="number" className="input" name="supply" placeholder="Max. Supply (e.g. 1000)" required value={maxSupply} onChange={(e) => setMaxSupply(e.target.value)}/>
-							<input type="number" className="input" name="max-supply" placeholder="Supply (e.g. 120)" required value={supply} onChange={(e) => setSupply(e.target.value)}/>
+							{quantity === 'multiple' && <input type="number" className="input" name="supply" placeholder="Max. Supply (e.g. 1000)" required value={maxSupply} onChange={(e) => setMaxSupply(e.target.value)}/>}
+							{quantity === 'multiple' && <input type="number" className="input" name="max-supply" placeholder="Supply (e.g. 120)" required value={supply} onChange={(e) => setSupply(e.target.value)}/>}
 							<input type="text" className="input" name="properties" placeholder="Properties" value={properties} onChange={(e) => setProperties(e.target.value)}/>
 						</div>
 
 						<div className='footer-btn'>
-                            <button className='btn-gradiant' onClick={sendToIPFS}>
+                            <button className='btn-gradiant' onClick={() => { 
+								quantity === 'multiple' ? sendToIPFS('erc1155') : sendToIPFS('erc721')
+							}}>
                                 Create Item
                             </button>
                         </div>

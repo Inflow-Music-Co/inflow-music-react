@@ -52,7 +52,7 @@ export const AppRoutes = () => {
                 component={Artistmanagement}
                 exact
             />
-			<ArtistRoutes
+			<PublicRoutes
                 path="/createcollectible/:quantity"
                 component={Createcollectible}
                 exact

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './base.css';
-// import Search from '../component/Search';
-// import Notification from '../component/Notification';
+import Search from '../component/Search';
+import Notification from '../component/Notification';
 import Profiledropdown from '../component/Profiledropdown';
 import { Button } from "react-bootstrap";
 import Wallet from '../utils/wallet';
@@ -76,9 +76,9 @@ const Header = () => {
                 <Button size="sm" className="mr-2 wallet-button" onClick={() => connectWallet()}>
                     {walletProvider ? 'Disconnect Wallet' : 'Connect Wallet'}
                 </Button>
-                {/* <div className="notified-main">
+                <div className="notified-main">
                         <Notification />
-                    </div> */}
+                    </div>
                 <div className="profile-dropdown">
                     <Profiledropdown />
                 </div>

@@ -6,6 +6,8 @@ import { Modal } from "react-bootstrap";
 const Collectible = (props) => {
 	const [collectibleId, setCollectibleId] = useState(null);
 	const [data, setData] = useState(null);
+	const [showSell, setShowSell] = useState(false);
+	const [showBuy, setShowBuy] = useState(false);
 
 	useEffect(() => {
 		setCollectibleId(props.match.params.collectibleId);		
@@ -25,7 +27,7 @@ const Collectible = (props) => {
 
     return (
 		<div className="dashboard-wrapper-main artist-management">
-			<div className="collectible-heading">NFT: Nothing Was The Same (Drake)</div>
+			<div className="collectible-heading">NFT: {data?.name}</div>
 			<div className='row'>
 				<div className='col-lg-12 col-md-12'>
 					<div className='card-collectible'>
@@ -37,14 +39,14 @@ const Collectible = (props) => {
 										<h4 className="nft-name">{data?.name}</h4>
 										<span className="nft-category">{data?.description}</span>
 										<hr/>
-										<h4 className="prints">{data?.supply} prints created  [max. {data?.maxSupply}]</h4>
+										{data?.maxSupply && <h4 className="prints">{data?.supply} prints created  [max. {data?.maxSupply}]</h4>}
 								</div>
 								<div className="creator">
 									<h3 className="title">Creator</h3>
 									<div className="creator-info">
-										<img src={`https://ipfs.io/ipfs/${data?.assetHash}`} />
+										<img src={assetsImages.person} />
 										<div className="artist">
-											<span className="name">Drake</span>
+											<span className="name">{data?.firstName}</span>
 											<span className="gender">Hip-Hop/Rap</span>
 										</div>
 									</div>
@@ -59,30 +61,36 @@ const Collectible = (props) => {
 										</div>
 									</div>
 								</div>
-							</div>
+							</div>s
 						</div>
 						<div className="buy-print">
-							<button className='btn btn-gradiant'>
+							<button className='btn btn-gradiant' onClick={() => setShowBuy(true)}>
 								Buy print now   [35 USD]
 		                	</button>
-							<button className='btn btn-gradiant'>
+							<button className='btn btn-gradiant' onClick={() => setShowSell(true)}>
 								Sell print now   [35 USD]
 		                	</button>
-							{/* <h3>Or place a bid</h3>
-							<div className="song-button">
-                            		<img alt="" src={assetsImages.singleButton} />
-                            		<div className="button">
-                                		<button className="add-split" type="button">
-											<span>Bid</span>
-										</button>
-                            		</div>
-                        	</div>
-							<p>Auction Ends: 7 hrs 38 mins</p> */}
+							{/* {data?.type === 'erc721' && (
+								<>
+								<h3>Or place a bid</h3>
+								<div className="song-button">
+										<img alt="" src={assetsImages.singleButton} />
+										<div>
+										<div className="button">
+											<button className="add-split" type="button">
+												<span>Bid</span>
+											</button>
+										</div>
+										</div>
+								</div>
+								<p>Auction Ends: 7 hrs 38 mins</p>
+								</>
+							)} */}
 						</div>
 					</div>
 				</div>
 			</div>
-			{/* <Modal show={true} className="edit-profile-modal newvote">
+			<Modal show={showBuy} className="edit-profile-modal newvote" onHide={() => setShowBuy(false)}>
                 <Modal.Header closeButton>
                     <span className='title'>
                         Buy NFT
@@ -92,12 +100,12 @@ const Collectible = (props) => {
                 <Modal.Body>
                     <div className='form-group'>
                         <label>Number of Prints</label>
-                        <input className='form-control mb-3' type='text' placeholder='Address' />
+                        <input className='form-control mb-3' type='text' placeholder='20' />
                     </div>
 
 					<div className='form-group'>
                         <label>Price</label>
-                        <input className='form-control mb-3' type='text' placeholder='Address' />
+                        <input className='form-control mb-3' type='text' placeholder='$30' />
                     </div>
                 </Modal.Body>
 
@@ -106,8 +114,8 @@ const Collectible = (props) => {
                         Buy
                     </button>
                 </Modal.Footer>
-            </Modal> */}
-						{/* <Modal show={true} className="edit-profile-modal newvote">
+            </Modal>
+						<Modal show={showSell} className="edit-profile-modal newvote" onHide={() => setShowSell(false)}>
                 <Modal.Header closeButton>
                     <span className='title'>
                         Sell NFT
@@ -117,16 +125,16 @@ const Collectible = (props) => {
                 <Modal.Body>
                     <div className='form-group'>
                         <label>Number of Prints</label>
-                        <input className='form-control mb-3' type='text' placeholder='Address' />
+                        <input className='form-control mb-3' type='text' placeholder='30' />
                     </div>
 
 					<div className='form-group'>
                         <label>Price</label>
-                        <input className='form-control mb-3' type='text' placeholder='Address' />
+                        <input className='form-control mb-3' type='text' placeholder='$30' />
                     </div>
 
 					<div className='sell-token-balance'>
-                        <span>Drake Balance: $36.55</span>
+                        <span>{data?.firstName} Balance: $36.55</span>
                     </div>
                 </Modal.Body>
 
@@ -135,7 +143,7 @@ const Collectible = (props) => {
                         Sell
                     </button>
                 </Modal.Footer>
-            </Modal> */}
+            </Modal>
 		</div>
     )
 }

@@ -13,8 +13,8 @@ const Artistpic = (props) => {
                 {props.name ? props.name : 'Mike Posner'}
             </div>
             <div className="short-desrip">
-                {/* <div className="price-tag">$113.51</div> */}
-                {/* <div className="tags-up">+9.1%</div> */}
+                <div className="price-tag">$113.51</div>
+                <div className="tags-up">+9.1%</div>
             </div>
 
         </div>
