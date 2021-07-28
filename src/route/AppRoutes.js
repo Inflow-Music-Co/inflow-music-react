@@ -32,7 +32,7 @@ export const AppRoutes = () => {
     return (
         <Switch>
             <PublicRoutes path="/login" component={Login} exact />
-			      <PublicRoutes path="/collectible/:collectibleId" component={Collectible} exact />
+			      <PublicRoutes path="/collectible/:collectibleId" component={Collectible} />
             <PublicRoutes path="/" component={Inflowmusic} exact />
             <AdminRoutes path="/artistonboarding" component={CreateSocialToken} exact />
             <Route path="/getmintprice" component={GetMintPrice} exact />
