@@ -2,20 +2,20 @@ import React, { useState, useEffect, useRef } from "react";
 import './component.css';
 import { assetsImages } from '../constants/images';
 import { Modal } from "react-bootstrap";
-
+import axios from "axios";
+import {
+	useParams
+  } from "react-router-dom";
+  
 const Collectible = (props) => {
-	const [collectibleId, setCollectibleId] = useState(null);
+	const {collectibleId} =  useParams();
 	const [data, setData] = useState(null);
 	const [showSell, setShowSell] = useState(false);
 	const [showBuy, setShowBuy] = useState(false);
 
 	useEffect(() => {
-		setCollectibleId(props.match.params.collectibleId);		
-	}, [props.match.params.collectibleId]);
-
-	useEffect(() => {
 		async function getData(){
-			const response = await fetch(`https://ipfs.io/ipfs/${collectibleId}`)	
+			const response = await axios.get(`https://ipfs.io/ipfs/${collectibleId}`)	
 			const data = await response.json();
 			setData(data)
 		}
