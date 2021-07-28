@@ -105,12 +105,6 @@ const Createcollectible = (props) => {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
 
-
-	if (redirect) {
-		return <Redirect to='/somewhere'/>;
-	}
-	  
-
 	const createERC721 = async (ipfsHash) => {
 		// const send = {
 		// 	price,
@@ -149,7 +143,7 @@ const Createcollectible = (props) => {
         //         console.error(err);
         //     }
         // }
-		window.location.href(`/collectible/${ipfsHash}`)
+		window.location.replace(`/collectible/${ipfsHash}`)
 
     };
 
@@ -193,7 +187,7 @@ const Createcollectible = (props) => {
 				// 	royalties: royalitiesToSend,
 				//   });
 
-                window.location.href(`/collectible/${ipfsHash}`)
+                window.location.replace(`/collectible/${ipfsHash}`)
 				// return  mintERC1155
             // } catch (err) {
             //     console.error(err);
