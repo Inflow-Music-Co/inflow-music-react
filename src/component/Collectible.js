@@ -6,13 +6,12 @@ import axios from "axios";
 import {
 	useParams
   } from "react-router-dom";
-  
+
 const Collectible = (props) => {
 	const {collectibleId} =  useParams();
 	const [data, setData] = useState(null);
 	const [showSell, setShowSell] = useState(false);
 	const [showBuy, setShowBuy] = useState(false);
-
 	useEffect(() => {
 		async function getData(){
 			const response = await axios.get(`https://ipfs.io/ipfs/${collectibleId}`)	

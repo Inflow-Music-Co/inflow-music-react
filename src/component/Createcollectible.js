@@ -7,12 +7,14 @@ import Inflow1155ABI from '../artifacts/contracts/token/nft/Inflow1155.sol/Inflo
 import Inflow721ABI from '../artifacts/contracts/token/nft/Inflow721.sol/Inflow721.json';
 import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
 import axios from 'axios'
+import { Redirect } from 'react-router'
 
 const Createcollectible = (props) => {
     const uid = useSelector((state) => state.auth.data.uid);
     const wallet = useSelector(state => state.wallet);
 	const [quantity, setQuantity] = useState('');
 	const [fileToMint, setFileToMint] = useState();
+	const [redirect, setRedirect] = useState(false);
 
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
@@ -103,6 +105,12 @@ const Createcollectible = (props) => {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
     }
 
+
+	if (redirect) {
+		return <Redirect to='/somewhere'/>;
+	}
+	  
+
 	const createERC721 = async (ipfsHash) => {
 		// const send = {
 		// 	price,
@@ -141,7 +149,7 @@ const Createcollectible = (props) => {
         //         console.error(err);
         //     }
         // }
-		window.location.replace(`https://inflow-music-react.vercel.app/collectible/${ipfsHash}`)
+		window.location.href(`https://inflow-music-react.vercel.app/collectible/${ipfsHash}`)
 
     };
 
@@ -185,7 +193,7 @@ const Createcollectible = (props) => {
 				// 	royalties: royalitiesToSend,
 				//   });
 
-                window.location.replace(`https://inflow-music-react.vercel.app/collectible/${ipfsHash}`)
+                window.location.href(`https://inflow-music-react.vercel.app/collectible/${ipfsHash}`)
 				// return  mintERC1155
             // } catch (err) {
             //     console.error(err);
