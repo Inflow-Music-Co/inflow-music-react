@@ -1,20 +1,43 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import './component.css';
 import { assetsImages } from '../constants/images';
+import { useSelector } from 'react-redux';
+import { ethers, Contract } from 'ethers';
+import Inflow1155ABI from '../artifacts/contracts/token/nft/Inflow1155.sol/Inflow1155.json';
+import Inflow721ABI from '../artifacts/contracts/token/nft/Inflow721.sol/Inflow721.json';
+import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
+import axios from 'axios'
 
 const Createcollectible = (props) => {
+    const wallet = useSelector(state => state.wallet);
 	const [quantity, setQuantity] = useState('');
 	const [fileToMint, setFileToMint] = useState();
+
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
+	const [royalty, setRoyalty] = useState('');
+	const [properties, setProperties] = useState('');
+
 	const [previewUrl, setPreviewUrl] = useState();
 	const [price, setPrice] = useState();
+	const [unlockOncePurchased, setUnlockOncePurchased] = useState(false);
 	const [feePrice, setFeePrice] = useState(0);
 	const [splitRoyaltiesCounter, setSplitRoyaltiesCount] = useState(4)
+	const [connectedwallet, setconnectedwallet] = useState(true);
+	const [supply, setSupply] = useState()
+	const [maxSupply, setMaxSupply] = useState()
 	const [artistRoyalty, setArtistRoyalty] = useState(100)
-	const [royalties, setRoyalties] = useState({})
+	const [royaltySplits, setRoyaltySplits] = useState({})
 	const [royaltyWallets, setRoyaltyWallets] = useState({})
 	const [splitRoyaltiesArray, setSplitRoyaltiesArray] = useState([])
 	const [pricingType, setPricingType] = useState('fixed-price') // fixed-price || unlimited-collection 
 	const uploadButtonRed = useRef();
+
+    useEffect(() => {
+        if (!wallet.wallet_connected) {
+            setconnectedwallet(false);
+        }
+    }, [wallet])
 
 	useEffect(() => {
 		setQuantity(props.match.params.quantity);
@@ -28,14 +51,21 @@ const Createcollectible = (props) => {
 
 	useEffect(() => {
 		var sum = 0;
-		for( var el in royalties ) {
-			console.log(el)
-		  if( royalties.hasOwnProperty( el ) ) {
-			sum += parseFloat( royalties[el] );
+		for( var el in royaltySplits ) {
+		  if( royaltySplits.hasOwnProperty( el ) ) {
+			sum += parseFloat( royaltySplits[el] || 0 );
 		  }
 		}
 		setArtistRoyalty(100-sum);
-	}, [royalties]);
+	}, [royaltySplits]);
+
+	const convertRoyalties = () => {
+		var royalities = [];
+		for( var el in royaltySplits ) {
+			royalities.push({address: royaltyWallets[el], value: parseFloat(royaltySplits[el])})
+		}
+		return royalities
+	}
 
 	useEffect(() => {
 		const arr = new Array(splitRoyaltiesCounter);
@@ -51,6 +81,160 @@ const Createcollectible = (props) => {
 			return
 		}
 	}, [price]);
+
+    async function requestAccount() {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+    }
+
+	const createERC721 = async (ipfsHash) => {
+		const send = {
+			price,
+			unlockOncePurchased,
+			pricingType,
+
+			royalty,
+			royaltySplits,
+			royaltyWallets,				
+		}
+
+        if (typeof window.ethereum !== 'undefined' ) {
+            try {
+                await requestAccount();
+				
+                const provider = new ethers.providers.Web3Provider(
+                    window.ethereum
+                );
+				const signer = provider.getSigner();
+                const inflow = new Inflow(provider, 80001);
+
+                const inflow721Address = await inflow.addresses.Inflow721
+                const inflow721 = new Contract(
+                    inflow721Address,
+                    Inflow721ABI.abi,
+                    signer
+                )
+
+				const royalitiesToSend = convertRoyalties()
+				
+				const mintERC721= await inflow721.mint(`https://ipfs.io/ipfs/${ipfsHash}`, royalitiesToSend);
+
+                console.log({mintERC721});
+				return  mintERC721
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    };
+
+	const createERC1155 = async (ipfsHash) => {
+		const send = {
+			price,
+			unlockOncePurchased,
+			pricingType,
+
+			royalty,
+			royaltySplits,
+			royaltyWallets,				
+		}
+
+        if (typeof window.ethereum !== 'undefined' ) {
+            try {
+				const tokenId = Date.now()
+				
+                const provider = new ethers.providers.Web3Provider(
+                    window.ethereum
+                );
+				const signer = provider.getSigner();
+				const signerAddress = await signer.getAddress()
+                const inflow = new Inflow(provider, 80001);
+
+                const inflow1155Address = await inflow.addresses.Inflow1155
+                const inflow1155 = new Contract(
+                    inflow1155Address,
+                    Inflow1155ABI.abi,
+                    signer
+                )
+				const royalitiesToSend = convertRoyalties()
+
+				const whitelistAddress = await inflow1155.whitelist(
+                    signerAddress
+                );
+
+                whitelistAddress.wait();
+				const mintERC1155 = await inflow1155.create({
+					supply: parseInt(supply),
+					maxSupply: parseInt(maxSupply),
+					uri: `http://localhost:3000/collectible/${ipfsHash}`,
+					royalties: royalitiesToSend,
+				  });
+
+                window.location.replace(`http://localhost:3000/collectible/${ipfsHash}`)
+				return  mintERC1155
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    };
+
+	const sendToIPFS = async () => {
+		const metadata = {
+			name: title,
+			title,
+			description,
+			properties,
+			supply,
+			maxSupply
+		}
+
+
+		let fileToBlob = async (file) => new Blob([new Uint8Array(await file.arrayBuffer())], {type: file.type });
+
+		const file = await fileToBlob(fileToMint)
+		const urlFile = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
+		const urlJSON = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+
+		let data = new FormData();
+		data.append('file', file, 'file');
+		
+		return axios.post(urlFile,
+				data,
+				{
+					headers: {
+						'Content-Type': `multipart/form-data; boundary= ${data._boundary}`,
+						'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
+						'pinata_secret_api_key': process.env.REACT_APP_PINATA_SECRET_API_KEY
+					}
+				}
+			).then(function (response) {
+				const assetHash = response.data.IpfsHash;
+
+				axios.post(urlJSON,
+					{assetHash, ...metadata},
+					{
+						headers: {
+							'Content-Type': `application/json`,
+							'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
+							'pinata_secret_api_key': process.env.REACT_APP_PINATA_SECRET_API_KEY
+						}
+					},
+				).then(async function (response) {
+					if(quantity === 'single'){
+						await createERC721(response.data.IpfsHash)
+						return;
+					}
+
+					await createERC1155(response.data.IpfsHash)
+					return
+				}).catch(function (error) {
+					console.error(error)
+					return null;
+				});
+			}).catch(function (error) {
+				//handle error here
+				console.error(error)
+				return null;
+			});
+    };
 
     return (
         <div className="dashboard-wrapper-main artist-management">
@@ -86,14 +270,14 @@ const Createcollectible = (props) => {
                     </div>
                 </div>
 
-				<div className='col-lg-6 col-md-6'>
+				<div className='col-lg-6 col-md-6 mt-4 mt-md-0'>
                     <div className='card create-collectible'>
                         <div className='create-collectible-title'>
                             <span>Preview</span>
                         </div>
 						<div className='create-collectible-preview-description'>
 							{previewUrl ? (
-								<img src={previewUrl} />
+								<img src={previewUrl} alt="NFT Preview"/>
 							) : (
 								<h3>
 									Upload file to preview your NFT
@@ -157,7 +341,7 @@ const Createcollectible = (props) => {
 							<div className="title">
 								<p className="text">Unlock once purchased</p>
 								<label className="switch">
-  									<input type="checkbox"/>
+  									<input type="checkbox" value={unlockOncePurchased} onChange={() => setUnlockOncePurchased(unlockOncePurchased => !unlockOncePurchased)}/>
   									<span className="slider round"></span>
 								</label>
 							</div>
@@ -170,7 +354,7 @@ const Createcollectible = (props) => {
 						{quantity === 'multiple' &&
 						<div className="graphic">
 							<div className='graphic-option'>
-								<img src={assetsImages.graphicConstant}/>
+								<img src={assetsImages.graphicConstant} alt="Constant"/>
 								<div className="option graphic-option-check selected">
 								<input type="radio" name="product" className="card-input-element" />
 								<div className="graphic-option-text">
@@ -180,7 +364,7 @@ const Createcollectible = (props) => {
 							</div>
 							</div>
 							<div className='graphic-option'>
-								<img src={assetsImages.graphicLinear}/>
+								<img src={assetsImages.graphicLinear} alt="Linear"/>
 								<div className="option graphic-option-check">
 								<input type="radio" name="product" className="card-input-element" />
 		  						<div className="graphic-option-text">
@@ -190,7 +374,7 @@ const Createcollectible = (props) => {
 							</div>
 							</div>
 							<div className='graphic-option'>
-								<img src={assetsImages.graphicSigmoid}/>
+								<img src={assetsImages.graphicSigmoid} alt="Sigmoid"/>
 								<div className="option graphic-option-check">
 								<input type="radio" name="product" className="card-input-element" />
 								<div className="graphic-option-text">
@@ -202,15 +386,16 @@ const Createcollectible = (props) => {
 						</div>}
 
 						<div className="additional-data">
-							<input type="text" className="input" name="title" placeholder="Title" required/>
-							<input type="text" className="input" name="description" placeholder="Description (Optional)"/>
-							<input type="text" className="input" name="royalties-number" placeholder="Royalties (e.g. 10%, 20%, 30%)" required/>
-							<input type="text" className="input" name="royalties" placeholder="Royalties" required/>
-							<input type="text" className="input" name="properties" placeholder="Properties"/>
+							<input type="text" className="input" name="title" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)}/>
+							<input type="text" className="input" name="description" placeholder="Description (Optional)" value={description} onChange={(e) => setDescription(e.target.value)}/>
+							<input type="number" className="input" name="royalties-number" placeholder="Royalties (e.g. 10%, 20%, 30%)" required value={royalty} onChange={(e) => setRoyalty(e.target.value)}/>
+							<input type="number" className="input" name="supply" placeholder="Max. Supply (e.g. 1000)" required value={maxSupply} onChange={(e) => setMaxSupply(e.target.value)}/>
+							<input type="number" className="input" name="max-supply" placeholder="Supply (e.g. 120)" required value={supply} onChange={(e) => setSupply(e.target.value)}/>
+							<input type="text" className="input" name="properties" placeholder="Properties" value={properties} onChange={(e) => setProperties(e.target.value)}/>
 						</div>
 
 						<div className='footer-btn'>
-                            <button className='btn-gradiant'>
+                            <button className='btn-gradiant' onClick={sendToIPFS}>
                                 Create Item
                             </button>
                         </div>
@@ -233,13 +418,13 @@ const Createcollectible = (props) => {
 								<div key={item} className="royalty-input-wrapper">
 									<input type="number" className="percentage" name={`percentage${index+1}`} placeholder="%"
 											onChange={(e) => {
-												royalties[`percentage${index+1}`] = e.target.value
-												setRoyalties(royalties => ({...royalties}))
+												royaltySplits[`percentage${index+1}`] = e.target.value
+												setRoyaltySplits(royalties => ({...royalties}))
 											}}
 										/>
-									<input type="text" className="wallet" name={`wallet${index+1}`} placeholder="Wallet address"
+									<input type="text" className="wallet" name={`percentage${index+1}`} placeholder="Wallet address"
 											onChange={(e) => {
-												royalties[`wallet${index+1}`] = e.target.value
+												royaltyWallets[`percentage${index+1}`] = e.target.value
 												setRoyaltyWallets(wallets => ({...wallets}))
 											}}
 									/>

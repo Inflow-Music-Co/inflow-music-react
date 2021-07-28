@@ -4,11 +4,24 @@ import { assetsImages } from '../constants/images';
 import { Modal } from "react-bootstrap";
 
 const Collectible = (props) => {
-	const [collectibleId, setCollectibleId] = useState('');
+	const [collectibleId, setCollectibleId] = useState(null);
+	const [data, setData] = useState(null);
 
 	useEffect(() => {
-		setCollectibleId(props.match.params.collectibleId);
+		setCollectibleId(props.match.params.collectibleId);		
 	}, [props.match.params.collectibleId]);
+
+	useEffect(() => {
+		async function getData(){
+			const response = await fetch(`https://ipfs.io/ipfs/${collectibleId}`)	
+			const data = await response.json();
+			setData(data)
+		}
+
+		if(collectibleId){
+			getData()
+		}
+	}, [collectibleId]);
 
     return (
 		<div className="dashboard-wrapper-main artist-management">
@@ -17,19 +30,19 @@ const Collectible = (props) => {
 				<div className='col-lg-12 col-md-12'>
 					<div className='card-collectible'>
 						<div className="nft">
-							<img src={assetsImages.person}/>
+							<img src={`https://ipfs.io/ipfs/${data?.assetHash}`} />
 							<div className="details">
 								<div className="info">
 										<h3 className="title">NFT Info</h3>
-										<h4 className="nft-name">Nothing was the same</h4>
-										<span className="nft-category">Drake album NFT</span>
+										<h4 className="nft-name">{data?.name}</h4>
+										<span className="nft-category">{data?.description}</span>
 										<hr/>
-										<h4 className="prints">30 prints created  [max. 160]</h4>
+										<h4 className="prints">{data?.supply} prints created  [max. {data?.maxSupply}]</h4>
 								</div>
 								<div className="creator">
 									<h3 className="title">Creator</h3>
 									<div className="creator-info">
-										<img src={assetsImages.imgchart} />
+										<img src={`https://ipfs.io/ipfs/${data?.assetHash}`} />
 										<div className="artist">
 											<span className="name">Drake</span>
 											<span className="gender">Hip-Hop/Rap</span>
@@ -94,7 +107,7 @@ const Collectible = (props) => {
                     </button>
                 </Modal.Footer>
             </Modal> */}
-						<Modal show={true} className="edit-profile-modal newvote">
+						{/* <Modal show={true} className="edit-profile-modal newvote">
                 <Modal.Header closeButton>
                     <span className='title'>
                         Sell NFT
@@ -122,7 +135,7 @@ const Collectible = (props) => {
                         Sell
                     </button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
 		</div>
     )
 }
