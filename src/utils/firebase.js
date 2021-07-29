@@ -3,13 +3,13 @@ import "firebase/firestore";
 import "firebase/auth";
 
 const config = {
-  apiKey: "AIzaSyAZg2nArlAzBsqdxu8RnA22HqJxyvE_EOI",
-  authDomain: "firstnft.firebaseapp.com",
-  projectId: "firstnft",
-  storageBucket: "firstnft.appspot.com",
-  messagingSenderId: "217647268540",
-  appId: "1:217647268540:web:606a6b7215168eb90386b9",
-  measurementId: "G-MGKYJX21XR"
+  apiKey: "AIzaSyDlCbfEsDb0wSquyl6H3Yha5Gg5-hFKSjg",
+  authDomain: "inflowmusic-fcf36.firebaseapp.com",
+  projectId: "inflowmusic-fcf36",
+  storageBucket: "inflowmusic-fcf36.appspot.com",
+  messagingSenderId: "581554259848",
+  appId: "1:581554259848:web:20f90268617cddd7b91c3d",
+  measurementId: "G-PMYNF68LB3"
 };
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
