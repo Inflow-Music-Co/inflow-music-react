@@ -5,7 +5,6 @@ import Header from '../base/Header';
 import Sidebar from '../base/Sidebar';
 
 function PublicRoute(props) {
-  
 
     if (props.path === '/login') {
         return <Route {...props} />

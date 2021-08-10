@@ -280,9 +280,11 @@ export class Inflow {
     //////////////////////////////////
 
     async getTokenSocialFactory(creator: string): Promise<string> {
+        console.log('type of creator is', typeof creator)
         const socialTokenAddress = await this.socialTokenFactory.getToken(
             creator
         );
+        console.log('type of socialTokenAddress is', socialTokenAddress)
         return socialTokenAddress;
     }
 

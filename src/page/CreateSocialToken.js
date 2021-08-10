@@ -6,31 +6,19 @@ import { getEventData } from '../utils/blockchain';
 import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
 import SocialTokenFactory from '../artifacts/contracts/token/social/SocialTokenFactory.sol/SocialTokenFactory.json';
 import { MOCKUSDC, SOCIAL_TOKEN_FACTORY } from '../utils/addresses'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { WalletProviderContext } from '../contexts/walletProviderContext';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 let emailregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const CreateSocialToken = () => {
+
     const { walletProvider } = useContext(WalletProviderContext);
     const wallet = useSelector(state => state.wallet);
+    const [artistToken, setArtistToken] = useState('');
     const [socialtokenid, setSocialTokenId] = useState('');
-    const [TokenName, setTokenName] = useState('');
-    const [TokenSymbol, setTokenSymbol] = useState('');
-    const [walletaddress, setwalletaddress] = useState('');
-    const [firstname, setfirstname] = useState('');
-    const [lastname, setlastname] = useState('');
-    const [artistaddress, setartistaddress] = useState('');
-    const [city, setcity] = useState('');
-    const [country, setcountry] = useState('');
-    const [email, setemail] = useState('');
-    const [phone, setphone] = useState('');
-    const [pincode, setpincode] = useState('');
-    const [profileimage, setprofileimage] = useState();
-    const [bannerimage, setbannerimage] = useState();
-    const [maxsupply, setmaxsupply] = useState('');
-    const [slope, setslope] = useState('');
+    const [socialTokenAddress, setSocialTokenAddress] = useState('')
     const [connectedwallet, setconnectedwallet] = useState(true);
     const [artistcreationsuccess, setartistcreationsuccess] = useState(false);
     const [artistcreationfailure, setartistcreationfailure] = useState(false);
@@ -38,6 +26,10 @@ const CreateSocialToken = () => {
     const [formvalidationerrormsg, setformvalidationerrormsg] = useState('');
     const [existingsocialtoken, setexistingsocialtoken] = useState(false);
     const [artistemailexists, setartistemailexists] = useState(false);
+    const [bannerImage, setBannerImage] = useState('');
+    const [profileImage, setProfileImage] = useState('');
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!wallet.wallet_connected) {
@@ -46,113 +38,126 @@ const CreateSocialToken = () => {
     }, [])
 
 
-    const onboardArtist = async () => {
-        if (firstname.trim() === '') {
+    const mintSocialToken = async () => {
+
+        //check form fields are valid 
+        if (artistToken.firstName.trim() === '') {
             setformvalidationerrormsg('Please enter first name');
             setformvalidationerror(true);
             return;
         }
-        if (artistaddress.trim() === '') {
+        if (artistToken.artistAddress.trim() === '') {
             setformvalidationerrormsg('Please enter address');
             setformvalidationerror(true);
             return;
         }
-        if (city.trim() === '') {
+        if (artistToken.city.trim() === '') {
             setformvalidationerrormsg('Please enter city');
             setformvalidationerror(true);
             return;
         }
-        if (country.trim() === '') {
+        if (artistToken.country.trim() === '') {
             setformvalidationerrormsg('Please enter country');
             setformvalidationerror(true);
             return;
         }
-        if (email.trim() === '' || emailregex.test(email) === false) {
+        if (artistToken.email.trim() === '' || emailregex.test(artistToken.email) === false) {
             setformvalidationerrormsg('Please enter valid email');
             setformvalidationerror(true);
             return;
         }
-        if (phone.trim() === '') {
+        if (artistToken.phone.trim() === '') {
             setformvalidationerrormsg('Please enter phone number');
             setformvalidationerror(true);
             return;
         }
-        if (pincode.trim() === '') {
-            setformvalidationerrormsg('Please enter pincode');
+        if (artistToken.pinCode.trim() === '') {
+            setformvalidationerrormsg('Please enter pinCode');
             setformvalidationerror(true);
             return;
         }
-        if (TokenName.trim() === '') {
+        if (artistToken.tokenName.trim() === '') {
             setformvalidationerrormsg('Please enter token name');
             setformvalidationerror(true);
             return;
         }
-        if (TokenSymbol.trim() === '') {
+        if (artistToken.tokenSymbol.trim() === '') {
             setformvalidationerrormsg('Please enter token symbol');
             setformvalidationerror(true);
             return;
         }
-        if (!profileimage) {
+        if (!profileImage) {
             setformvalidationerrormsg('Please provide a profile image');
             setformvalidationerror(true);
             return;
         }
-        if (!bannerimage) {
+        if (!bannerImage) {
             setformvalidationerrormsg('Please provide a banner image');
             setformvalidationerror(true);
             return;
         }
-        if (walletaddress.trim() === '' || walletaddress.length !== 42) {
+        console.log(artistToken.walletAddress.trim())
+        if (artistToken.walletAddress.trim() === '') {
             setformvalidationerrormsg('Please provide a valid wallet address');
             setformvalidationerror(true);
             return;
         }
         try {
             console.log("HERE")
-            const {data} = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/emailcheck`, {email: email})
-            if (!data.userExists) {
-                setartistemailexists(true);
-                setSocialTokenId('');
-                return;
-            }
-            const { socialTokenAddress, alreadyExisted } = await generateSocialToken();
+
+            // artistToken/emailcheck Route doesn't exist on server yet 
+
+            // const {data} = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artistToken/emailcheck`, {email: email})
+            // if (!data.artistTokenExists) {
+            //     setartistemailexists(true);
+            //     setSocialTokenId('');
+            //     return;
+            // }
+
+            const { tokenAddress, alreadyExisted } = await generateSocialToken();
+            setSocialTokenAddress(tokenAddress)
             
             if (alreadyExisted) {
                 setexistingsocialtoken(true)
             }
-            if (socialTokenAddress && socialTokenAddress.length) {
-                const data = new FormData();
-                console.log("HELLO");
-                // console.log({ TokenName })
-                data.append("first_name", firstname);
-                data.append("last_name", lastname);
-                data.append("address", artistaddress);
-                data.append("city", city);
-                data.append("country", country);
-                data.append("email", email);
-                data.append("phone", phone);
-                data.append("pin_code", pincode);
-                data.append("wallet_id", walletaddress);
-                data.append("social_token_name", TokenName);
-                data.append("social_token_symbol", TokenSymbol);
-                data.append("social_token_id", socialTokenAddress);
-                data.append("profile", profileimage);
-                data.append("banner", bannerimage);
-                // console.log(process.env.REACT_APP_SERVER_URL)
-                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/onboarding`, data)
-                if (!alreadyExisted) {
-                    setartistcreationsuccess(artistcreationsuccess => !artistcreationsuccess);
-                }
-            } else {
-                setartistcreationfailure(artistcreationfailure => !artistcreationfailure);
-            }
+            
         } catch (error) {
-            // console.log(error)
+             console.log(error)
         }
 
     }
 
+    const saveArtist = async () => {
 
+        const formData = new FormData();
+
+        formData.append('address', artistToken.artistAddress);
+        formData.append('city', artistToken.city);
+        formData.append('country', artistToken.country);
+        formData.append('email', artistToken.email);
+        formData.append('first_name', artistToken.firstName);
+        formData.append('last_name', artistToken.lastName);
+        formData.append('phone', artistToken.phone);
+        formData.append('pin_code', artistToken.pinCode);
+        formData.append('social_token_id', artistToken.walletAddress);
+        formData.append('social_token_symbol', artistToken.tokenSymbol);
+        formData.append('banner', bannerImage);
+        formData.append('profile', profileImage);
+        
+
+        await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/onboarding`, formData)
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+        
+        //deactivated checker
+        
+        // if (!alreadyExisted) {
+        //     setartistcreationsuccess(artistcreationsuccess => !artistcreationsuccess);
+        // }else {
+        //     setartistcreationfailure(artistcreationfailure => !artistcreationfailure);
+        // }
+        
+    }
 
     // async function requestAccount() {
     //     await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -175,7 +180,7 @@ const CreateSocialToken = () => {
             // console.log(signerAddress);
             const inflow = new Inflow(provider, 80001);
             const socialTokenAddress = await inflow.getTokenSocialFactory(
-                walletaddress
+                artistToken.walletAddress
             );
             // console.log({ socialTokenAddress });
             if (
@@ -194,12 +199,12 @@ const CreateSocialToken = () => {
                 // console.log('WHITELISTED');
                 const socialTokenAddress = await getEventData(
                     contract.create({
-                        creator: walletaddress,
+                        creator : artistToken.walletAddress,
                         collateral: MOCKUSDC,
-                        maxSupply: ethers.utils.parseEther(String(maxsupply)),
-                        slope: ethers.utils.parseEther(String(slope)),
-                        name: TokenName.trim(),
-                        symbol: TokenSymbol.trim(),
+                        maxSupply: ethers.utils.parseEther(String(artistToken.maxsupply)),
+                        slope: ethers.utils.parseEther(String(artistToken.slope)),
+                        name: artistToken.tokenName.trim(),
+                        symbol: artistToken.tokenSymbol.trim(),
                     }),
                     0
                 );
@@ -211,12 +216,12 @@ const CreateSocialToken = () => {
             //     typeof window.ethereum !== 'undefined' &&
             //     TokenName &&
             //     TokenSymbol &&
-            //     walletaddress &&
+            //     walletAddress &&
             //     maxsupply &&
             //     slope &&
             //     TokenName.trim() !== '' &&
             //     TokenSymbol.trim() !== '' &&
-            //     walletaddress.trim() !== '' &&
+            //     walletAddress.trim() !== '' &&
             //     maxsupply.trim() !== '' &&
             //     slope.trim() !== ''
 
@@ -239,7 +244,7 @@ const CreateSocialToken = () => {
             //     // console.log(signerAddress);
             //     const inflow = new Inflow(provider, 80001);
             //     const socialTokenAddress = await inflow.getTokenSocialFactory(
-            //         walletaddress
+            //         walletAddress
             //     );
             //     // console.log({ socialTokenAddress });
             //     if (
@@ -257,7 +262,7 @@ const CreateSocialToken = () => {
             //         // console.log('WHITELISTED');
             //         const socialTokenAddress = await getEventData(
             //             contract.create({
-            //                 creator: walletaddress,
+            //                 creator: walletAddress,
             //                 collateral: MOCKUSDC,
             //                 maxSupply: ethers.utils.parseEther(String(maxsupply)),
             //                 slope: ethers.utils.parseEther(String(slope)),
@@ -276,6 +281,11 @@ const CreateSocialToken = () => {
         }
     };
 
+    const handleChange = (event) => {
+        const { value, name } = event.target;
+        setArtistToken({ ...artistToken, [name]: value });
+    }
+
     return (
         <>
             <div className="dashboard-wrapper-main vw-100 d-flex flex-column justify-content-center align-items-center">
@@ -285,8 +295,7 @@ const CreateSocialToken = () => {
                         <div
                             className="nav nav-tabs nav-fill"
                             id="nav-tab"
-                            role="tablist"
-                        >
+                            role="tablist">
                             <a
                                 className="nav-item nav-link active"
                                 id="nav-home-tab"
@@ -294,8 +303,7 @@ const CreateSocialToken = () => {
                                 href="#nav-home"
                                 role="tab"
                                 aria-controls="nav-home"
-                                aria-selected="true"
-                            >
+                                aria-selected="true">
                                 Artist Onboarding
                             </a>
                         </div>
@@ -311,169 +319,145 @@ const CreateSocialToken = () => {
                                 <div className="grids-main-inputs">
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setfirstname(e.target.value)
-                                            }
-                                            value={firstname}
+                                            onChange={handleChange}
+                                            value={artistToken.firstName}
                                             placeholder="First Name"
-                                            id="firstname"
+                                            name="firstName"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setlastname(e.target.value)
-                                            }
-                                            value={lastname}
+                                            onChange={handleChange}
+                                            value={artistToken.lastName}
                                             placeholder="Last Name"
-                                            id="lastname"
+                                            name="lastName"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setartistaddress(e.target.value)
-                                            }
-                                            value={artistaddress}
+                                            onChange={handleChange}
+                                            value={artistToken.artistAddress}
                                             placeholder="Address"
-                                            id="artistaddress"
+                                            name="artistAddress"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setcity(e.target.value)
-                                            }
-                                            value={city}
+                                            onChange={handleChange}
+                                            value={artistToken.city}
                                             placeholder="City"
-                                            id="city"
+                                            name="city"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setcountry(e.target.value)
-                                            }
-                                            value={country}
+                                            onChange={handleChange}
+                                            value={artistToken.country}
                                             placeholder="Country"
-                                            id="country"
+                                            name="country"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setemail(e.target.value)
-                                            }
-                                            value={email}
+                                            onChange={handleChange}
+                                            value={artistToken.email}
                                             placeholder="Email"
-                                            id="email"
+                                            name="email"
                                             type="email"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setphone(e.target.value)
-                                            }
-                                            value={phone}
+                                            onChange={handleChange}
+                                            value={artistToken.phone}
                                             placeholder="Phone number"
-                                            id="phone"
+                                            name="phone"
                                             type="number"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setpincode(e.target.value)
-                                            }
-                                            value={pincode}
-                                            placeholder="Pincode"
-                                            id="pincode"
+                                            onChange={handleChange}
+                                            value={artistToken.pinCode}
+                                            placeholder="pinCode"
+                                            name="pinCode"
                                             type="number"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setwalletaddress(e.target.value)
-                                            }
-                                            value={walletaddress}
+                                            onChange={handleChange}
+                                            value={artistToken.walletAddress}
                                             placeholder="Artist Wallet Address"
-                                            id="address"
+                                            name="walletAddress"
+                                            type="text"
                                             required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setTokenName(e.target.value)
-                                            }
-                                            value={TokenName}
+                                            onChange={handleChange}
                                             placeholder="Social Token Name"
-                                            id="tokenName"
-                                        />
-                                    </div>
-                                    <div className="comman-grids">
-                                        <input
-                                            onChange={(e) =>
-                                                setTokenSymbol(e.target.value)
-                                            }
-                                            value={TokenSymbol}
-                                            placeholder="Social Token Symbol"
-                                            id="tokenSymbol"
+                                            name="tokenName"
+                                            value={artistToken.tokenName}
                                             type="text"
+                                            required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setmaxsupply(e.target.value)
-                                            }
-                                            value={maxsupply}
+                                            onChange={handleChange}
+                                            placeholder="Social Token Symbol"
+                                            name="tokenSymbol"
+                                            value={artistToken.tokenSymbol}
+                                            type="text"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="comman-grids">
+                                        <input
+                                            onChange={handleChange}
                                             placeholder="Max Supply"
-                                            id="maxsupply"
+                                            value={artistToken.maxSupply}
+                                            name="maxsupply"
                                             type="number"
+                                            required
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         <input
-                                            onChange={(e) =>
-                                                setslope(e.target.value)
-                                            }
-                                            value={slope}
+                                            onChange={handleChange}
                                             placeholder="Slope"
-                                            id="slope"
+                                            value={artistToken.slope}
+                                            name="slope"
                                             type="number"
+                                            required
                                         />
                                     </div>
                                     <div className="common-grids"></div>
                                     <div className="comman-grids">
                                         Profile Image:
                                         <input
-                                            onChange={(e) =>
-                                                setprofileimage(e.target.files[0])
-                                            }
+                                            onChange={(e) => setProfileImage(e.target.files[0])}
                                             placeholder="Profile Image"
-                                            id="profileimage"
+                                            name="profile"
                                             type="file"
                                         />
                                     </div>
                                     <div className="comman-grids">
                                         Banner Image:
                                         <input
-                                            onChange={(e) =>
-                                                setbannerimage(e.target.files[0])
-                                            }
+                                            onChange={(e) => setBannerImage(e.target.files[0])}
                                             placeholder="Banner Image"
-                                            id="bannerimage"
+                                            name="banner"
                                             type="file"
                                         />
                                     </div>
@@ -483,8 +467,16 @@ const CreateSocialToken = () => {
                                     <Button
                                         variant="primary"
                                         size="lg"
-                                        onClick={onboardArtist}
-                                    >
+                                        onClick={mintSocialToken}>
+                                        MINT ARTIST TOKEN
+                                    </Button>{' '}
+                                </div>
+                                <br></br>
+                                <div className="save-changes-main">
+                                    <Button
+                                        variant="primary"
+                                        size="lg"
+                                        onClick={saveArtist}>
                                         ONBOARD ARTIST
                                     </Button>{' '}
                                 </div>
@@ -545,7 +537,7 @@ const CreateSocialToken = () => {
             <SweetAlert
                 danger
                 show={artistemailexists}
-                title="User with given email doesnt exist"
+                title="artistToken with given email doesnt exist"
                 style={{ color: '#000' }}
                 onConfirm={() => { setartistemailexists(artistemailexists => !artistemailexists) }}
                 onCancel={() => { setartistemailexists(artistemailexists => !artistemailexists) }}

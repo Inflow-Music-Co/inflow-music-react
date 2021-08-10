@@ -5,6 +5,7 @@ import Header from "../base/Header";
 import Sidebar from "../base/Sidebar";
 
 function PrivateRoute(props) {
+  
   const token = useSelector((state) => state.auth.token);
   if (!token) {
     return <Redirect to="/login" />;

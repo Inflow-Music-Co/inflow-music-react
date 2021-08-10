@@ -41,7 +41,6 @@ const MintUSDC = () => {
 
     const mintUSDC = async () => {
         try {
-
             await requestAccount();
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const admin = new Wallet(process.env.REACT_APP_ADMIN_PVT_KEY, provider);
@@ -51,10 +50,11 @@ const MintUSDC = () => {
                 MockUSDC.abi,
                 admin
             );
+            console.log('usdc Contract', usdc, 'signer', signer)
             const usdcMinter = usdc.connect(signer);
-            // console.log(mockUSDCmint);
+            console.log('mockUSDmint', mockUSDCmint);
             const inflow = new Inflow(provider, 80001);
-            // console.log(inflow.parseERC20('USDC', String(mockUSDCmint)));
+            console.log(inflow.parseERC20('USDC', String(mockUSDCmint)));
             setLoading(true);
             const signerAddress = await signer.getAddress();
             await (
@@ -62,14 +62,14 @@ const MintUSDC = () => {
                     inflow.parseERC20('USDC', String(mockUSDCmint))
                 )
             ).wait();
-            // console.log('MOCK USDC MINT SUCCESSFUL');
+            console.log('MOCK USDC MINT SUCCESSFUL');
             const usdcBalance = await inflow.balanceOf('USDC', signerAddress);
             setbalance(usdcBalance[0]);
             setLoading(false);
-            // console.log('USDC BALANCE: ', usdcBalance);
+            console.log('USDC BALANCE: ', usdcBalance);
         } catch (error) {
             setLoading(false);
-            // console.log(error);
+            console.log(error);
         }
     };
 

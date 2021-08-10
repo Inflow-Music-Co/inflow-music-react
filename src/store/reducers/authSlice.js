@@ -6,12 +6,12 @@ export const authSlice = createSlice({
   initialState: {
     data: {},
     token: '',
-    isAdmin: false,
+    isAdmin: true,
     isArtist: false,
   },
   reducers: {
     login: (state, action) => {
-      // console.log({ data: action.data })
+      console.log('isAdmin', state.isAdmin)
       state.data = action.payload
       state.token = action.payload.token
       state.isAdmin = action.payload.isAdmin
