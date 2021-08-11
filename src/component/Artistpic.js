@@ -16,7 +16,6 @@ const Artistpic = (props) => {
                 <div className="price-tag">$113.51</div>
                 <div className="tags-up">+9.1%</div>
             </div>
-
         </div>
     )
 }

@@ -10,6 +10,8 @@ import { assetsImages } from "../constants/images";
 const Inflowmusic = () => {
     const [artists, setArtists] = useState();
     const [loading, setloading] = useState(false);
+    const [imagesUrl, setImagesUrl] = useState();
+
     useEffect(() => {
         const getArtists = async () => {
             setloading(true)
@@ -20,12 +22,14 @@ const Inflowmusic = () => {
         getArtists();
     }, [])
 
+
     const displayArtists = () => {
         if (artists && artists.length > 0) {
             return artists.map((artist, i) => {
-                // console.log(`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`)
+                 console.log(artist.profile_image)
                 return (<Link to={`/artist/${artist._id}`} key={i}>
                     <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name} ${artist.last_name}`} />
+                    <div></div>
                 </Link>)
             })
         }
@@ -41,8 +45,8 @@ const Inflowmusic = () => {
             <div className="dashboard-wrapper-main inner-music-wrapper">
                 <div className="artist-heading">Featured Artists</div>
                 <div className="grid-for-artist">
-                    {/* {displayArtists()} */}
-                    <Link to="/artist">
+                    {displayArtists()}
+                    {/* <Link to="/artist">
                         <Artistpic imglink={assetsImages.artist} />
                     </Link>
                     <Link to="/artist">
@@ -62,7 +66,7 @@ const Inflowmusic = () => {
                     </Link>
                     <Link to="/artist">
                         <Artistpic imglink={assetsImages.artist} />
-                    </Link>
+                    </Link> */}
                 </div>
                 <div className="see-all-artist">
                     <a href="#">See All Artists</a>

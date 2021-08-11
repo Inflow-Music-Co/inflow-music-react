@@ -139,11 +139,11 @@ const CreateSocialToken = () => {
         formData.append('last_name', artistToken.lastName);
         formData.append('phone', artistToken.phone);
         formData.append('pin_code', artistToken.pinCode);
-        formData.append('social_token_id', artistToken.walletAddress);
+        formData.append('wallet_id', artistToken.walletAddress);
+        formData.append('social_token_id', artistToken.socialTokenAddress)
         formData.append('social_token_symbol', artistToken.tokenSymbol);
         formData.append('banner', bannerImage);
         formData.append('profile', profileImage);
-        
 
         await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/onboarding`, formData)
         .then(res => console.log(res))
@@ -188,15 +188,16 @@ const CreateSocialToken = () => {
                 parseInt(socialTokenAddress, 16) !== 0
             ) {
                 setSocialTokenId(socialTokenAddress);
+                //console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
                 return { socialTokenAddress, alreadyExisted: true }
-                // console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
+                
             } else {
                 // console.log('HEERREE');
                 const whitelistAddress = await contract.whitelist(
                     signerAddress
                 );
                 whitelistAddress.wait();
-                // console.log('WHITELISTED');
+                console.log('WHITELISTED');
                 const socialTokenAddress = await getEventData(
                     contract.create({
                         creator : artistToken.walletAddress,
@@ -209,8 +210,8 @@ const CreateSocialToken = () => {
                     0
                 );
                 setSocialTokenId(socialTokenAddress);
+                console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
                 return { socialTokenAddress, alreadyExisted: false }
-                // console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
             }
             // if (
             //     typeof window.ethereum !== 'undefined' &&
@@ -277,7 +278,7 @@ const CreateSocialToken = () => {
             //     }
             // }
         } catch (error) {
-            // console.log(error);
+            console.log(error);
         }
     };
 
@@ -442,7 +443,16 @@ const CreateSocialToken = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="common-grids"></div>
+                                    <div className="comman-grids">
+                                        <input
+                                            onChange={handleChange}
+                                            placeholder="social token address"
+                                            value={artistToken.socialTokenAddress}
+                                            name="socialTokenAddress"
+                                            type="text"
+                                        />
+                                    </div>
+                                    
                                     <div className="comman-grids">
                                         Profile Image:
                                         <input
@@ -479,6 +489,8 @@ const CreateSocialToken = () => {
                                         onClick={saveArtist}>
                                         ONBOARD ARTIST
                                     </Button>{' '}
+                                    <br></br>
+                                    
                                 </div>
                             </div>
                         </div>

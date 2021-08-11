@@ -39,8 +39,7 @@ const MintUSDC = () => {
 						<div
 							className="nav nav-tabs nav-fill"
 							id="nav-tab"
-							role="tablist"
-						>
+							role="tablist">
 							<a
 								className="nav-item nav-link active"
 								id="nav-home-tab"

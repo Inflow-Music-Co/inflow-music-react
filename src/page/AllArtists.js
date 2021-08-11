@@ -27,7 +27,6 @@ const AllArtists = () => {
 	const [mbannerimage, setmbannerimage] = useState();
 
 
-
 	useEffect(() => {
 		getArtists();
 	}, [])
