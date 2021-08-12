@@ -53,7 +53,7 @@ const Artistpic = () => {
 
     const formatAndSetTokenFees = async (value) => {
         const provider = walletProvider
-        const inflow = new Inflow(provider, 80001);
+        const inflow = new Inflow(provider, 4);
         const tokenfees = inflow.formatERC20('USDC', String(value))
         // console.log({tokenfees})
         settokenfees(tokenfees);

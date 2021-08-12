@@ -77,7 +77,7 @@ const LabelArtists = () => {
         try {
             // await requestAccount();
             const provider = walletProvider;
-            const inflow = new Inflow(provider, 80001);
+            const inflow = new Inflow(provider, 4);
             // // console.log(localStorage.getItem('oncereloadlabelartists'))
             // if (!localStorage.getItem('oncereloadlabelartists')) {
             //     // console.log("HERE")

@@ -253,11 +253,14 @@ export class Inflow {
         socialTokenAddress: string,
         amount: BigNumberish
     ): Promise<FormattedAndBNTuple> {
+        console.log(this.addresses)
         const socialToken = new Contract(
             socialTokenAddress,
             getAbi(this.abis, 'SocialToken'),
             this.provider
         ) as SocialToken;
+        console.log({ socialToken })
+        console.log( 'provider', this.provider );
         const price = await socialToken.getMintPrice(amount);
         return [this.formatUsdc(price), price];
     }
@@ -280,7 +283,9 @@ export class Inflow {
     //////////////////////////////////
 
     async getTokenSocialFactory(creator: string): Promise<string> {
+        console.log(this.chainId, this.provider)
         console.log('type of creator is', typeof creator)
+        console.log('creator value is', creator)
         const socialTokenAddress = await this.socialTokenFactory.getToken(
             creator
         );

@@ -8,6 +8,8 @@ function AdminRoute(props) {
 	const token = useSelector((state) => state.auth.token);
 	const isAdmin = useSelector((state) => state.auth.isAdmin);
 
+	console.log(token, isAdmin)
+
 	// console.log({ isAdmin })
 
 	if (!token) {

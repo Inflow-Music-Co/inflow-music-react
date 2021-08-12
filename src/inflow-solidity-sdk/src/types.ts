@@ -9,7 +9,7 @@ export {
   SocialTokenFactory,
 } from "../typechain";
 
-export type ChainId = 137 | 80001;
+export type ChainId = 137 | 80001 | 4;
 
 export type Part = { account: string; value: BigNumberish };
 

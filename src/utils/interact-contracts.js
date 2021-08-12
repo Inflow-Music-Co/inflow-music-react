@@ -1,7 +1,7 @@
 import { createAlchemyWeb3 } from '@alch/alchemy-web3';
 import { default as contractABI } from '../../contract-abi.json';
 
-const web3 = createAlchemyWeb3(process.env.NEXT_PUBLIC_ALCHEMY_API_URL || '');
+const web3 = createAlchemyWeb3(process.env.NEXT_PUBLIC_ALCHEMY_API_URL_RINKEBY || '');
 
 export const connectWallet = async () => {
   if (window.ethereum) {

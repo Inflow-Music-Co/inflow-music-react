@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 import { getEventData } from '../utils/blockchain';
 import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
 import SocialTokenFactory from '../artifacts/contracts/token/social/SocialTokenFactory.sol/SocialTokenFactory.json';
-import { MOCKUSDC, SOCIAL_TOKEN_FACTORY } from '../utils/addresses'
+import { RINKEBY_MOCKUSDC, RINKEBY_SOCIAL_TOKEN_FACTORY } from '../utils/addresses'
 import { useSelector, useDispatch } from 'react-redux';
 import { WalletProviderContext } from '../contexts/walletProviderContext';
 import SweetAlert from 'react-bootstrap-sweetalert';
@@ -34,6 +34,7 @@ const CreateSocialToken = () => {
     useEffect(() => {
         if (!wallet.wallet_connected) {
             setconnectedwallet(false);
+            console.log('wallet is not connected')
         }
     }, [])
 
@@ -167,32 +168,33 @@ const CreateSocialToken = () => {
         try {
             // await requestAccount();
             const provider = walletProvider;
-            // console.log({ provider });
+            console.log({ provider });
             const signer = provider.getSigner();
             const contract = new ethers.Contract(
-                SOCIAL_TOKEN_FACTORY,
+                RINKEBY_SOCIAL_TOKEN_FACTORY,
                 SocialTokenFactory.abi,
                 signer
             );
-            // console.log(contract);
-            // console.log(signer);
+            console.log({ contract });
+            console.log({ signer });
             const signerAddress = await signer.getAddress();
-            // console.log(signerAddress);
-            const inflow = new Inflow(provider, 80001);
+            console.log({ signerAddress });
+            const inflow = new Inflow(provider, 4);
+            console.log(inflow);
             const socialTokenAddress = await inflow.getTokenSocialFactory(
                 artistToken.walletAddress
             );
-            // console.log({ socialTokenAddress });
+            console.log({ socialTokenAddress });
             if (
                 socialTokenAddress &&
                 parseInt(socialTokenAddress, 16) !== 0
             ) {
                 setSocialTokenId(socialTokenAddress);
-                //console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
+                console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
                 return { socialTokenAddress, alreadyExisted: true }
                 
             } else {
-                // console.log('HEERREE');
+                console.log('HEERREE');
                 const whitelistAddress = await contract.whitelist(
                     signerAddress
                 );
@@ -201,7 +203,7 @@ const CreateSocialToken = () => {
                 const socialTokenAddress = await getEventData(
                     contract.create({
                         creator : artistToken.walletAddress,
-                        collateral: MOCKUSDC,
+                        collateral: RINKEBY_MOCKUSDC,
                         maxSupply: ethers.utils.parseEther(String(artistToken.maxsupply)),
                         slope: ethers.utils.parseEther(String(artistToken.slope)),
                         name: artistToken.tokenName.trim(),

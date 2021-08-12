@@ -12,7 +12,7 @@ class Wallet {
     ethersProvider = null;
     web3Modal;
     providerOptions
-    chainId = 1;
+    chainId = 4;
     networkName = '';
     account = null;
     provider = null;
@@ -110,8 +110,8 @@ class Wallet {
         this.account = account;
         this.chainId = network.chainId;
         this.networkName = network.name;
-        // console.log(account, network);
-        // this.dispatch(connected({address: account}));
+        console.log('account', 'network', account, network);
+        //this.dispatch(connected({address: account}));
     }
 
     disconnect(clearCache) {

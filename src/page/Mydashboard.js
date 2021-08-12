@@ -75,7 +75,7 @@ const Mydashboard = () => {
         if (walletProvider) {
             try {
                 const provider = walletProvider;
-                const inflow = new Inflow(provider, 80001);
+                const inflow = new Inflow(provider, 4);
                 const mintPrice = await inflow.getMintPriceSocial(
                     token,
                     inflow.parseERC20('SocialToken', String(balance))
@@ -101,7 +101,7 @@ const Mydashboard = () => {
             try {
                 const signer = walletProvider.getSigner();
                 const signerAddress = await signer.getAddress();
-                const inflow = new Inflow(walletProvider, 80001);
+                const inflow = new Inflow(walletProvider, 4);
                 const balance = await inflow.balanceOf(
                     'SocialToken',
                     signerAddress,

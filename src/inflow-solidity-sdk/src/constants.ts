@@ -7,6 +7,7 @@ import { abi as ERC20_ABI } from "../../artifacts/@openzeppelin/contracts/token/
 import { abi as SocialTokenFactory_ABI } from "../../artifacts/contracts/token/social/SocialTokenFactory.sol/SocialTokenFactory.json";
 import MATIC_DEPLOYED_ADDRESSES from "../deployments/matic.json";
 import MUMBAI_DEPLOYED_ADDRESSES from "../deployments/mumbai.json";
+import RINKEBY_DEPLOYED_ADDRESSES from "../deployments/rinkeby.json";
 import {
   AddressesByChainId,
   Addresses,
@@ -17,14 +18,16 @@ import {
 
 export const inflowAddressesByChainId: AddressesByChainId = new Map([
   [137, MATIC_DEPLOYED_ADDRESSES as Addresses], // matic mainnet
-  [80001, MUMBAI_DEPLOYED_ADDRESSES], // mumbai testnet
+  [4, RINKEBY_DEPLOYED_ADDRESSES as Addresses] //rinkeby testnet
 ]);
 
 export function getAddressesByChainId(
   addressesByChainId: AddressesByChainId,
   chainId: ChainId
 ): Addresses {
+  console.log({ chainId })
   const addresses = addressesByChainId.get(chainId);
+  console.log({ addresses })
   if (addresses === undefined) throw new Error("Addresses is undefined");
   return addresses;
 }
