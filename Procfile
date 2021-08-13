@@ -1,1 +1,1 @@
-web: "DISABLE_ESLINT_PLUGIN=true react-scripts start"
+web: "npm start"
