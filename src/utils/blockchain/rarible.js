@@ -1,4 +1,4 @@
-"use strict";
+
 exports.__esModule = true;
 exports.formatCreators = void 0;
 var ethers_1 = require("ethers");

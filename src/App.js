@@ -1,8 +1,6 @@
+/* eslint-disable */
 import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import store from "./store/configureStore";
 import { BrowserRouter as Router } from "react-router-dom";
 import History from "./route/History";
 
@@ -11,7 +9,7 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
-import { useSelector } from "react-redux";
+
 import Login from "./page/Login";
 // const { store, persistor } = configureStore();
 import Header from '../src/base/Header';

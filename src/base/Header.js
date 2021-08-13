@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './base.css';
-import Search from '../component/Search';
+//import Search from '../component/Search';
 import Notification from '../component/Notification';
 import Profiledropdown from '../component/Profiledropdown';
 import { Button } from "react-bootstrap";
@@ -23,6 +23,7 @@ const Header = () => {
         if (wallet.wallet_connected) {
             conn();
         }
+        // eslint-disable-next-line
     }, [])
 
     const conn = async () => {
