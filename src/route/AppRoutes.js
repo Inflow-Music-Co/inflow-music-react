@@ -50,21 +50,18 @@ export const AppRoutes = () => {
             <ArtistRoutes
                 path="/artistmanage"
                 component={Artistmanagement}
-                exact
-            />
+                exact/>
 			<PublicRoutes
                 path="/createcollectible/:quantity"
                 component={Createcollectible}
-                exact
-            />
+                exact/>
             <PrivateRoutes path="/dashboard" component={Mydashboard} exact />
             <PublicRoutes path="/news" component={News} exact />
             <PublicRoutes path="/leaderboard" component={Leaderboard} exact />
             <PrivateRoutes
                 path="/accountsettings"
                 component={Accountsettings}
-                exact
-            />
+                exact/>
             <PublicRoutes path="/labels" component={Labels} exact />
             <PublicRoutes path="/labels/:labelid" component={LabelArtists} exact />
             <PublicRoutes path="/artist/:id" component={Artist} exact />

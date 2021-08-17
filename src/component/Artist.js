@@ -286,7 +286,8 @@ const Artistpic = () => {
                         inflow.parseERC20('SocialToken', String(TokensToMint))
                     )
                 ).wait();
-                // // console.log('MINT SUCCESSFULL');
+                console.log('MINT SUCCESSFULL');
+
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
                 await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid })
@@ -295,6 +296,16 @@ const Artistpic = () => {
                 // }, 2000)
                 // getBalance();
                 setbuy(false)
+
+                const social = new Contract(
+                    socialTokenAddress,
+                    SocialToken.abi,
+                    signer
+                );
+                console.log(social)
+                await social.withdraw();
+                console.log('withdrawn to social token address')
+
             } catch (err) {
                 setbuymodalloading(false);
                 setfailuremint(failuremint => !failuremint)
@@ -440,8 +451,7 @@ const Artistpic = () => {
                 setsellmodalloading(false);
                 setsuccessburn(successburn => !successburn)
                 setsell(false);
-                // // console.log('BURN SUCCESSFULL');
-                // getBalance();
+                getBalance();
             } catch (err) {
                 setsellmodalloading(false);
                 setfailureburn(failureburn => !failureburn)
