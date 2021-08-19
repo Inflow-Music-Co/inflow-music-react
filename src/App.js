@@ -1,8 +1,7 @@
 /* eslint-disable */
 import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
-import { BrowserRouter as Router } from "react-router-dom";
-import History from "./route/History";
+import { BrowserRouter } from "react-router-dom";
 
 import {
   ApolloClient,
@@ -10,7 +9,6 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 
-import Login from "./page/Login";
 // const { store, persistor } = configureStore();
 import Header from '../src/base/Header';
 import Sidebar from '../src/base/Sidebar';
@@ -31,15 +29,14 @@ function App() {
   return (
     <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider}}>
       <ApolloProvider client={client}>
-        <Router history={History}>
+        <BrowserRouter>
           <AppRoutes />
-          <Login />
           <Header />
           <Sidebar />
-          <div className="main-comman-wrapping">
+          {/* <div className="main-comman-wrapping">
             <AppRoutes />
-          </div>
-        </Router>
+          </div> */}
+        </BrowserRouter>
       </ApolloProvider>
     </WalletProviderContext.Provider>
   );
