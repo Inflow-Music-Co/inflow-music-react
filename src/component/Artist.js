@@ -441,7 +441,7 @@ const Artistpic = () => {
                 setsellmodalloading(false);
                 setsuccessburn(successburn => !successburn)
                 setsell(false);
-                getBalance();
+                // getBalance();
             } catch (err) {
                 setsellmodalloading(false);
                 setfailureburn(failureburn => !failureburn)

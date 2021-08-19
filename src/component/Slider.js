@@ -4,15 +4,6 @@ import { assetsImages } from '../constants/images';
 import { Carousel } from 'react-bootstrap';
 import SmallLoader from './SmallLoader';
 
-const displayArtists = () => {
-    return artists.map((artist, i) => {
-        return (<Link to={`/artist/${artist._id}`} key={i}>
-            <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name} ${artist.last_name}`} />
-            <div></div>
-        </Link>)
-    })
-}
-
 const Slider = ({ tokenNames, tokenPrices, profileImages }) => {
     console.log({ profileImages })
     return (
