@@ -297,14 +297,7 @@ const Artistpic = () => {
                 // getBalance();
                 setbuy(false)
 
-                const social = new Contract(
-                    socialTokenAddress,
-                    SocialToken.abi,
-                    signer
-                );
-                console.log(social)
-                await social.withdraw();
-                console.log('withdrawn to social token address')
+                
 
             } catch (err) {
                 setbuymodalloading(false);
