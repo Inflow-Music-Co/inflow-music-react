@@ -12,7 +12,6 @@ const GET_GRAPH_DATA = gql`
     }
 `
 
-
 const Totalbalancechart = () => {
   const { loading, data } = useQuery(GET_GRAPH_DATA);
   const [labels, setlabels] = useState([]);
@@ -20,6 +19,7 @@ const Totalbalancechart = () => {
 
   useEffect(() => {
     if (data) {
+      console.log({ data });
       let templabels = [];
       let tempvalues = []
       data.minteds.forEach(item => {

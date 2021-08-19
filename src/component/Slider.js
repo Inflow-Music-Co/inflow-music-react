@@ -4,33 +4,39 @@ import { assetsImages } from '../constants/images';
 import { Carousel } from 'react-bootstrap';
 import SmallLoader from './SmallLoader';
 
+const displayArtists = () => {
+    return artists.map((artist, i) => {
+        return (<Link to={`/artist/${artist._id}`} key={i}>
+            <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name} ${artist.last_name}`} />
+            <div></div>
+        </Link>)
+    })
+}
+
 const Slider = ({ tokenNames, tokenPrices, profileImages }) => {
+    console.log({ profileImages })
     return (
         <div>
             <Carousel>
-                {
-                    tokenNames.map((tokenName, index) => {
-                        return (
-                            <Carousel.Item>
-                                <div className="item d-flex flex-column justify-content-center align-items-center w-100 carousel-artist" style={{ height: "300px" }}>
-                                    <div className="mb-5">
-                                        <img src={profileImages[index] ? `${process.env.REACT_APP_SERVER_URL}/${profileImages[index]}` : assetsImages.artist} height="100" width="100" style={{ borderRadius: "50%" }} alt="artistimage" />
-                                    </div>
-
-                                    <div className="information-row d-flex justify-content-around align-items-center w-100">
-                                        <div className="name-person">
-                                            {tokenName?tokenName:<SmallLoader />}
-                                            <span className="categories">Rap</span>
-                                        </div>
-                                        <div className="name-person">
-                                            {tokenPrices[index] ? `$ ${tokenPrices[index]}` : <SmallLoader />}
-                                            <span className="up-down">--</span>
-                                        </div>
-
-                                    </div>
-
+                {tokenNames.map((tokenName, index) => {
+                    return (
+                        <Carousel.Item>
+                            <div className="item d-flex flex-column justify-content-center align-items-center w-100 carousel-artist" style={{ height: "300px" }}>
+                                <div className="mb-5">
+                                    <img src={profileImages[index] ? `${process.env.REACT_APP_SERVER_URL}/${profileImages[index]}` : assetsImages.artist} height="150" width="150" style={{ borderRadius: "50%" }} alt="artistimage" />
                                 </div>
-                            </Carousel.Item>
+                                <div className="information-row d-flex justify-content-around align-items-center w-100">
+                                    <div className="name-person">
+                                        {tokenName?tokenName:<SmallLoader />}
+                                        <span className="categories">Rap</span>
+                                    </div>
+                                    <div className="name-person">
+                                        {tokenPrices[index] ? `$ ${tokenPrices[index]}` : <SmallLoader />}
+                                        <span className="up-down">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </Carousel.Item>
                         )
                     })
                 }

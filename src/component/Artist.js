@@ -32,12 +32,8 @@ const Artistpic = () => {
     const wallet = useSelector(state => state.wallet)
     const token = useSelector(state => state.auth.token)
     const uid = useSelector((state) => state.auth.data.uid);
-    // const wallet = useSelector(state => state.wallet);
     const { id } = useParams();
     const [artist, setArtist] = useState({})
-
-    // const [socialTokenAddress, setSocialTokenAddress] = useState("0xa02c6b826ffCD48112a37Fd2495B8f1D0462715B")
-    // const socialTokenAddress = '0x89ced16adedb49B420a7232d6C6Ca7bda0DCd546';
     const [profileModel, setprofileModel] = useState(false);
     const [sell, setsell] = useState(false);
     const [buy, setbuy] = useState(false);
@@ -287,6 +283,7 @@ const Artistpic = () => {
                     )
                 ).wait();
                 console.log('MINT SUCCESSFULL');
+                console.log({ socialTokenAddress })
 
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
