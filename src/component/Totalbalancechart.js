@@ -38,7 +38,7 @@ const Totalbalancechart = () => {
     }
   }, [data]);
 
-  
+  console.log(values, labels)
 
   const options = {
     maintainAspectRatio: false,
