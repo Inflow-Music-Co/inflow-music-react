@@ -201,8 +201,7 @@ const Artistpic = () => {
         console.log('WALLER PROVIDER ____', walletProvider)
 
         if (walletProvider) {
-            try {
-                
+            try {  
                 // await requestAccount();
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum
@@ -288,12 +287,17 @@ const Artistpic = () => {
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
                 await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid });
-                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
-                    mintPrice : MintPrice, 
+                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
+                    mint_price_history : {
+                        price: MintPrice, 
+                        timestamp: Date.now()
+                        }, 
                     socialTokenAddress, 
                     first_name : artist.first_name,
                     last_name : artist.last_name,
-                    social_token_id: artist.social_token_id})
+                    social_token_id: artist.social_token_id});
+                
+                console.log(res);
                 // setInterval(() => {
                 //     window.location.reload();
                 // }, 2000)
@@ -647,7 +651,7 @@ const Artistpic = () => {
                         </div>
                     </div> */}
                     <div className="total-bal-chart">
-                        <Totalbalancechart />
+                        <Totalbalancechart artist={artist}/>
                     </div>
 
                     <div className="song-buy-sell">
