@@ -125,7 +125,6 @@ const CreateSocialToken = () => {
         } catch (error) {
              console.log(error)
         }
-
     }
 
     const saveArtist = async () => {
