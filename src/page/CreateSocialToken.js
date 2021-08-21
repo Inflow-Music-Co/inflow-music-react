@@ -38,7 +38,6 @@ const CreateSocialToken = () => {
         }
     }, [])
 
-
     const mintSocialToken = async () => {
 
         //check form fields are valid 
@@ -145,6 +144,8 @@ const CreateSocialToken = () => {
         formData.append('social_token_symbol', artistToken.tokenSymbol);
         formData.append('banner', bannerImage);
         formData.append('profile', profileImage);
+        formData.append('password', artistToken.password);
+        formData.append('password_confirmation', artistToken.confirmPassword);
 
         await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/onboarding`, formData)
         .then(res => console.log(res))
@@ -152,11 +153,12 @@ const CreateSocialToken = () => {
         
         //deactivated checker
         
-        // if (!alreadyExisted) {
-        //     setartistcreationsuccess(artistcreationsuccess => !artistcreationsuccess);
-        // }else {
-        //     setartistcreationfailure(artistcreationfailure => !artistcreationfailure);
-        // }
+        const { alreadyExisted } = await generateSocialToken();
+        if (!alreadyExisted) {
+            setartistcreationsuccess(artistcreationsuccess => !artistcreationsuccess);
+        }else {
+            setartistcreationfailure(artistcreationfailure => !artistcreationfailure);
+        }
         
     }
 
@@ -471,6 +473,27 @@ const CreateSocialToken = () => {
                                             placeholder="Banner Image"
                                             name="banner"
                                             type="file"
+                                        />
+                                    </div>
+
+                                    <div className="comman-grids">
+                                        <input
+                                            type="password"
+                                            onChange={handleChange}
+                                            value={artistToken.password}
+                                            placeholder="Password"
+                                            name="password"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="comman-grids">
+                                        <input
+                                            type="password"
+                                            onChange={handleChange}
+                                            value={artistToken.confirmPassword}
+                                            placeholder="Confirm Password"
+                                            name="confirmPassword"
+                                            required
                                         />
                                     </div>
 
