@@ -57,6 +57,7 @@ const Artistpic = () => {
     const [buymodalloading, setbuymodalloading] = useState(false)
     const [sellmodalloading, setsellmodalloading] = useState(false)
     const [insufficenttokens, setinsufficenttokens] = useState(false)
+    const [historicalData, setHistoricalData] = useState([])
 
     useEffect(() => {
         if (!wallet.wallet_connected) {
@@ -66,6 +67,7 @@ const Artistpic = () => {
             console.log({ walletProvider })
             setLoading(true)
             const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id })
+            
             // // console.log({ data })
             if (data.artist) {
                 console.log("HELLO1")
@@ -73,6 +75,8 @@ const Artistpic = () => {
                 setSocialTokenAddress(data.artist.social_token_id)
                 console.log(data.artist.social_token_id)
                 fetchTokenPrice();
+                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist)
+                setHistoricalData(res.data.priceHistory);
                 // const tokenPrice = setInterval(() => {
                 //     // // console.log("HELLO3")
                 //     fetchTokenPrice();
@@ -651,7 +655,7 @@ const Artistpic = () => {
                         </div>
                     </div> */}
                     <div className="total-bal-chart">
-                        <Totalbalancechart artist={artist}/>
+                        <Totalbalancechart artist={artist} historicalData={historicalData}/>
                     </div>
 
                     <div className="song-buy-sell">
@@ -704,10 +708,7 @@ const Artistpic = () => {
                                     >
                                         Buy
                                     </button>))
-
                                 }
-
-
                             </div>
                         </div>
                     </div>

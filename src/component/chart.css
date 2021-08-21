@@ -1,0 +1,13 @@
+.chart{
+    margin: 10px;
+    padding:20px;
+    -webkit-box-shadow: 7px 5px 15px 5px rgba(0,0,0,0.24); 
+    box-shadow: 7px 5px 15px 5px rgba(0,0,0,0.24);
+    border-radius: 20px;
+    background-color: white;
+}
+
+.title{
+    margin-bottom: 20px;
+    color:#4e2b67;
+}
