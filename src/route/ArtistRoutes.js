@@ -9,7 +9,7 @@ function ArtistRoute(props) {
 	const token = useSelector((state) => state.auth.token);
 	const isArtist = useSelector((state) => state.auth.isArtist);
 
-	// console.log({ isArtist })
+	console.log({ isArtist })
 
 	if (!token) {
 		return <Redirect to="/login" />;

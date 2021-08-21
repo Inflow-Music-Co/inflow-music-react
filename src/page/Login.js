@@ -18,7 +18,6 @@ import Axios from 'axios'
 import { setclienturl } from "../store/reducers/graphqlSlice";
 
 const Login = () => {
-  
   const dispatch = useDispatch();
   const uData = useSelector((state) => state.auth.data);
   // console.log(uData);
@@ -78,7 +77,7 @@ const Login = () => {
             email,
             password
           );
-          let isAdmin = true
+          let isAdmin = false
           const idTokenResult = await user.getIdTokenResult();
           isAdmin = idTokenResult.claims.isAdmin ? true : false
           dispatch(
@@ -104,9 +103,9 @@ const Login = () => {
           //   displayName,
           // });
           user.sendEmailVerification();
-          let isAdmin = true
+          let isAdmin = false
           const idTokenResult = await user.getIdTokenResult()
-          isAdmin = true;
+          isAdmin = idTokenResult.claims.isAdmin ? true : false
           dispatch(
             login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
           );
@@ -153,8 +152,7 @@ const Login = () => {
           showAlert('Login Successful', 'success')
           setTimeout(() => {
             const loginUser = result.user;
-            let isAdmin = true
-            console.log(`isAdmine ${isAdmin}`)
+            let isAdmin = false
             loginUser.getIdTokenResult().then(idTokenResult => {
               isAdmin = idTokenResult.claims.isAdmin ? true : false
               dispatch(login({ phoneNumber: user.phone, uid: loginUser.uid, token: loginUser.refreshToken, isAdmin }));

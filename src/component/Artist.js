@@ -32,12 +32,8 @@ const Artistpic = () => {
     const wallet = useSelector(state => state.wallet)
     const token = useSelector(state => state.auth.token)
     const uid = useSelector((state) => state.auth.data.uid);
-    // const wallet = useSelector(state => state.wallet);
     const { id } = useParams();
     const [artist, setArtist] = useState({})
-
-    // const [socialTokenAddress, setSocialTokenAddress] = useState("0xa02c6b826ffCD48112a37Fd2495B8f1D0462715B")
-    // const socialTokenAddress = '0x89ced16adedb49B420a7232d6C6Ca7bda0DCd546';
     const [profileModel, setprofileModel] = useState(false);
     const [sell, setsell] = useState(false);
     const [buy, setbuy] = useState(false);
@@ -61,6 +57,7 @@ const Artistpic = () => {
     const [buymodalloading, setbuymodalloading] = useState(false)
     const [sellmodalloading, setsellmodalloading] = useState(false)
     const [insufficenttokens, setinsufficenttokens] = useState(false)
+    const [historicalData, setHistoricalData] = useState([])
 
     useEffect(() => {
         if (!wallet.wallet_connected) {
@@ -70,6 +67,7 @@ const Artistpic = () => {
             console.log({ walletProvider })
             setLoading(true)
             const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id })
+            
             // // console.log({ data })
             if (data.artist) {
                 console.log("HELLO1")
@@ -77,6 +75,8 @@ const Artistpic = () => {
                 setSocialTokenAddress(data.artist.social_token_id)
                 console.log(data.artist.social_token_id)
                 fetchTokenPrice();
+                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist)
+                setHistoricalData(res.data.priceHistory);
                 // const tokenPrice = setInterval(() => {
                 //     // // console.log("HELLO3")
                 //     fetchTokenPrice();
@@ -205,8 +205,7 @@ const Artistpic = () => {
         console.log('WALLER PROVIDER ____', walletProvider)
 
         if (walletProvider) {
-            try {
-                
+            try {  
                 // await requestAccount();
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum
@@ -286,15 +285,31 @@ const Artistpic = () => {
                         inflow.parseERC20('SocialToken', String(TokensToMint))
                     )
                 ).wait();
-                // // console.log('MINT SUCCESSFULL');
+                console.log('MINT SUCCESSFULL');
+                console.log({ socialTokenAddress })
+
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
-                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid })
+                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid });
+                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
+                    mint_price_history : {
+                        price: MintPrice, 
+                        timestamp: Date.now()
+                        }, 
+                    socialTokenAddress, 
+                    first_name : artist.first_name,
+                    last_name : artist.last_name,
+                    social_token_id: artist.social_token_id});
+                
+                console.log(res);
                 // setInterval(() => {
                 //     window.location.reload();
                 // }, 2000)
                 // getBalance();
                 setbuy(false)
+
+                
+
             } catch (err) {
                 setbuymodalloading(false);
                 setfailuremint(failuremint => !failuremint)
@@ -440,7 +455,6 @@ const Artistpic = () => {
                 setsellmodalloading(false);
                 setsuccessburn(successburn => !successburn)
                 setsell(false);
-                // // console.log('BURN SUCCESSFULL');
                 // getBalance();
             } catch (err) {
                 setsellmodalloading(false);
@@ -641,7 +655,7 @@ const Artistpic = () => {
                         </div>
                     </div> */}
                     <div className="total-bal-chart">
-                        <Totalbalancechart />
+                        <Totalbalancechart artist={artist} historicalData={historicalData}/>
                     </div>
 
                     <div className="song-buy-sell">
@@ -694,10 +708,7 @@ const Artistpic = () => {
                                     >
                                         Buy
                                     </button>))
-
                                 }
-
-
                             </div>
                         </div>
                     </div>

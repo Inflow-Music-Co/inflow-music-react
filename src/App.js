@@ -19,7 +19,7 @@ function App() {
   const [walletProvider, setWalletProvider] = useState(null);
 
   // const clienturl = useSelector((state) => state.graphql.clienturl);
-  const clienturl = 'https://api.studio.thegraph.com/query/4440/inflow-v1-mumbai/v0.0.1';
+  const clienturl = 'https://api.studio.thegraph.com/query/6287/inflow-rinkeby/0.0.1';
 
   const client = new ApolloClient({
     uri: clienturl,

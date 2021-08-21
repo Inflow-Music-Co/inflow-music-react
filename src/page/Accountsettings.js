@@ -153,6 +153,7 @@ const Accountsettings = () => {
                                         type="file"
                                     />
                                 </div>) : null}
+                                {isArtist ? <div></div> : null}
                                 <div className="comman-grids">
                                     {/* <Dropdown>
                                         <Dropdown.Toggle id="dropdown-custom-1">
@@ -165,6 +166,7 @@ const Accountsettings = () => {
                                         </Dropdown.Menu>
                                     </Dropdown> */}
                                 </div>
+                                
 
 
                             </div>
