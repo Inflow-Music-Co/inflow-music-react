@@ -6,8 +6,8 @@ import Slider from '../component/Slider'
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Doughnetchart from '../component/Doughnetchart';
-import Totalbalancechart from '../component/Totalbalancechart';
-// import Mynftdropdown from '../component/Mynftdropdown';
+import MyBalanceChart from '../component/MyBalanceChart';
+ // import Mynftdropdown from '../component/Mynftdropdown';
 // import Song from '../component/Song';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -237,7 +237,7 @@ const Mydashboard = () => {
                             </div>
                         </div>
                         {/* <Performbar /> */}
-                        <Totalbalancechart />
+                        <MyBalanceChart />
                         <div className="progress-bar-cust">
                             <ProgressBar now={100} />
                         </div>

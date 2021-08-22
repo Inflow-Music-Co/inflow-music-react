@@ -24,10 +24,8 @@ const Totalbalancechart = ({ artist, historicalData }) => {
         item.price = parseFloat(item.price, 10).toFixed(2);
         console.log(item)
         if (templabels.length > 0) {
-          if ((templabels[templabels.length - 1].getMonth() === new Date(item.timestamp * 1000).getMonth() && templabels[templabels.length - 1].getDate() < new Date(item.timestamp * 1000).getDate()) || (templabels[templabels.length - 1].getMonth() !== new Date(item.timestamp * 1000).getMonth())) {
             templabels.push(new Date(item.timestamp * 1000));
-            tempvalues.push(item.price)
-          }
+            tempvalues.push(item.price)   
         } else {
           templabels.push(new Date(item.timestamp));
           tempvalues.push(item.price / 1000000)
