@@ -31,7 +31,7 @@ const Artistpic = () => {
     const { walletProvider } = useContext(WalletProviderContext);
     const wallet = useSelector(state => state.wallet)
     const token = useSelector(state => state.auth.token)
-    const uid = useSelector((state) => state.auth.data.uid);
+    const uid = useSelector((state) => state.auth.data._id);
     // const wallet = useSelector(state => state.wallet);
     const { id } = useParams();
     const [artist, setArtist] = useState({})
@@ -268,7 +268,7 @@ const Artistpic = () => {
                     ).wait();
                     setLoading(false)
                     setsuccessmint(successmint => !successmint)
-                    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid })
+                    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
                     setInterval(() => {
                         window.location.reload();
                     }, 2000)
@@ -290,7 +290,7 @@ const Artistpic = () => {
 
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
-                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid })
+                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
                 // setInterval(() => {
                 //     window.location.reload();
                 // }, 2000)
@@ -451,7 +451,7 @@ const Artistpic = () => {
                 setsellmodalloading(false);
                 setsuccessburn(successburn => !successburn)
                 setsell(false);
-                getBalance();
+                // getBalance();
             } catch (err) {
                 setsellmodalloading(false);
                 setfailureburn(failureburn => !failureburn)

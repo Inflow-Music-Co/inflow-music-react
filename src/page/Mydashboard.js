@@ -21,7 +21,7 @@ import SweetAlert from 'react-bootstrap-sweetalert';
 
 const Mydashboard = () => {
     const { walletProvider } = useContext(WalletProviderContext);
-    const uid = useSelector(state => state.auth.data.uid);
+    const uid = useSelector((state) => state.auth.data._id);
     const wallet = useSelector(state => state.wallet);
     const [balarr, setbalarr] = useState('');
     const [connectedwallet, setconnectedwallet] = useState(true);
@@ -45,7 +45,7 @@ const Mydashboard = () => {
 
 
     const getTotalBalance = async () => {
-        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, { firebase_user_id: uid })
+        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, { uid })
         tokensBought = data.tokensBought;
         settokennames(data.tokenNames);
         setProfileImages(data.profileImages);

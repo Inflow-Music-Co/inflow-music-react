@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
 import { BrowserRouter as Router } from "react-router-dom";
 import History from "./route/History";
-
+import './utils/axios'
 import {
   ApolloClient,
   InMemoryCache,
@@ -33,9 +33,9 @@ function App() {
       <ApolloProvider client={client}>
         <Router history={History}>
           <AppRoutes />
-          <Login />
+          {/* <Login />
           <Header />
-          <Sidebar />
+          <Sidebar /> */}
           <div className="main-comman-wrapping">
             <AppRoutes />
           </div>

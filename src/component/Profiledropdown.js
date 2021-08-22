@@ -10,7 +10,7 @@ import axios from 'axios'
 function Profiledropdown() {
     const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.token);
-    const uid = useSelector((state) => state.auth.data.uid);
+    const uid = useSelector((state) => state.auth.data._id);
     const [firstname, setfirstname] = useState('');
     const [country, setcountry] = useState('');
     const [profileimage, setprofileimage] = useState('');
@@ -21,12 +21,16 @@ function Profiledropdown() {
     }, [])
 
     const getdata = async () => {
-        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`, { firebase_user_id: uid })
-        const { user } = data
-        if (user) {
-            setfirstname(user.first_name ? user.first_name : user.name);
-            setcountry(user.country ? user.country : '');
-            setprofileimage(user.profile_image)
+        try {
+            const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`, { uid })
+            const { user } = data
+            if (user) {
+                setfirstname(user.first_name ? user.first_name : user.name);
+                setcountry(user.country ? user.country : '');
+                setprofileimage(user.profile_image)
+            }
+        } catch (e) {
+
         }
     }
 

@@ -10,7 +10,7 @@ import axios from 'axios'
 import { Redirect } from 'react-router'
 
 const Createcollectible = (props) => {
-    const uid = useSelector((state) => state.auth.data.uid);
+    const uid = useSelector((state) => state.auth.data._id);
     const wallet = useSelector(state => state.wallet);
 	const [quantity, setQuantity] = useState('');
 	const [fileToMint, setFileToMint] = useState();
@@ -43,7 +43,7 @@ const Createcollectible = (props) => {
     }, [])
 
     const getdata = async () => {
-        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`, { firebase_user_id: uid })
+        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`, { uid })
         const { user } = data
         if (user) {
 			

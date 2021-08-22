@@ -27,11 +27,14 @@ import ManageLabelArtists from '../page/ManageLabelArtists';
 import Createcollectible from '../component/Createcollectible';
 import Collectible from '../component/Collectible';
 import AdminPanel from '../page/AdminPanel';
-
+import ResetPassword from '../page/ResetPassword'
+import VerfiyEmail from '../page/VerifyEmail'
 export const AppRoutes = () => {
     return (
         <Switch>
             <PublicRoutes path="/login" component={Login} exact />
+            <PublicRoutes path="/auth/resetpassword" component={ResetPassword}/>
+            <PublicRoutes path="/auth/verifyemail" component={VerfiyEmail}/>
 			<PublicRoutes path="/collectible/:collectibleId" component={Collectible} />
             <PublicRoutes path="/" component={Inflowmusic} exact />
             <AdminRoutes path="/artistonboarding" component={CreateSocialToken} exact />
