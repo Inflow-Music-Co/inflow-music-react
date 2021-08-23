@@ -263,19 +263,19 @@ const Login = () => {
     setUser({ ...user, account_type: e.target.value })
   }
 
-  const forgotPassword = () => {
-    auth
-      .sendPasswordResetEmail(user.email)
-      .then((result) => {
-        // console.log(result);
-        showAlert("check your email for changing password", "info");
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 2500);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const forgotPassword = async () => {
+    try {
+      await Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/user/resetpassword`,
+        { email: user.email }
+      );
+      showAlert("check your email for changing password", "info");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2500);
+    } catch (e) {
+      console.error(e)
+    }
   };
 
   const signInWithSocialAccount = async (provider) => {
