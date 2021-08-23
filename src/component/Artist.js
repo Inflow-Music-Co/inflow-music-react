@@ -75,7 +75,7 @@ const Artistpic = () => {
                 setSocialTokenAddress(data.artist.social_token_id)
                 console.log(data.artist.social_token_id)
                 fetchTokenPrice();
-                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist)
+                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, data.artist)
                 setHistoricalData(res.data.priceHistory);
                 // const tokenPrice = setInterval(() => {
                 //     // // console.log("HELLO3")

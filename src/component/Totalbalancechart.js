@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2';
 import SmallLoader from './SmallLoader';
-import Axios from 'axios'
 import './chart.css'
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Totalbalancechart = ({ artist, historicalData }) => {
   const [labels, setlabels] = useState([]);
@@ -11,33 +9,37 @@ const Totalbalancechart = ({ artist, historicalData }) => {
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    
-    setLoading(false);
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(false);
 
-    if (historicalData) {
-      console.log('historicalData', historicalData);
-      let templabels = [];
-      let tempvalues = [];
-      historicalData.forEach(item => {
-        delete item._id;
-        item.price = parseFloat(item.price, 10).toFixed(2);
-        console.log(item)
-        if (templabels.length > 0) {
-          if ((templabels[templabels.length - 1].getMonth() === new Date(item.timestamp * 1000).getMonth() && templabels[templabels.length - 1].getDate() < new Date(item.timestamp * 1000).getDate()) || (templabels[templabels.length - 1].getMonth() !== new Date(item.timestamp * 1000).getMonth())) {
-            templabels.push(new Date(item.timestamp * 1000));
+      if (historicalData) {
+        console.log('historicalData', historicalData);
+        let templabels = [];
+        let tempvalues = [];
+        historicalData.forEach(item => {
+          delete item._id;
+          item.price = parseFloat(item.price, 10).toFixed(2);
+          console.log(item)
+          const curDate = new Date(item.timestamp);
+          // if (templabels.length > 0) {
+          //   const prevDate = templabels[templabels.length - 1];
+          //   if ((prevDate.getMonth() === curDate.getMonth() && prevDate.getDate() < curDate.getDate()) || (prevDate.getMonth() !== curDate.getMonth())) {
+          //     templabels.push(curDate);
+          //     tempvalues.push(item.price)
+          //   }
+          // } else {
+            templabels.push(curDate);
             tempvalues.push(item.price)
-          }
-        } else {
-          templabels.push(new Date(item.timestamp));
-          tempvalues.push(item.price / 1000000)
-          console.log(templabels, tempvalues);
-        }
-      })
-      setvalues(tempvalues);
-      setlabels(templabels);
+          // }
+        })
+        console.log(templabels, tempvalues);
+        setvalues(tempvalues);
+        setlabels(templabels);
+      }
     }
-  },[]);
+    loadData();
+  }, [historicalData]);
 
   console.log(values, labels)
 
