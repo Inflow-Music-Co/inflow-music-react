@@ -14,11 +14,16 @@ const Inflowmusic = () => {
 
     useEffect(() => {
         const getArtists = async () => {
-            setloading(true)
-            const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
-            setArtists(data.artists)
-            
-            setloading(false);
+            try {
+                setloading(true)
+                const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
+                setArtists(data.artists)
+
+                setloading(false);
+
+            } catch (e) {
+                setloading(false);
+            }
         }
         getArtists();
     }, [])
@@ -28,7 +33,7 @@ const Inflowmusic = () => {
         if (artists && artists.length > 0) {
             console.log(`${process.env.REACT_APP_SERVER_URL}/${artists.profile_image}`)
             return artists.map((artist, i) => {
-                 
+
                 return (<Link to={`/artist/${artist._id}`} key={i}>
                     <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name} ${artist.last_name}`} />
                     <div></div>
@@ -47,7 +52,7 @@ const Inflowmusic = () => {
             <div className="dashboard-wrapper-main inner-music-wrapper">
                 <div className="artist-heading">Featured Artists</div>
                 <div className="grid-for-artist">
-                    {artists? displayArtists() : null}
+                    {artists ? displayArtists() : null}
                     {/* <Link to="/artist">
                         <Artistpic imglink={assetsImages.artist} />
                     </Link>

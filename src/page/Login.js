@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setArtist, loginUser } from "../store/reducers/authSlice";
 import { assetsImages } from "../constants/images";
@@ -15,7 +15,9 @@ import { setclienturl } from "../store/reducers/graphqlSlice";
 import ReactBootstrap from 'react-bootstrap'
 const Login = () => {
   const dispatch = useDispatch();
+  const history = useHistory()
   const uData = useSelector((state) => state.auth.data);
+  const token = useSelector(state => state.auth.token)
   // console.log(uData);
   // const history = useHistory();
   const [authSelectFlag, setAuthSelectFlag] = useState(true);
@@ -38,9 +40,12 @@ const Login = () => {
   const captchaRef = React.useRef(null);
 
   useEffect(() => {
+    if (token) {
+      history.push('/')
+    }
     //setUser({displayName:'', ...uData})
     //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-  }, [uData]);
+  }, [token]);
 
   // const handleLogin = async (event) => {
   //   event.preventDefault();
@@ -80,7 +85,7 @@ const Login = () => {
           // const idTokenResult = await user.getIdTokenResult();
           // isAdmin = idTokenResult.claims.isAdmin ? true : false
           console.log("aaa", account_type, email)
-          await dispatch(loginUser({ email, password, account_type}));
+          await dispatch(loginUser({ email, password, account_type }));
           // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
           // const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
           // // console.log(response.data);
@@ -255,7 +260,7 @@ const Login = () => {
 
   const handleChangeUsertpe = (e) => {
     console.log("999", e.target.value)
-    setUser({...user, account_type:  e.target.value})
+    setUser({ ...user, account_type: e.target.value })
   }
 
   const forgotPassword = () => {
@@ -428,8 +433,8 @@ const Login = () => {
           {forgotPasswordFlag
             ? "Forgot Password"
             : authSelectFlag
-            ? "Login Account"
-            : "Create Account"}
+              ? "Login Account"
+              : "Create Account"}
         </div>
         {forgotPasswordFlag ? null : (
           <div className="social-icons">
@@ -474,10 +479,10 @@ const Login = () => {
           {forgotPasswordFlag
             ? "use email for forgot password"
             : phoneRegisterFlag
-            ? "use phone number for registration"
-            : authSelectFlag
-            ? "use email for login"
-            : "use email for registration"}
+              ? "use phone number for registration"
+              : authSelectFlag
+                ? "use email for login"
+                : "use email for registration"}
         </div>
         {phoneRegisterFlag ? (
           <form onSubmit={handleRegisterWithPhone}>
@@ -548,18 +553,18 @@ const Login = () => {
             {forgotPasswordFlag
               ? null
               : !authSelectFlag && (
-                  <>
-                    <div className="comman-row-input persons-row">
-                      <input
-                        placeholder="Name"
-                        type="text"
-                        name="displayName"
-                        value={user.displayName}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </>
-                )}
+                <>
+                  <div className="comman-row-input persons-row">
+                    <input
+                      placeholder="Name"
+                      type="text"
+                      name="displayName"
+                      value={user.displayName}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </>
+              )}
             <div className="comman-row-input email-row">
               <input
                 placeholder="Email"
@@ -620,10 +625,10 @@ const Login = () => {
                 Forgot password
               </button>
             ) : null}
-        <select  defaultValue="user"  onChange={handleChangeUsertpe}>
-          <option value="user">Admin or Fan</option>
-          <option value="artist">Artist</option>
-        </select >
+            <select defaultValue="user" onChange={handleChangeUsertpe}>
+              <option value="user">Admin or Fan</option>
+              <option value="artist">Artist</option>
+            </select >
           </form>
         )}
       </div>

@@ -27,18 +27,18 @@ function App() {
     uri: clienturl,
     cache: new InMemoryCache()
   });
-  
+
   return (
-    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider}}>
+    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
       <ApolloProvider client={client}>
         <Router history={History}>
           <AppRoutes />
           {/* <Login />
           <Header />
           <Sidebar /> */}
-          <div className="main-comman-wrapping">
+          {/* <div className="main-comman-wrapping">
             <AppRoutes />
-          </div>
+          </div> */}
         </Router>
       </ApolloProvider>
     </WalletProviderContext.Provider>

@@ -24,7 +24,7 @@ axios.interceptors.response.use(
   async (err) => {
     const originalConfig = err.config;
 
-    if (originalConfig.url !== `${process.env.REACT_APP_SERVER_URL}/v1/user/login` && err.response) {
+    if (originalConfig.url !== `${process.env.REACT_APP_SERVER_URL}/v1/user/login` && err.response && err.response !== 403) {
       // Access Token was expired
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
