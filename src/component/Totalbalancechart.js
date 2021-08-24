@@ -3,7 +3,6 @@ import { Line } from 'react-chartjs-2';
 import SmallLoader from './SmallLoader';
 import Axios from 'axios'
 import './chart.css'
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Totalbalancechart = ({ artist, historicalData }) => {
   const [labels, setlabels] = useState([]);

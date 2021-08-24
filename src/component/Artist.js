@@ -31,12 +31,8 @@ const Artistpic = () => {
     const { walletProvider } = useContext(WalletProviderContext);
     const wallet = useSelector(state => state.wallet)
     const token = useSelector(state => state.auth.token)
-<<<<<<< HEAD
-    const uid = useSelector((state) => state.auth.data.uid);
-=======
     const uid = useSelector((state) => state.auth.data._id);
     // const wallet = useSelector(state => state.wallet);
->>>>>>> user_auth
     const { id } = useParams();
     const [artist, setArtist] = useState({})
     const [profileModel, setprofileModel] = useState(false);
@@ -209,12 +205,8 @@ const Artistpic = () => {
         console.log('WALLER PROVIDER ____', walletProvider)
 
         if (walletProvider) {
-<<<<<<< HEAD
-            try {  
-=======
             try {
 
->>>>>>> user_auth
                 // await requestAccount();
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum

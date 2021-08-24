@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
 import { BrowserRouter as Router } from "react-router-dom";
-import History from "./route/History";
 import './utils/axios'
 import {
   ApolloClient,
@@ -30,16 +29,8 @@ function App() {
   return (
     <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
       <ApolloProvider client={client}>
-        <BrowserRouter>
+        <Router>
           <AppRoutes />
-<<<<<<< HEAD
-          <Header />
-          <Sidebar />
-          {/* <div className="main-comman-wrapping">
-            <AppRoutes />
-          </div> */}
-        </BrowserRouter>
-=======
           {/* <Login />
           <Header />
           <Sidebar /> */}
@@ -47,7 +38,6 @@ function App() {
             <AppRoutes />
           </div> */}
         </Router>
->>>>>>> user_auth
       </ApolloProvider>
     </WalletProviderContext.Provider>
   );
