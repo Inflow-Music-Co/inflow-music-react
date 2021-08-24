@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import './component.css';
 import Dropdown from 'react-bootstrap/Dropdown';

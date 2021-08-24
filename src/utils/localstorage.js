@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 function setToken(tokenObj) {
   localStorage.setItem("access_token", tokenObj.access_token);
   localStorage.setItem("refresh_token", tokenObj.refresh_token);

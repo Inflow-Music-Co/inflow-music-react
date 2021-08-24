@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ContractInterface } from "ethers";
 import { abi as Inflow1155BC_ABI } from "../../artifacts/contracts/token/nft/Inflow1155BC.sol/Inflow1155BC.json";
 import { abi as Inflow1155_ABI } from "../../artifacts/contracts/token/nft/Inflow1155.sol/Inflow1155.json";

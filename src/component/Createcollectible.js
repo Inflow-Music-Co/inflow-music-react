@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useContext, useRef } from "react";
 import './component.css';
 import { assetsImages } from '../constants/images';

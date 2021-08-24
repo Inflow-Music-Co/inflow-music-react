@@ -1,9 +1,6 @@
+/* eslint-disable */
 import React, { Component } from 'react'
 import { Doughnut } from 'react-chartjs-2';
-
-
-
-
 
 const backgroundColor = [
   'rgba(255, 99, 132, 1)',

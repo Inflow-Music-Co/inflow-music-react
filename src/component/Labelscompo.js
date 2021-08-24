@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react"
 import { assetsImages } from "../constants/images"
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useContext } from "react"
 // import { assetsImages } from "../constants/images"
 import { useParams } from 'react-router-dom';

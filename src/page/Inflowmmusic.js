@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import Banner from '../component/Banner';
 import Artistpic from '../component/Artistpic';
