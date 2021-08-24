@@ -13,8 +13,7 @@ import { WalletProviderContext } from '../contexts/walletProviderContext';
 const Header = () => {
     const { walletProvider, setWalletProvider } = useContext(WalletProviderContext);
     const wallet = useSelector(state => state.wallet);
-    const token = useSelector(state => state.auth.token);
-    // const wallet = useSelector(state => state.wallet);
+    // const token = useSelector(state => state.auth.token);
     const dispatch = useDispatch()
     const [alert, setalert] = useState(null);
 
@@ -33,10 +32,7 @@ const Header = () => {
     }
 
     const connectWallet = async () => {
-        if (!token) {
-            window.location.href = "/login"
-            return;
-        }
+        
         try {
             if (!walletProvider) {
                 if (!Wallet.ethersProvider) {

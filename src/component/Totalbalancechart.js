@@ -1,43 +1,44 @@
+import { gql, useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2';
 import SmallLoader from './SmallLoader';
-import Axios from 'axios'
-import './chart.css'
-import { Area, AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const GET_GRAPH_DATA = gql`
+    query {
+      mintEvents(first: 5) {
+        mintPrice
+        socialToken
+      }
+    }
+`
 
 const Totalbalancechart = ({ artist, historicalData }) => {
+  const { loading, data } = useQuery(GET_GRAPH_DATA);
   const [labels, setlabels] = useState([]);
   const [values, setvalues] = useState([]);
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(async () => {
-    
-    setLoading(false);
-
-    if (historicalData) {
-      console.log('historicalData', historicalData);
+  useEffect(() => {
+    if (data) {
+      console.log({ data })
       let templabels = [];
-      let tempvalues = [];
-      historicalData.forEach(item => {
-        delete item._id;
-        item.price = parseFloat(item.price, 10).toFixed(2);
-        console.log(item)
-        if (templabels.length > 0) {
-            templabels.push(new Date(item.timestamp * 1000));
-            tempvalues.push(item.price)   
-        } else {
-          templabels.push(new Date(item.timestamp));
-          tempvalues.push(item.price / 1000000)
-          console.log(templabels, tempvalues);
-        }
-      })
+      let tempvalues = []
+      // data.minteds.forEach(item => {
+      //   if (templabels.length > 0) {
+      //     if ((templabels[templabels.length - 1].getMonth() === new Date(item.timestamp * 1000).getMonth() && templabels[templabels.length - 1].getDate() < new Date(item.timestamp * 1000).getDate()) || (templabels[templabels.length - 1].getMonth() !== new Date(item.timestamp * 1000).getMonth())) {
+      //       templabels.push(new Date(item.timestamp * 1000));
+      //       tempvalues.push(item.mintPrice / 1000000)
+      //     }
+      //   } else {
+      //     templabels.push(new Date(item.timestamp * 1000));
+      //     tempvalues.push(item.mintPrice / 1000000)
+      //   }
+      // })
       setvalues(tempvalues);
       setlabels(templabels);
     }
-  },[]);
+  }, [data]);
 
-  console.log(values, labels)
+  
 
   const options = {
     maintainAspectRatio: false,

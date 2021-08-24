@@ -30,7 +30,7 @@ let errcode = '';
 const Artistpic = () => {
     const { walletProvider } = useContext(WalletProviderContext);
     const wallet = useSelector(state => state.wallet)
-    const token = useSelector(state => state.auth.token)
+    // const token = useSelector(state => state.auth.token)
     const uid = useSelector((state) => state.auth.data.uid);
     const { id } = useParams();
     const [artist, setArtist] = useState({})
@@ -227,11 +227,7 @@ const Artistpic = () => {
                     RINKEBY_MOCKUSDC,
                     MockUSDC.abi,
                     signer
-                );
-                console.log({ usdcMinter })
-                console.log("HEERREE");
-                console.log('now here.....');
-                // const usdcMinter = usdc.connect(signer);
+                );    
                 const inflow = new Inflow(provider, 4);
                 setbuymodalloading(true);
                 const signerAddress = await signer.getAddress();
@@ -239,9 +235,7 @@ const Artistpic = () => {
                     'USDC',
                     signerAddress
                 );
-                console.log('usdc Balance', usdcBalance)
                 await fetchTokenPrice();
-                console.log('fetched token price');
                 if (parseFloat(usdcBalance[0]) < parseFloat(totalmintprice)) {
                     console.log("HELLO")
                     setLoading(false)
@@ -256,7 +250,6 @@ const Artistpic = () => {
                 );
                 console.log({ allowance });
                 if (parseFloat(allowance) >= parseFloat(totalmintprice)) {
-                    console.log('ALLOWANCE GREATER SO MINTING DIRECTLY');
                     await (
                         await socialMinter.mint(
                             inflow.parseERC20(
@@ -276,7 +269,6 @@ const Artistpic = () => {
                 const mintPrice = await socialMinter.getMintPrice(
                     inflow.parseERC20('SocialToken', String(TokensToMint))
                 );
-               console.log('ALLOWANCE LESS SO GETTING APPROVAL');
                 await (
                     await usdcMinter.approve(socialMinter.address, mintPrice)
                 ).wait();
@@ -285,8 +277,6 @@ const Artistpic = () => {
                         inflow.parseERC20('SocialToken', String(TokensToMint))
                     )
                 ).wait();
-                console.log('MINT SUCCESSFULL');
-                console.log({ socialTokenAddress })
 
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
@@ -662,53 +652,32 @@ const Artistpic = () => {
                         <div className="song-button">
                             <img alt="" src={assetsImages.button} />
                             <div className="button">
-                                {
-                                    token.trim() === "" ?
-                                        (<button
-                                            className="btn sell-button test"
-                                            type="button"
-                                            onClick={() => { window.location.href = "/login" }}
-                                        >
-                                            Sell
-                                        </button>) :
-                                        (walletProvider ? (<button
-                                            className="btn sell-button"
-                                            type="button"
-                                            onClick={() => setsell((sell) => !sell)}
-                                        >
-                                            Sell
-                                        </button>) : (
-                                            <button
-                                                className="btn sell-button"
-                                                type="button"
-                                                onClick={() => setconnectedwallet((connectedwallet) => !connectedwallet)}
-                                            >
-                                                Sell
-                                            </button>
-                                        ))
-                                }
-
-                                {
-                                    token.trim() === "" ? (<button
-                                        className="btn buy-button test"
+                                {(walletProvider ? (<button
+                                    className="btn sell-button"
+                                    type="button"
+                                    onClick={() => setsell((sell) => !sell)}
+                                >
+                                    Sell
+                                </button>) : (
+                                    <button
+                                        className="btn sell-button"
                                         type="button"
-                                        onClick={() => { window.location.href = "/login" }}
+                                        onClick={() => setconnectedwallet((connectedwallet) => !connectedwallet)}
                                     >
-                                        Buy
-                                    </button>) : (walletProvider ? (<button
+                                        Sell
+                                    </button>
+                                ))}
+                                {(walletProvider ? (<button
                                         className="btn buy-button"
                                         type="button"
-                                        onClick={() => setbuy((buy) => !buy)}
-                                    >
+                                        onClick={() => setbuy((buy) => !buy)}>
                                         Buy
                                     </button>) : (<button
                                         className="btn buy-button"
                                         type="button"
-                                        onClick={() => setconnectedwallet((connectedwallet) => !connectedwallet)}
-                                    >
+                                        onClick={() => setconnectedwallet((connectedwallet) => !connectedwallet)}>
                                         Buy
-                                    </button>))
-                                }
+                                    </button>))}
                             </div>
                         </div>
                     </div>
@@ -1037,7 +1006,6 @@ const Artistpic = () => {
                         ) : null
                     }
                 </Modal.Body>
-
                 <Modal.Footer>
                     <button
                         disabled={sellmodalloading}
@@ -1048,7 +1016,6 @@ const Artistpic = () => {
                     </button>
                 </Modal.Footer>
             </Modal>
-
             <SweetAlert
                 danger
                 show={lessusdc}
