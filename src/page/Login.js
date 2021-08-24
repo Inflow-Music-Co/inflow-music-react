@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from "react";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, setArtist } from "../store/reducers/authSlice";
+import { setArtist, loginUser } from "../store/reducers/authSlice";
 import { assetsImages } from "../constants/images";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import {
-  auth,
-  googleProvider,
-  facebookProvider,
-} from "../utils/firebase";
+import { auth, googleProvider, facebookProvider } from "../utils/firebase";
 import firebase from "firebase";
 // import { Link } from 'react-router-dom';
 import Loader from "../component/Loader";
 import SweetAlert from "react-bootstrap-sweetalert";
-import Axios from 'axios'
+import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
-
+import ReactBootstrap from 'react-bootstrap'
 const Login = () => {
   const dispatch = useDispatch();
+  const history = useHistory()
   const uData = useSelector((state) => state.auth.data);
+  const token = useSelector(state => state.auth.token)
   // console.log(uData);
   // const history = useHistory();
   const [authSelectFlag, setAuthSelectFlag] = useState(true);
+  const [account_type, setAccountType] = useState('user')
   const [forgotPasswordFlag, setForgotPasswordFlag] = useState(false);
   const [phoneRegisterFlag, setPhoneRegisterFlag] = useState(false);
   const [optSent, setOptSent] = useState(false);
@@ -41,9 +40,12 @@ const Login = () => {
   const captchaRef = React.useRef(null);
 
   useEffect(() => {
+    if (token) {
+      history.push('/')
+    }
     //setUser({displayName:'', ...uData})
     //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-  }, [uData]);
+  }, [token]);
 
   // const handleLogin = async (event) => {
   //   event.preventDefault();
@@ -57,8 +59,9 @@ const Login = () => {
   // };
 
   const handleRegister = async (event) => {
+    console.log("register func", user);
     event.preventDefault();
-    const { email, password } = user;
+    const { email, password, account_type } = user;
     //// console.log('++++', email, password)
     const reg =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -73,56 +76,78 @@ const Login = () => {
       setErrorMessage("");
       try {
         if (authSelectFlag) {
-          const { user } = await auth.signInWithEmailAndPassword(
-            email,
-            password
-          );
-          let isAdmin = false
-          const idTokenResult = await user.getIdTokenResult();
-          isAdmin = idTokenResult.claims.isAdmin ? true : false
-          dispatch(
-            login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
-          );
-          await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
-          const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
-          // console.log(response.data);
-          dispatch(setArtist({ isArtist: response.data.isArtist }))
-          if (response.data.isArtist) {
-            dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
-          } else {
-            dispatch(setclienturl({ clienturl: '' }))
-          }
-          // showAlert('Login Successful', 'success')
-          setTimeout(() => {
-            window.location.href = "/"
-          }, 1500)
+          //login part
+          // const { user } = await auth.signInWithEmailAndPassword(
+          //   email,
+          //   password
+          // );
+          // let isAdmin = false
+          // const idTokenResult = await user.getIdTokenResult();
+          // isAdmin = idTokenResult.claims.isAdmin ? true : false
+          console.log("aaa", account_type, email)
+          await dispatch(loginUser({ email, password, account_type }));
+          // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
+          // const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
+          // // console.log(response.data);
+          // dispatch(setArtist({ isArtist: response.data.isArtist }))
+          // if (response.data.isArtist) {
+          //   dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
+          // } else {
+          //   dispatch(setclienturl({ clienturl: '' }))
+          // }
+          dispatch(setclienturl({ clienturl: '' }))
+          // // showAlert('Login Successful', 'success')
+          // setTimeout(() => {
+          //   window.location.href = "/"
+          // }, 1500)
+          window.location.href = "/";
         } else {
-          const { user } =
-            await auth.createUserWithEmailAndPassword(email, password);
+          // registeration part
+          // const { user } =
+          //   await auth.createUserWithEmailAndPassword(email, password);
           // const data = await createUserProfileDocument(registeredUser, {
           //   displayName,
           // });
-          user.sendEmailVerification();
-          let isAdmin = false
-          const idTokenResult = await user.getIdTokenResult()
-          isAdmin = idTokenResult.claims.isAdmin ? true : false
-          dispatch(
-            login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
+          // user.sendEmailVerification();
+          // let isAdmin = false
+          // const idTokenResult = await user.getIdTokenResult()
+          // isAdmin = idTokenResult.claims.isAdmin ? true : false
+          // dispatch(
+          //   login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
+          // );
+
+          const res = await Axios.post(
+            `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
+            {
+              name: user.displayName,
+              email: user.email,
+              password: user.password,
+            }
           );
-          await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
-          const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email });
-          // console.log(response.data);
-          dispatch(setArtist({ isArtist: response.data.isArtist }))
-          if (response.data.isArtist) {
-            dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
-          } else {
-            dispatch(setclienturl({ clienturl: '' }))
+          if (!res.data.status) {
+            //when this email is already used
+            showAlert(res.data.message);
+            return;
           }
-          showAlert('Check your email and verify account', 'info')
+          //@TODO
+          // const response = await Axios.post(
+          //   `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
+          //   { email: user.email }
+          // );
+          // // console.log(response.data);
+          // dispatch(setArtist({ isArtist: response.data.isArtist }));
+          // if (response.data.isArtist) {
+          //   dispatch(
+          //     setclienturl({ clienturl: response.data.artist.graphqlurl })
+          //   );
+          // } else {
+          //   dispatch(setclienturl({ clienturl: "" }));
+          // }
+          showAlert("Check your email and verify account", "info");
+
           setTimeout(() => {
-            window.location.href = "/login";
-          },1500)
-          
+            window.location.href = "/";
+          }, 1500)
         }
         // history.push("/");
       } catch (error) {
@@ -131,7 +156,6 @@ const Login = () => {
       }
     }
   };
-
 
   const handleRegisterWithPhone = async (event) => {
     event.preventDefault();
@@ -149,78 +173,108 @@ const Login = () => {
         .confirm(user.otp)
         .then((result) => {
           setLoading(false);
-          showAlert('Login Successful', 'success')
+          showAlert("Login Successful", "success");
           setTimeout(() => {
             const loginUser = result.user;
-            let isAdmin = false
-            loginUser.getIdTokenResult().then(idTokenResult => {
-              isAdmin = idTokenResult.claims.isAdmin ? true : false
-              dispatch(login({ phoneNumber: user.phone, uid: loginUser.uid, token: loginUser.refreshToken, isAdmin }));
-              Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, phone: user.phone, refresh_token: user.refreshToken })
-            }).then(() => {
-              Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
-            }).then((response) => {
-              // console.log(response.data);
-              dispatch(setArtist({ isArtist: response.data.isArtist }))
-              if (response.data.isArtist) {
-                dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
-              } else {
-                dispatch(setclienturl({ clienturl: '' }))
-              }
-              hideAlert();
-            });
+            let isAdmin = false;
+            loginUser
+              .getIdTokenResult()
+              .then((idTokenResult) => {
+                isAdmin = idTokenResult.claims.isAdmin ? true : false;
+                // dispatch(
+                //   login({
+                //     phoneNumber: user.phone,
+                //     uid: loginUser.uid,
+                //     token: loginUser.refreshToken,
+                //     isAdmin,
+                //   })
+                // );
+                Axios.post(
+                  `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
+                  {
+                    uid: user.uid,
+                    phone: user.phone,
+                    refresh_token: user.refreshToken,
+                  }
+                );
+              })
+              .then(() => {
+                Axios.post(
+                  `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
+                  { email: user.email }
+                );
+              })
+              .then((response) => {
+                // console.log(response.data);
+                dispatch(setArtist({ isArtist: response.data.isArtist }));
+                if (response.data.isArtist) {
+                  dispatch(
+                    setclienturl({ clienturl: response.data.artist.graphqlurl })
+                  );
+                } else {
+                  dispatch(setclienturl({ clienturl: "" }));
+                }
+                hideAlert();
+              });
           }, 2000);
         })
         .catch((error) => {
-          showAlert('Invalid OTP', 'error');
+          showAlert("Invalid OTP", "error");
         });
     } else {
       if (user.phone.length < 10) {
         setErrorFlg("phone");
         setErrorMessage("Phone must be 10 charachter long");
-      }
-      else {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(captchaRef.current, {
-          'size': 'invisible'
-        })
+      } else {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+          captchaRef.current,
+          {
+            size: "invisible",
+          }
+        );
         const appVerifier = window.recaptchaVerifier;
-        const phoneNumber = '+' + user.phone;
+        const phoneNumber = "+" + user.phone;
         auth
           .signInWithPhoneNumber(String(phoneNumber), appVerifier)
-          .then(confirmResult => {
+          .then((confirmResult) => {
             setOptSent(true);
             setOtpConfirmation(confirmResult);
             setLoading(false);
-          }
-          )
-          .catch(error =>
-            showAlert(`Sign In With Phone Number Error: ${error.message}`, 'error')
+          })
+          .catch((error) =>
+            showAlert(
+              `Sign In With Phone Number Error: ${error.message}`,
+              "error"
+            )
           );
       }
     }
-  }
+  };
 
   const handleChange = (event) => {
     const { value, name } = event.target;
+
     setUser({ ...user, [name]: value });
-    setErrorFlg('');
-    setErrorMessage('');
+    setErrorFlg("");
+    setErrorMessage("");
   };
 
-  const forgotPassword = () => {
-    auth
-      .sendPasswordResetEmail(user.email)
-      .then((result) => {
-        // console.log(result);
-        showAlert('check your email for changing password', 'info');
-        setTimeout(() => {
-          window.location.href = "/login"
-        }, 2500)
+  const handleChangeUsertpe = (e) => {
+    console.log("999", e.target.value)
+    setUser({ ...user, account_type: e.target.value })
+  }
 
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const forgotPassword = async () => {
+    try {
+      await Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/user/resetpassword`,
+        { email: user.email }
+      );
+      showAlert("check your email for changing password", "info");
+      window.location.href = "/login";
+    } catch (e) {
+      console.error(e)
+    }
   };
 
   const signInWithSocialAccount = async (provider) => {
@@ -271,20 +325,33 @@ const Login = () => {
       const user = result.user;
       let isAdmin = false;
       const idTokenResult = await user.getIdTokenResult();
-      isAdmin = idTokenResult.claims.isAdmin ? true : false
-      dispatch(
-        login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
+      isAdmin = idTokenResult.claims.isAdmin ? true : false;
+      // dispatch(
+      //   login({
+      //     email: user.email,
+      //     uid: user.uid,
+      //     token: user.refreshToken,
+      //     isAdmin,
+      //   })
+      // );
+      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, {
+        uid: user.uid,
+        email: user.email,
+        refresh_token: user.refreshToken,
+        name: user.displayName,
+      });
+      const response = await Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
+        { email: user.email }
       );
-      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken, name: user.displayName })
-      const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
       // console.log(response.data)
       dispatch(setArtist({ isArtist: response.data.isArtist }));
       if (response.data.isArtist) {
-        dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
+        dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }));
       } else {
-        dispatch(setclienturl({ clienturl: '' }))
+        dispatch(setclienturl({ clienturl: "" }));
       }
-      window.location.href = "/"
+      window.location.href = "/";
     } catch (error) {
       // const errorCode = error.code;
       const errorMessage = error.message;
@@ -292,36 +359,41 @@ const Login = () => {
       const credential = error.credential;
       console.error(credential, errorMessage, email);
     }
-
-
-
   };
 
   function showAlert(title, type) {
-    setAlert(<SweetAlert style={{ color: '#000' }} type={type} onConfirm={() => handleAlertConfirm(type)} timeout={3000} title={title} />)
+    setAlert(
+      <SweetAlert
+        style={{ color: "#000" }}
+        type={type}
+        onConfirm={() => handleAlertConfirm(type)}
+        timeout={3000}
+        title={title}
+      />
+    );
     setLoading(false);
   }
 
   function handleAlertConfirm(type) {
-    if (type === 'success') {
+    if (type === "success") {
       hideAlert();
       setTimeout(() => {
-        window.location.href = "/"
-      }, 1500)
+        window.location.href = "/";
+      }, 1500);
     } else {
       hideAlert();
     }
   }
 
   function hideAlert() {
-    setAlert(null)
+    setAlert(null);
   }
 
   return (
     <div className="login-page-main">
       {loading && <Loader />}
       {alert}
-      <div className='recaptcha-container' ref={captchaRef}></div>
+      <div className="recaptcha-container" ref={captchaRef}></div>
       <div className="left-cols-main">
         <div className="logos-row">
           <img alt="" src={assetsImages.logo} />
@@ -365,11 +437,19 @@ const Login = () => {
         </div>
         {forgotPasswordFlag ? null : (
           <div className="social-icons">
-            <a className="mail-icon" href="#" onClick={() => setPhoneRegisterFlag(false)}>
+            <a
+              className="mail-icon"
+              href="#"
+              onClick={() => setPhoneRegisterFlag(false)}
+            >
               {" "}
               <img alt="" src={assetsImages.envelope} />
             </a>
-            <a className="call-icon" href="#" onClick={() => setPhoneRegisterFlag(true)}>
+            <a
+              className="call-icon"
+              href="#"
+              onClick={() => setPhoneRegisterFlag(true)}
+            >
               {" "}
               <img alt="" src={assetsImages.telephone} />
             </a>
@@ -405,7 +485,7 @@ const Login = () => {
         </div>
         {phoneRegisterFlag ? (
           <form onSubmit={handleRegisterWithPhone}>
-            {!authSelectFlag &&
+            {!authSelectFlag && (
               <div className="comman-row-input persons-row">
                 <input
                   placeholder="Name"
@@ -414,13 +494,14 @@ const Login = () => {
                   value={user.displayName}
                   onChange={handleChange}
                 />
-              </div>}
+              </div>
+            )}
             <div className="comman-row-input email-row">
               <PhoneInput
                 country={"us"}
                 value={user.phone}
                 onChange={(value) => {
-                  setUser({ "phone": value });
+                  setUser({ phone: value });
                 }}
               />
             </div>
@@ -436,31 +517,33 @@ const Login = () => {
                 {errorMessage}
               </div>
             ) : null}
-            {optSent ? <>
-              <div className="comman-row-input password-row">
-                <input
-                  placeholder="OTP"
-                  type="text"
-                  name="otp"
-                  value={user.otp}
-                  onChange={handleChange}
-                />
-              </div>
-              {errorFlg === "otp" ? (
-                <div
-                  style={{
-                    color: "red",
-                    marginTop: `-13px`,
-                    marginBottom: "15px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {errorMessage}
+            {optSent ? (
+              <>
+                <div className="comman-row-input password-row">
+                  <input
+                    placeholder="OTP"
+                    type="text"
+                    name="otp"
+                    value={user.otp}
+                    onChange={handleChange}
+                  />
                 </div>
-              ) : null}
-            </> : null}
+                {errorFlg === "otp" ? (
+                  <div
+                    style={{
+                      color: "red",
+                      marginTop: `-13px`,
+                      marginBottom: "15px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {errorMessage}
+                  </div>
+                ) : null}
+              </>
+            ) : null}
             <button type="submit" className="sign-up-btn">
-              {optSent ? (authSelectFlag ? 'Login' : 'Register') : 'Send OTP'}
+              {optSent ? (authSelectFlag ? "Login" : "Register") : "Send OTP"}
             </button>
           </form>
         ) : (
@@ -541,6 +624,10 @@ const Login = () => {
                 Forgot password
               </button>
             ) : null}
+            <select defaultValue="user" onChange={handleChangeUsertpe}>
+              <option value="user">Admin or Fan</option>
+              <option value="artist">Artist</option>
+            </select >
           </form>
         )}
       </div>

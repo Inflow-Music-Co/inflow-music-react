@@ -14,11 +14,16 @@ const Inflowmusic = () => {
 
     useEffect(() => {
         const getArtists = async () => {
-            setloading(true)
-            const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
-            setArtists(data.artists)
-            
-            setloading(false);
+            try {
+                setloading(true)
+                const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
+                setArtists(data.artists)
+
+                setloading(false);
+
+            } catch (e) {
+                setloading(false);
+            }
         }
         getArtists();
     }, [])
@@ -45,7 +50,7 @@ const Inflowmusic = () => {
             <div className="dashboard-wrapper-main inner-music-wrapper">
                 <div className="artist-heading">Featured Artists</div>
                 <div className="grid-for-artist">
-                    {artists? displayArtists() : null}
+                    {artists ? displayArtists() : null}
                     {/* <Link to="/artist">
                         <Artistpic imglink={assetsImages.artist} />
                     </Link>

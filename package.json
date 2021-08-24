@@ -42,6 +42,7 @@
     "nft.storage": "^2.1.1",
     "prettier": "^2.3.1",
     "prettier-plugin-solidity": "^1.0.0-beta.13",
+    "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",
     "react-bootstrap-sweetalert": "^5.2.0",

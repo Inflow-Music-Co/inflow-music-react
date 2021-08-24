@@ -130,11 +130,11 @@ const CreateSocialToken = () => {
     const saveArtist = async () => {
 
         const formData = new FormData();
-
         formData.append('address', artistToken.artistAddress);
         formData.append('city', artistToken.city);
         formData.append('country', artistToken.country);
         formData.append('email', artistToken.email);
+        formData.append('password', artistToken.password);
         formData.append('first_name', artistToken.firstName);
         formData.append('last_name', artistToken.lastName);
         formData.append('phone', artistToken.phone);
@@ -371,6 +371,16 @@ const CreateSocialToken = () => {
                                             placeholder="Email"
                                             name="email"
                                             type="email"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="comman-grids">
+                                        <input
+                                            onChange={handleChange}
+                                            value={artistToken.password}
+                                            placeholder="Password"
+                                            name="password"
+                                            type="password"
                                             required
                                         />
                                     </div>

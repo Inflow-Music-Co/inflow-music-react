@@ -31,7 +31,12 @@ const Artistpic = () => {
     const { walletProvider } = useContext(WalletProviderContext);
     const wallet = useSelector(state => state.wallet)
     const token = useSelector(state => state.auth.token)
+<<<<<<< HEAD
     const uid = useSelector((state) => state.auth.data.uid);
+=======
+    const uid = useSelector((state) => state.auth.data._id);
+    // const wallet = useSelector(state => state.wallet);
+>>>>>>> user_auth
     const { id } = useParams();
     const [artist, setArtist] = useState({})
     const [profileModel, setprofileModel] = useState(false);
@@ -70,7 +75,6 @@ const Artistpic = () => {
             
             // // console.log({ data })
             if (data.artist) {
-                console.log("HELLO1")
                 setArtist(data.artist)
                 setSocialTokenAddress(data.artist.social_token_id)
                 console.log(data.artist.social_token_id)
@@ -90,7 +94,7 @@ const Artistpic = () => {
         if (id) {
             return init();
         }
-    }, [socialTokenAddress, walletProvider]);
+    }, [id, socialTokenAddress, walletProvider]);
 
     // async function requestAccount() {
     //     await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -205,7 +209,12 @@ const Artistpic = () => {
         console.log('WALLER PROVIDER ____', walletProvider)
 
         if (walletProvider) {
+<<<<<<< HEAD
             try {  
+=======
+            try {
+
+>>>>>>> user_auth
                 // await requestAccount();
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum
@@ -214,15 +223,15 @@ const Artistpic = () => {
                     process.env.REACT_APP_ADMIN_PVT_KEY,
                     provider
                 );
-                
+
                 const signer = provider.getSigner();
-                
+
                 const socialMinter = new Contract(
                     socialTokenAddress,
                     SocialToken.abi,
                     signer
                 );
-                
+
                 const usdcMinter = new Contract(
                     RINKEBY_MOCKUSDC,
                     MockUSDC.abi,
@@ -267,7 +276,7 @@ const Artistpic = () => {
                     ).wait();
                     setLoading(false)
                     setsuccessmint(successmint => !successmint)
-                    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid })
+                    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
                     setInterval(() => {
                         window.location.reload();
                     }, 2000)
@@ -276,7 +285,7 @@ const Artistpic = () => {
                 const mintPrice = await socialMinter.getMintPrice(
                     inflow.parseERC20('SocialToken', String(TokensToMint))
                 );
-               console.log('ALLOWANCE LESS SO GETTING APPROVAL');
+                console.log('ALLOWANCE LESS SO GETTING APPROVAL');
                 await (
                     await usdcMinter.approve(socialMinter.address, mintPrice)
                 ).wait();
@@ -290,18 +299,7 @@ const Artistpic = () => {
 
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
-                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, firebase_user_id: uid });
-                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
-                    mint_price_history : {
-                        price: MintPrice, 
-                        timestamp: Date.now()
-                        }, 
-                    socialTokenAddress, 
-                    first_name : artist.first_name,
-                    last_name : artist.last_name,
-                    social_token_id: artist.social_token_id});
-                
-                console.log(res);
+                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
                 // setInterval(() => {
                 //     window.location.reload();
                 // }, 2000)
@@ -663,7 +661,7 @@ const Artistpic = () => {
                             <img alt="" src={assetsImages.button} />
                             <div className="button">
                                 {
-                                    token.trim() === "" ?
+                                    token && token.trim() === "" ?
                                         (<button
                                             className="btn sell-button test"
                                             type="button"
@@ -689,7 +687,7 @@ const Artistpic = () => {
                                 }
 
                                 {
-                                    token.trim() === "" ? (<button
+                                    token && token.trim() === "" ? (<button
                                         className="btn buy-button test"
                                         type="button"
                                         onClick={() => { window.location.href = "/login" }}

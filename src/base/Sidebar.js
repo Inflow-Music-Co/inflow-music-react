@@ -93,7 +93,7 @@ const Sidebar = () => {
                         </div>
                     </Link>
                 ) : null}
-                {isArtist ? (
+                {(isArtist && token) ? (
                     <Link to={'/artistmanage'}>
                         <div
                             className={
@@ -110,7 +110,7 @@ const Sidebar = () => {
                         </div>
                     </Link>
                 ) : null}
-                {isAdmin ? (
+                {(isAdmin && token) ? (
                     <Link to={'/adminpanel'}>
                         <div
                             className={
@@ -127,7 +127,7 @@ const Sidebar = () => {
                         </div>
                     </Link>
                 ) : null}
-                {token !== '' ? (
+                {token ? (
                     <Link to={'/accountsettings'}>
                         <div
                             className={

@@ -1,8 +1,9 @@
 /* eslint-disable */
 import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
-import { BrowserRouter } from "react-router-dom";
-
+import { BrowserRouter as Router } from "react-router-dom";
+import History from "./route/History";
+import './utils/axios'
 import {
   ApolloClient,
   InMemoryCache,
@@ -25,18 +26,28 @@ function App() {
     uri: clienturl,
     cache: new InMemoryCache()
   });
-  
+
   return (
-    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider}}>
+    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
       <ApolloProvider client={client}>
         <BrowserRouter>
           <AppRoutes />
+<<<<<<< HEAD
           <Header />
           <Sidebar />
           {/* <div className="main-comman-wrapping">
             <AppRoutes />
           </div> */}
         </BrowserRouter>
+=======
+          {/* <Login />
+          <Header />
+          <Sidebar /> */}
+          {/* <div className="main-comman-wrapping">
+            <AppRoutes />
+          </div> */}
+        </Router>
+>>>>>>> user_auth
       </ApolloProvider>
     </WalletProviderContext.Provider>
   );
