@@ -130,19 +130,19 @@ const Login = () => {
             return;
           }
           //@TODO
-          const response = await Axios.post(
-            `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
-            { email: user.email }
-          );
-          // console.log(response.data);
-          dispatch(setArtist({ isArtist: response.data.isArtist }));
-          if (response.data.isArtist) {
-            dispatch(
-              setclienturl({ clienturl: response.data.artist.graphqlurl })
-            );
-          } else {
-            dispatch(setclienturl({ clienturl: "" }));
-          }
+          // const response = await Axios.post(
+          //   `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
+          //   { email: user.email }
+          // );
+          // // console.log(response.data);
+          // dispatch(setArtist({ isArtist: response.data.isArtist }));
+          // if (response.data.isArtist) {
+          //   dispatch(
+          //     setclienturl({ clienturl: response.data.artist.graphqlurl })
+          //   );
+          // } else {
+          //   dispatch(setclienturl({ clienturl: "" }));
+          // }
           showAlert("Check your email and verify account", "info");
 
           setTimeout(() => {
