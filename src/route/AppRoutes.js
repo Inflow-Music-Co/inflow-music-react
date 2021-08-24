@@ -36,7 +36,7 @@ export const AppRoutes = () => {
             <PublicRoutes path="/auth/resetpassword" component={ResetPassword} />
             <PublicRoutes path="/auth/verifyemail" component={VerfiyEmail} />
             <PublicRoutes path="/collectible/:collectibleId" component={Collectible} />
-            <PrivateRoutes path="/" component={Inflowmusic} exact />
+            <PublicRoutes path="/" component={Inflowmusic} exact />
             <AdminRoutes path="/artistonboarding" component={CreateSocialToken} exact />
             <Route path="/getmintprice" component={GetMintPrice} exact />
             <Route path="/mintusdc" component={MintUSDC} exact />

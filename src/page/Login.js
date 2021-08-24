@@ -100,6 +100,7 @@ const Login = () => {
           // setTimeout(() => {
           //   window.location.href = "/"
           // }, 1500)
+          window.location.href = "/";
         } else {
           // registeration part
           // const { user } =
@@ -144,9 +145,9 @@ const Login = () => {
           }
           showAlert("Check your email and verify account", "info");
 
-          // setTimeout(() => {
-          //   window.location.href = "/login";
-          // },1500)
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 1500)
         }
         // history.push("/");
       } catch (error) {
@@ -270,9 +271,7 @@ const Login = () => {
         { email: user.email }
       );
       showAlert("check your email for changing password", "info");
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 2500);
+      window.location.href = "/login";
     } catch (e) {
       console.error(e)
     }

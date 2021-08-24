@@ -35,9 +35,15 @@ const Accountsettings = () => {
 
     const getdata = async () => {
         setloading(true)
-        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`, { uid })
-        const { user } = data
-        // console.log({ user })
+        let user
+        if (isArtist) {
+            const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id: uid })
+            user = res.data.artist
+        } else {
+            const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`, { uid })
+            user = res.data.user
+        }
+
         if (user) {
             setfirstname(user.first_name ? user.first_name : user.name);
             setlastname(user.last_name);
@@ -72,17 +78,17 @@ const Accountsettings = () => {
         window.location.href = "/accountsettings"
     }
 
-    const forgotPassword = async() => {
+    const forgotPassword = async () => {
         try {
             await Axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/v1/user/resetpassword`,
                 { email: userdata.email }
-              );
-              setresetpasswordemailsent(true);
-        } catch(e) {
+            );
+            setresetpasswordemailsent(true);
+        } catch (e) {
             console.error(e)
         }
-  
+
         // auth
         //   .sendPasswordResetEmail(userdata.email)
         //   .then((result) => {
@@ -91,7 +97,7 @@ const Accountsettings = () => {
         //   .catch((error) => {
         //     console.error(error);
         //   });
-      };
+    };
 
     if (loading) {
         return <Loader />
@@ -180,7 +186,7 @@ const Accountsettings = () => {
 
                             </div>
                             <div className="save-changes-main row d-flex justify-content-around">
-                                <button style={{background:"white", color:"black"}} onClick={forgotPassword}>Reset Password</button>
+                                <button style={{ background: "white", color: "black" }} onClick={forgotPassword}>Reset Password</button>
                                 <button onClick={savechanges}>Save Changes</button>
                             </div>
                         </div>
