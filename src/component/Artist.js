@@ -298,9 +298,6 @@ const Artistpic = () => {
                 // }, 2000)
                 // getBalance();
                 setbuy(false)
-
-                
-
             } catch (err) {
                 setbuymodalloading(false);
                 setfailuremint(failuremint => !failuremint)

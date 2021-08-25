@@ -10,7 +10,7 @@ const Sidebar = () => {
     const token = useSelector((state) => state.auth.token);
     const isArtist = useSelector((state) => state.auth.isArtist);
     const isAdmin = useSelector((state) => state.auth.isAdmin);
-   
+
 
     return (
         <div className="side-bar-main">
