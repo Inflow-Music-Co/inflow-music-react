@@ -7,7 +7,6 @@ import axios from "axios";
 import Loader from "../component/Loader";
 import { useSelector } from 'react-redux';
 import { assetsImages } from '../constants/images';
-import { auth } from "../utils/firebase";
 import SweetAlert from 'react-bootstrap-sweetalert';
 import Axios from 'axios'
 

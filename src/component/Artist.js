@@ -269,7 +269,7 @@ const Artistpic = () => {
                     ).wait();
                     setLoading(false)
                     setsuccessmint(successmint => !successmint)
-                    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
+                    // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress })
                     setInterval(() => {
                         window.location.reload();
                     }, 2000)
@@ -292,7 +292,7 @@ const Artistpic = () => {
 
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
-                await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
+                // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
                 // setInterval(() => {
                 //     window.location.reload();
                 // }, 2000)

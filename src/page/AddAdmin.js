@@ -1,33 +1,31 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import Loader from '../component/Loader';
-import firebase from '../utils/firebase';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 const MintUSDC = () => {
-	const [loading, setLoading] = useState(false);
+	// const [loading, setLoading] = useState(false);
 	const [email, setemail] = useState('');
 	const [successadmin, setsuccessadmin] = useState(false);
 	const [failureadmin, setfailureadmin] = useState(false);
 
 	const addAdmin = async () => {
-		try {
-			const funtions = firebase.functions();
-			const addAdminRole = funtions.httpsCallable('addAdminRole');
-			setLoading(true)
-			await addAdminRole({ email });
-			setLoading(false);
-			setsuccessadmin(successadmin => !successadmin)
-		} catch (error) {
-			setLoading(false)
-			setfailureadmin(failureadmin => !failureadmin)
-			// console.log(error);
-		}
+		// try {
+		// 	const funtions = firebase.functions();
+		// 	const addAdminRole = funtions.httpsCallable('addAdminRole');
+		// 	setLoading(true)
+		// 	await addAdminRole({ email });
+		// 	setLoading(false);
+		// 	setsuccessadmin(successadmin => !successadmin)
+		// } catch (error) {
+		// 	setLoading(false)
+		// 	setfailureadmin(failureadmin => !failureadmin)
+		// 	// console.log(error);
+		// }
 	}
 
-	if (loading) {
-		return <Loader />;
-	}
+	// if (loading) {
+	// 	return <Loader />;
+	// }
 
 	return (
 		<div>

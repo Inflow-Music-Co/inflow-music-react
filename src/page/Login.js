@@ -6,8 +6,7 @@ import { setArtist, loginUser } from "../store/reducers/authSlice";
 import { assetsImages } from "../constants/images";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { auth, googleProvider, facebookProvider } from "../utils/firebase";
-import firebase from "firebase";
+// import { auth, googleProvider, facebookProvider } from "../utils/firebase";
 // import { Link } from 'react-router-dom';
 import Loader from "../component/Loader";
 import SweetAlert from "react-bootstrap-sweetalert";
@@ -158,99 +157,99 @@ const Login = () => {
     }
   };
 
-  const handleRegisterWithPhone = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    if (optSent) {
-      if (!user.otp) {
-        setErrorFlg("otp");
-        setErrorMessage("Please enter OTP sent to your phone");
-        return;
-      }
-      //alert("send successfully");
-      // const code = window.prompt('Please enter the verification ' +
-      //     'code that was sent to your mobile device.');
-      otpConfirmation
-        .confirm(user.otp)
-        .then((result) => {
-          setLoading(false);
-          showAlert("Login Successful", "success");
-          setTimeout(() => {
-            const loginUser = result.user;
-            let isAdmin = false;
-            loginUser
-              .getIdTokenResult()
-              .then((idTokenResult) => {
-                isAdmin = idTokenResult.claims.isAdmin ? true : false;
-                // dispatch(
-                //   login({
-                //     phoneNumber: user.phone,
-                //     uid: loginUser.uid,
-                //     token: loginUser.refreshToken,
-                //     isAdmin,
-                //   })
-                // );
-                Axios.post(
-                  `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
-                  {
-                    uid: user.uid,
-                    phone: user.phone,
-                    refresh_token: user.refreshToken,
-                  }
-                );
-              })
-              .then(() => {
-                Axios.post(
-                  `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
-                  { email: user.email }
-                );
-              })
-              .then((response) => {
-                // console.log(response.data);
-                dispatch(setArtist({ isArtist: response.data.isArtist }));
-                if (response.data.isArtist) {
-                  dispatch(
-                    setclienturl({ clienturl: response.data.artist.graphqlurl })
-                  );
-                } else {
-                  dispatch(setclienturl({ clienturl: "" }));
-                }
-                hideAlert();
-              });
-          }, 2000);
-        })
-        .catch((error) => {
-          showAlert("Invalid OTP", "error");
-        });
-    } else {
-      if (user.phone.length < 10) {
-        setErrorFlg("phone");
-        setErrorMessage("Phone must be 10 charachter long");
-      } else {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-          captchaRef.current,
-          {
-            size: "invisible",
-          }
-        );
-        const appVerifier = window.recaptchaVerifier;
-        const phoneNumber = "+" + user.phone;
-        auth
-          .signInWithPhoneNumber(String(phoneNumber), appVerifier)
-          .then((confirmResult) => {
-            setOptSent(true);
-            setOtpConfirmation(confirmResult);
-            setLoading(false);
-          })
-          .catch((error) =>
-            showAlert(
-              `Sign In With Phone Number Error: ${error.message}`,
-              "error"
-            )
-          );
-      }
-    }
-  };
+  // const handleRegisterWithPhone = async (event) => {
+  //   event.preventDefault();
+  //   setLoading(true);
+  //   if (optSent) {
+  //     if (!user.otp) {
+  //       setErrorFlg("otp");
+  //       setErrorMessage("Please enter OTP sent to your phone");
+  //       return;
+  //     }
+  //     //alert("send successfully");
+  //     // const code = window.prompt('Please enter the verification ' +
+  //     //     'code that was sent to your mobile device.');
+  //     otpConfirmation
+  //       .confirm(user.otp)
+  //       .then((result) => {
+  //         setLoading(false);
+  //         showAlert("Login Successful", "success");
+  //         setTimeout(() => {
+  //           const loginUser = result.user;
+  //           let isAdmin = false;
+  //           loginUser
+  //             .getIdTokenResult()
+  //             .then((idTokenResult) => {
+  //               isAdmin = idTokenResult.claims.isAdmin ? true : false;
+  //               // dispatch(
+  //               //   login({
+  //               //     phoneNumber: user.phone,
+  //               //     uid: loginUser.uid,
+  //               //     token: loginUser.refreshToken,
+  //               //     isAdmin,
+  //               //   })
+  //               // );
+  //               Axios.post(
+  //                 `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
+  //                 {
+  //                   uid: user.uid,
+  //                   phone: user.phone,
+  //                   refresh_token: user.refreshToken,
+  //                 }
+  //               );
+  //             })
+  //             .then(() => {
+  //               Axios.post(
+  //                 `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
+  //                 { email: user.email }
+  //               );
+  //             })
+  //             .then((response) => {
+  //               // console.log(response.data);
+  //               dispatch(setArtist({ isArtist: response.data.isArtist }));
+  //               if (response.data.isArtist) {
+  //                 dispatch(
+  //                   setclienturl({ clienturl: response.data.artist.graphqlurl })
+  //                 );
+  //               } else {
+  //                 dispatch(setclienturl({ clienturl: "" }));
+  //               }
+  //               hideAlert();
+  //             });
+  //         }, 2000);
+  //       })
+  //       .catch((error) => {
+  //         showAlert("Invalid OTP", "error");
+  //       });
+  //   } else {
+  //     if (user.phone.length < 10) {
+  //       setErrorFlg("phone");
+  //       setErrorMessage("Phone must be 10 charachter long");
+  //     } else {
+  //       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+  //         captchaRef.current,
+  //         {
+  //           size: "invisible",
+  //         }
+  //       );
+  //       const appVerifier = window.recaptchaVerifier;
+  //       const phoneNumber = "+" + user.phone;
+  //       auth
+  //         .signInWithPhoneNumber(String(phoneNumber), appVerifier)
+  //         .then((confirmResult) => {
+  //           setOptSent(true);
+  //           setOtpConfirmation(confirmResult);
+  //           setLoading(false);
+  //         })
+  //         .catch((error) =>
+  //           showAlert(
+  //             `Sign In With Phone Number Error: ${error.message}`,
+  //             "error"
+  //           )
+  //         );
+  //     }
+  //   }
+  // };
 
   const handleChange = (event) => {
     const { value, name } = event.target;
