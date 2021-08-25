@@ -33,7 +33,6 @@ const Artistpic = () => {
     const wallet = useSelector(state => state.wallet)
     const token = useSelector(state => state.auth.token)
     const uid = useSelector((state) => state.auth.data._id);
-    // const wallet = useSelector(state => state.wallet);
     const { id } = useParams();
     const [artist, setArtist] = useState({})
     const [profileModel, setprofileModel] = useState(false);
@@ -92,9 +91,9 @@ const Artistpic = () => {
         }
     }, [id, socialTokenAddress, walletProvider]);
 
-    // async function requestAccount() {
-    //     await window.ethereum.request({ method: 'eth_requestAccounts' });
-    // }
+    async function requestAccount() {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+    }
 
     // const getBalance = async () => {
     //     if (
@@ -124,8 +123,6 @@ const Artistpic = () => {
 
     const fetchTokenPrice = async () => {
         const provider = new ethers.providers.JsonRpcProvider("https://eth-rinkeby.alchemyapi.io/v2/Oq7yS7NdZbdW-beaojb1-8CuN_mjBpFc");
-        console.log({ provider })
-        console.log({ walletProvider })
         try {
             if (walletProvider) {
                 const inflow = new Inflow(walletProvider, 4);
@@ -198,14 +195,13 @@ const Artistpic = () => {
     // };
 
     const buyTokens = async () => {
-        console.log(typeof window.ethereum !== 'undefined')
         console.log(socialTokenAddress)
         console.log('WALLER PROVIDER ____', walletProvider)
 
         if (walletProvider) {
+            console.log('wallet provider is true');
             try {
-
-                // await requestAccount();
+                await requestAccount();
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum
                 );
