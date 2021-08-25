@@ -207,7 +207,7 @@ const Artistpic = () => {
                 );
 
                 const signer = provider.getSigner();
-
+                console.log('bla bla bla <><><><><><><><', socialTokenAddress, signer,)
                 const socialMinter = new Contract(
                     socialTokenAddress,
                     SocialToken.abi,
