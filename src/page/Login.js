@@ -101,7 +101,7 @@ const Login = () => {
           // setTimeout(() => {
           //   window.location.href = "/"
           // }, 1500)
-          window.location.href = "/";
+          // window.location.href = "/";
         } else {
           // registeration part
           // const { user } =
@@ -153,7 +153,7 @@ const Login = () => {
         // history.push("/");
       } catch (error) {
         console.error(error);
-        showAlert(error.message, error);
+        showAlert('Invalid email or password');
       }
     }
   };

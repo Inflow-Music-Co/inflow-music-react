@@ -51,7 +51,7 @@ export const loginUser = user => async (dispatch) => {
 
   } catch (e) {
     //handle error later
-    console.log(e)
+    throw e
   }
 
 };
