@@ -69,8 +69,7 @@ const Artistpic = () => {
             console.log({ walletProvider })
             setLoading(true)
             const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id })
-            
-            // // console.log({ data })
+
             if (data.artist) {
                 setArtist(data.artist)
                 setSocialTokenAddress(data.artist.social_token_id)
@@ -130,20 +129,18 @@ const Artistpic = () => {
         try {
             if (walletProvider) {
                 const inflow = new Inflow(walletProvider, 4);
-                // console.log("HEEEREEEE")
                 const mintPrice = await inflow.getMintPriceSocial(
                     socialTokenAddress,
                     inflow.parseERC20('SocialToken', '1')
                 );
                 setMintPrice(mintPrice[0]);
-                console.log(`MINT PRICE: ${mintPrice[0]}`);
             }
         } catch (err) {
-            // if (errcode === -32002) {
-            //     errcode = '';
-            //     window.location.reload();
-            // }
-            // errcode = err.code
+            if (errcode === -32002) {
+                errcode = '';
+                window.location.reload();
+            }
+            errcode = err.code
             console.log(err)
         }
     };
@@ -212,10 +209,6 @@ const Artistpic = () => {
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum
                 );
-                const admin = new ethers.Wallet(
-                    process.env.REACT_APP_ADMIN_PVT_KEY,
-                    provider
-                );
 
                 const signer = provider.getSigner();
 
@@ -232,7 +225,6 @@ const Artistpic = () => {
                 );
                 console.log({ usdcMinter })
                 console.log("HEERREE");
-                console.log('now here.....');
                 // const usdcMinter = usdc.connect(signer);
                 const inflow = new Inflow(provider, 4);
                 setbuymodalloading(true);
