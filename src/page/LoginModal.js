@@ -12,22 +12,6 @@ const LoginModal = (props) => {
     otp: "",
   });
 
-  const selectFan = () => {
-    if (type === "fan") {
-      return "btn-selected";
-    } else {
-      return "btn-gradiant";
-    }
-  };
-
-  const selectArtist = () => {
-    if (type === "artist") {
-      return "btn-selected";
-    } else {
-      return "btn-gradiant";
-    }
-  };
-
   const handleChange = (event) => {
     const { value, name } = event.target;
     setUser({ ...user, [name]: value });
@@ -47,20 +31,24 @@ const LoginModal = (props) => {
         <Modal.Body>
           <div className="login-type d-flex flex-row justify-content-center col-12">
             <button
-              className={`${selectFan()} ml-3`}
+              className={`${
+                type === "fan" ? "btn-selected" : "btn-gradiant"
+              } mr-3`}
               onClick={() => setType("fan")}
             >
               Fan
             </button>
             <button
-              className={`${selectArtist()} ml-3`}
+              className={`${
+                type === "artist" ? "btn-selected" : "btn-gradiant"
+              } ml-3`}
               onClick={() => setType("artist")}
             >
               Artist
             </button>
           </div>
 
-          <div className="mt-3 form-group">
+          <div className="mt-5 form-group">
             <form onSubmit={``}>
               <div className="comman-row-input persons-row">
                 <input
