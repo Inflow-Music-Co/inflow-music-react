@@ -22,7 +22,10 @@ const LoginModal = (props) => {
       <Modal
         show={login}
         className="edit-profile-modal"
-        onHide={() => setLogin((login) => !login)}
+        onHide={() => {
+          setLogin((login) => !login);
+          setType("");
+        }}
       >
         <Modal.Header closeButton>
           <span className="title">Login</span>
@@ -49,7 +52,7 @@ const LoginModal = (props) => {
           </div>
 
           <div className="mt-5 form-group">
-            <form onSubmit={``}>
+            <form onSubmit={``} className="col-12">
               <div className="comman-row-input persons-row">
                 <input
                   placeholder="Name"
@@ -65,6 +68,15 @@ const LoginModal = (props) => {
                   type="text"
                   name="email"
                   value={user.email}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="comman-row-input password-row">
+                <input
+                  placeholder="Password"
+                  type="password"
+                  name="password"
+                  value={user.password}
                   onChange={handleChange}
                 />
               </div>
