@@ -74,16 +74,16 @@ const Artistpic = () => {
                 setSocialTokenAddress(data.artist.social_token_id)
                 console.log(data.artist.social_token_id)
                 fetchTokenPrice();
-                // const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist)
-                // setHistoricalData(res.data.priceHistory);
-                // const tokenPrice = setInterval(() => {
-                //     // // console.log("HELLO3")
-                //     fetchTokenPrice();
-                // }, 10000);
+                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist)
+                setHistoricalData(res.data.priceHistory);
+                const tokenPrice = setInterval(() => {
+                    // // console.log("HELLO3")
+                    fetchTokenPrice();
+                }, 10000);
                 setLoading(false)
-                // return () => {
-                //     clearInterval(tokenPrice);
-                // };
+                return () => {
+                    clearInterval(tokenPrice);
+                };
             }
         }
         if (id) {
@@ -207,7 +207,7 @@ const Artistpic = () => {
                 );
 
                 const signer = provider.getSigner();
-                console.log('bla bla bla <><><><><><><><', socialTokenAddress, signer,)
+
                 const socialMinter = new Contract(
                     socialTokenAddress,
                     SocialToken.abi,
@@ -280,7 +280,9 @@ const Artistpic = () => {
 
                 setbuymodalloading(false);
                 setsuccessmint(successmint => !successmint)
-                // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
+                
+                await updatePriceHistory();
+
                 // setInterval(() => {
                 //     window.location.reload();
                 // }, 2000)
@@ -431,6 +433,9 @@ const Artistpic = () => {
                 setsellmodalloading(false);
                 setsuccessburn(successburn => !successburn)
                 setsell(false);
+                
+                await updatePriceHistory();
+                
                 // getBalance();
             } catch (err) {
                 setsellmodalloading(false);
@@ -537,6 +542,20 @@ const Artistpic = () => {
 
     if (loading) {
         return <Loader />
+    }
+
+    const updatePriceHistory = async () => {
+
+        await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
+            mint_price_history : {
+                price: MintPrice, 
+                timestamp: Date.now()
+                }, 
+            socialTokenAddress, 
+            first_name : artist.first_name,
+            last_name : artist.last_name,
+            social_token_id: artist.social_token_id}); 
+
     }
 
     return (
@@ -888,8 +907,7 @@ const Artistpic = () => {
             <Modal
                 show={profileModel}
                 className="edit-profile-modal"
-                onHide={() => setprofileModel((profileModel) => !profileModel)}
-            >
+                onHide={() => setprofileModel((profileModel) => !profileModel)}>
                 <Modal.Header closeButton>
                     <span className="title">Edit Profile</span>
                 </Modal.Header>
@@ -900,10 +918,8 @@ const Artistpic = () => {
                         <input
                             className="form-control"
                             type="text"
-                            placeholder=""
-                        />
+                            placeholder=""/>
                     </div>
-
                     <div className="user-profile">
                         <img alt="" src={assetsImages.artist} />
                         <button className="upload-profile btn-gradiant">
@@ -918,19 +934,16 @@ const Artistpic = () => {
                         </button>
                     </div>
                 </Modal.Body>
-
                 <Modal.Footer>
                     <button className="save-btn btn-gradiant">
                         Save Edits
                     </button>
                 </Modal.Footer>
             </Modal>
-
             <Modal
                 show={buy}
                 className="edit-profile-modal sell"
-                onHide={() => setbuy((buy) => !buy)}
-            >
+                onHide={() => setbuy((buy) => !buy)}>
                 <Modal.Header closeButton>
                     <span className="title">Buy {artist.social_token_symbol} Token</span>
                 </Modal.Header>

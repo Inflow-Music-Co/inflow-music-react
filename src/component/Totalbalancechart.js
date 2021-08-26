@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import SmallLoader from './SmallLoader';
 import Axios from 'axios'
 import './chart.css'
+import { id } from 'ethers/lib/utils';
 
 const Totalbalancechart = ({ artist, historicalData }) => {
   const [labels, setlabels] = useState([]);
@@ -20,16 +21,18 @@ const Totalbalancechart = ({ artist, historicalData }) => {
       let templabels = [];
       let tempvalues = [];
       historicalData.forEach(item => {
-        delete item._id;
-        item.price = parseFloat(item.price, 10).toFixed(2);
-        console.log(item)
-        if (templabels.length > 0) {
-            templabels.push(new Date(item.timestamp * 1000));
-            tempvalues.push(item.price)   
-        } else {
-          templabels.push(new Date(item.timestamp));
-          tempvalues.push(item.price / 1000000)
-          console.log(templabels, tempvalues);
+        if(item){
+          delete item._id;
+          item.price = parseFloat(item.price, 10).toFixed(2);
+          console.log(item)
+          if (templabels.length > 0) {
+              templabels.push(new Date(item.timestamp * 1000));
+              tempvalues.push(item.price)   
+          } else {
+            templabels.push(new Date(item.timestamp));
+            tempvalues.push(item.price / 1000000)
+            console.log(templabels, tempvalues);
+          }   
         }
       })
       setvalues(tempvalues);
