@@ -12,16 +12,16 @@ import Loader from "../component/Loader";
 import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
-import ReactBootstrap from 'react-bootstrap'
+import ReactBootstrap from "react-bootstrap";
 const Login = () => {
   const dispatch = useDispatch();
-  const history = useHistory()
+  const history = useHistory();
   const uData = useSelector((state) => state.auth.data);
-  const token = useSelector(state => state.auth.token)
+  const token = useSelector((state) => state.auth.token);
   // console.log(uData);
   // const history = useHistory();
   const [authSelectFlag, setAuthSelectFlag] = useState(true);
-  const [account_type, setAccountType] = useState('user')
+  const [account_type, setAccountType] = useState("user");
   const [forgotPasswordFlag, setForgotPasswordFlag] = useState(false);
   const [phoneRegisterFlag, setPhoneRegisterFlag] = useState(false);
   const [optSent, setOptSent] = useState(false);
@@ -41,7 +41,7 @@ const Login = () => {
 
   useEffect(() => {
     if (token) {
-      history.push('/')
+      history.push("/");
     }
     //setUser({displayName:'', ...uData})
     //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
@@ -84,7 +84,7 @@ const Login = () => {
           // let isAdmin = false
           // const idTokenResult = await user.getIdTokenResult();
           // isAdmin = idTokenResult.claims.isAdmin ? true : false
-          console.log("aaa", account_type, email)
+          console.log("aaa", account_type, email);
           await dispatch(loginUser({ email, password, account_type }));
           // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
           // const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
@@ -95,7 +95,7 @@ const Login = () => {
           // } else {
           //   dispatch(setclienturl({ clienturl: '' }))
           // }
-          dispatch(setclienturl({ clienturl: '' }))
+          dispatch(setclienturl({ clienturl: "" }));
           // // showAlert('Login Successful', 'success')
           // setTimeout(() => {
           //   window.location.href = "/"
@@ -147,12 +147,12 @@ const Login = () => {
 
           setTimeout(() => {
             window.location.href = "/";
-          }, 1500)
+          }, 1500);
         }
         // history.push("/");
       } catch (error) {
         console.error(error);
-        showAlert('Invalid email or password');
+        showAlert("Invalid email or password");
       }
     }
   };
@@ -260,9 +260,9 @@ const Login = () => {
   };
 
   const handleChangeUsertpe = (e) => {
-    console.log("999", e.target.value)
-    setUser({ ...user, account_type: e.target.value })
-  }
+    console.log("999", e.target.value);
+    setUser({ ...user, account_type: e.target.value });
+  };
 
   const forgotPassword = async () => {
     try {
@@ -273,7 +273,7 @@ const Login = () => {
       showAlert("check your email for changing password", "info");
       window.location.href = "/login";
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
   };
 
@@ -432,8 +432,8 @@ const Login = () => {
           {forgotPasswordFlag
             ? "Forgot Password"
             : authSelectFlag
-              ? "Login Account"
-              : "Create Account"}
+            ? "Login Account"
+            : "Create Account"}
         </div>
         {forgotPasswordFlag ? null : (
           <div className="social-icons">
@@ -478,10 +478,10 @@ const Login = () => {
           {forgotPasswordFlag
             ? "use email for forgot password"
             : phoneRegisterFlag
-              ? "use phone number for registration"
-              : authSelectFlag
-                ? "use email for login"
-                : "use email for registration"}
+            ? "use phone number for registration"
+            : authSelectFlag
+            ? "use email for login"
+            : "use email for registration"}
         </div>
         {phoneRegisterFlag ? (
           <form onSubmit={handleRegisterWithPhone}>
@@ -552,18 +552,18 @@ const Login = () => {
             {forgotPasswordFlag
               ? null
               : !authSelectFlag && (
-                <>
-                  <div className="comman-row-input persons-row">
-                    <input
-                      placeholder="Name"
-                      type="text"
-                      name="displayName"
-                      value={user.displayName}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </>
-              )}
+                  <>
+                    <div className="comman-row-input persons-row">
+                      <input
+                        placeholder="Name"
+                        type="text"
+                        name="displayName"
+                        value={user.displayName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </>
+                )}
             <div className="comman-row-input email-row">
               <input
                 placeholder="Email"
@@ -627,7 +627,7 @@ const Login = () => {
             <select defaultValue="user" onChange={handleChangeUsertpe}>
               <option value="user">Admin or Fan</option>
               <option value="artist">Artist</option>
-            </select >
+            </select>
           </form>
         )}
       </div>
