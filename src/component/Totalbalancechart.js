@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2';
+import moment from 'moment';
 import SmallLoader from './SmallLoader';
 import './chart.css'
 
@@ -58,7 +59,7 @@ const Totalbalancechart = ({ artist, historicalData }) => {
   };
 
   const getgraphdata = () => {
-    const updatedLabels = labels.map(label => label.toLocaleDateString())
+    const updatedLabels = labels.map(date => moment(date).format('DD/MM'))
     const graphdata = {
       labels: updatedLabels,
   
