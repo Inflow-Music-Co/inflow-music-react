@@ -1074,9 +1074,9 @@ button.login-btn {
   left: 12px;
 }
 
-.name-input,
-.email-input {
-  width: 100%;
+.forgot-password {
+  font-size: 12px;
+  color: white;
 }
 
 .comman-row-input input {

@@ -86,9 +86,16 @@ const LoginModal = (props) => {
           <div className="user-profile"></div>
         </Modal.Body>
 
-        <Modal.Footer>
-          {type && <button className="save-btn btn-gradiant">Login</button>}
-        </Modal.Footer>
+        {type && (
+          <Modal.Footer>
+            <div className="d-flex flex-column flex-wrap justify-content-center align-items-center">
+              <button className="btn-gradiant">Login</button>
+              <a href="/login" className="forgot-password mt-3">
+                Forgot Password?
+              </a>
+            </div>
+          </Modal.Footer>
+        )}
       </Modal>
     </>
   );

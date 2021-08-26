@@ -90,7 +90,7 @@ const Header = () => {
           //   onClick={() => connectWallet()}
           onClick={() => setLogin((login) => !login)}
         >
-          {walletProvider ? "Disconnect Wallet" : "Connect Wallet"}
+          {walletProvider ? "Logout" : "Login"}
         </Button>
         <div className="notified-main">
           <Notification />
