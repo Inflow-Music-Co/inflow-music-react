@@ -997,6 +997,8 @@ img.small-img {
 
 .artist-background .artist-main .background img {
   width: 100%;
+  object-fit: cover;
+  height: 350px;
 }
 .artist-background .artist-main .background button {
   position: absolute;
@@ -1020,7 +1022,7 @@ img.small-img {
   height: 100%;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .artist-background .artist-main {
