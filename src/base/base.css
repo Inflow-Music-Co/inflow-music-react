@@ -84,7 +84,7 @@
 
 .side-bar-main .side-bar-navigation {
   overflow-y: auto;
-  padding-top: 20px;
+  /* padding-top: 20px; */
   height: calc(100% - 90px);
   box-shadow: 1px 0px 6px #1f1f1f;
 }
