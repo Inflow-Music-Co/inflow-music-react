@@ -609,11 +609,11 @@ const Artistpic = () => {
                         </div>
                     </div>
                     <div className="artist-tag">
-                        {/* <button className="tag-button">MERCH STORE</button>
+                        <button className="tag-button">MERCH STORE</button>
                         <button className="tag-button">LIVE STREAMS</button>
                         <button className="tag-button">CONTENT</button>
                         <button className="tag-button">EXPERIENCE</button>
-                        <button className="tag-button">VR ROOM</button> */}
+                        <button className="tag-button">VR ROOM</button>
                     </div>
                 </div>
             </div>
