@@ -9,7 +9,7 @@ import { assetsImages } from '../constants/images';
 // import CircularProgress from "@material-ui/core/CircularProgress";
 import Totalbalancechart from './Totalbalancechart';
 // import Song from './Song';
-// import Mynftdropdown from './Mynftdropdown';
+import Mynftdropdown from './Mynftdropdown';
 import { Modal } from 'react-bootstrap';
 import Loader from './Loader';
 import SmallLoader from './SmallLoader';
