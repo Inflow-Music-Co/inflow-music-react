@@ -218,7 +218,7 @@ const Artistpic = () => {
               </div>
               <div className="soundcloud-url d-flex flex-column justify-content-center align-items-center">
                 <h4>Soundcloud Playlist URL</h4>
-                <input type="text" />
+                <input type="text" className="soundcloud-input" />
               </div>
             </div>
 

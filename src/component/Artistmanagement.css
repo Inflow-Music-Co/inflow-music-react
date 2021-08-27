@@ -240,6 +240,11 @@
 
 .soundcloud-url {
   height: 200px;
+  width: 100%;
+}
+
+.soundcloud-input {
+  width: 100%;
 }
 
 @media (max-width: 991px) {
