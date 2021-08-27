@@ -22,6 +22,8 @@
   font-weight: normal;
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap");
+
 body {
   background: #000 !important;
   color: #fff !important;
@@ -45,8 +47,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .main-comman-wrapping {
   position: relative;
-  margin-left: 105px;
-  margin-top: 90px;
+  margin-left: 90px;
+  margin-top: 80px;
   background: url("./assets/images/background-pattern.svg") repeat-y fixed;
   background-size: cover;
 }
@@ -2695,7 +2697,7 @@ input:checked + .slider:before {
     .Dropdown-main-header
     .dropdown
     .btn {
-    padding-right: 10px;
+    padding-right: 100px;
   }
 
   .Inflow-music-main .inner-music-wrapper {

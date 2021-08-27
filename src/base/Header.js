@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { connected, disconnect } from "../store/reducers/walletSlice";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import LoginModal from "../page/LoginModal";
+import { assetsImages } from "../constants/images";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const { walletProvider, setWalletProvider } = useContext(
@@ -82,6 +84,11 @@ const Header = () => {
   return (
     <div className="header-main">
       {alert}
+      <div className="logo-website-main">
+        <Link to={"/"}>
+          <img alt="" src={assetsImages.logo} className="logo-main-test" />
+        </Link>
+      </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
         <Button
