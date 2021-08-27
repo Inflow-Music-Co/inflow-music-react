@@ -22,8 +22,6 @@
   font-weight: normal;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap");
-
 body {
   background: #000 !important;
   color: #fff !important;
@@ -47,8 +45,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .main-comman-wrapping {
   position: relative;
-  margin-left: 90px;
-  margin-top: 80px;
+  margin-left: 105px;
+  margin-top: 90px;
   background: url("./assets/images/background-pattern.svg") repeat-y fixed;
   background-size: cover;
 }
@@ -908,18 +906,6 @@ button.search-btn img {
   overflow: hidden;
 }
 
-.login-modal-main {
-  background: linear-gradient(
-    235deg,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(98, 32, 177, 1) 100%
-  );
-  padding: 130px 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .login-page-main .left-cols-main .logos-row img {
   width: 80px;
   margin-right: 20px;
@@ -991,18 +977,18 @@ button.login-btn {
   justify-content: center;
 }
 
-.creat-name-main {
+.login-page-main .right-cols-main .creat-name-main {
   font-size: 35px;
   font-weight: 600;
   margin-bottom: 30px;
 }
 
-.social-icons {
+.login-page-main .right-cols-main .social-icons {
   display: flex;
   align-items: center;
 }
 
-.social-icons a {
+.login-page-main .right-cols-main .social-icons a {
   width: 40px;
   height: 40px;
   margin-right: 15px;
@@ -1015,29 +1001,29 @@ button.login-btn {
   padding: 10px;
 }
 
-.social-icons a.call-icon img,
-.social-icons a.mail-icon img {
+.login-page-main .right-cols-main .social-icons a.call-icon img,
+.login-page-main .right-cols-main .social-icons a.mail-icon img {
   filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg)
     brightness(102%) contrast(102%);
 }
 
-.social-icons a img {
+.login-page-main .right-cols-main .social-icons a img {
   width: 100%;
 }
 
-.or-use {
+.login-page-main .right-cols-main .or-use {
   margin-top: 30px;
   margin-bottom: 30px;
   font-size: 14px;
   font-weight: 600;
 }
 
-.comman-row-input {
+.login-page-main .right-cols-main .comman-row-input {
   margin-bottom: 20px;
   position: relative;
 }
 
-.comman-row-input.persons-row::before {
+.login-page-main .right-cols-main .comman-row-input.persons-row::before {
   position: absolute;
   content: "";
   background: url(assets/images/user.svg) no-repeat;
@@ -1050,7 +1036,7 @@ button.login-btn {
   left: 12px;
 }
 
-.comman-row-input.email-row::before {
+.login-page-main .right-cols-main .comman-row-input.email-row::before {
   position: absolute;
   content: "";
   background: url(assets/images/email.svg) no-repeat;
@@ -1063,7 +1049,7 @@ button.login-btn {
   left: 12px;
 }
 
-.comman-row-input.password-row::before {
+.login-page-main .right-cols-main .comman-row-input.password-row::before {
   position: absolute;
   content: "";
   background: url(assets/images/password.svg) no-repeat;
@@ -1076,13 +1062,8 @@ button.login-btn {
   left: 12px;
 }
 
-.forgot-password {
-  font-size: 12px;
-  color: white;
-}
-
-.comman-row-input input {
-  width: 100%;
+.login-page-main .right-cols-main .comman-row-input input {
+  width: 60%;
   padding: 10px 10px;
   font-size: 14px;
   border-radius: 5px;
@@ -1647,23 +1628,6 @@ ul.following-list li .follower-details .option-btn {
     rgba(59, 72, 193, 1) 100%
   );
   color: #ffffff;
-  padding: 15px 35px;
-  letter-spacing: 2px;
-  min-width: 150px;
-}
-
-.btn-selected {
-  border-radius: 50px;
-  border: 0;
-  background: white;
-  color: linear-gradient(
-    0deg,
-    rgba(101, 32, 181, 1) 0%,
-    rgba(59, 72, 193, 1) 100%
-  );
-  padding: 15px 35px;
-  letter-spacing: 2px;
-  min-width: 150px;
 }
 
 .edit-profile-modal .modal-body .upload-profile,
@@ -1702,18 +1666,6 @@ ul.following-list li .follower-details .option-btn {
   padding: 15px 35px;
   letter-spacing: 2px;
   min-width: 150px;
-}
-
-.artist-management {
-  padding-bottom: 0;
-  margin-bottom: 30px;
-}
-
-.artist-management .card {
-  background-color: #2f3443;
-  padding: 20px 40px;
-  border-radius: 15px;
-  height: 100%;
 }
 
 .card-collectible {
@@ -1869,98 +1821,6 @@ ul.following-list li .follower-details .option-btn {
   font-size: 14px;
   font-weight: 500;
   font-family: Rubik-Medium;
-}
-
-.artist-management .card.button-card {
-  min-height: 450px;
-}
-
-.artist-management .card .artist-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.artist-management .card .artist-title span {
-  font-size: 18px;
-  font-weight: 700;
-  font-family: Rubik-bold;
-  letter-spacing: 1px;
-}
-
-.create-collectible {
-  display: flex;
-  overflow: hidden;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.artist-management .card .create-collectible-title {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.artist-management .card .create-collectible-title span {
-  font-size: 16px;
-  font-weight: 400;
-  font-family: Rubik;
-  letter-spacing: 1px;
-}
-
-.artist-management .card .create-collectible-upload-description {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 40px 0;
-}
-
-.artist-management .card .create-collectible-upload-description h3 {
-  font-size: 20px;
-  font-weight: 300;
-  font-family: Rubik-Light;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-.artist-management .card .create-collectible-upload-description p {
-  font-size: 15px;
-  font-weight: 500;
-  font-family: Rubik-Medium;
-  color: #888888;
-}
-
-.artist-management .card .create-collectible-preview-description {
-  display: flex;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 40px 0;
-  padding: 0 16px;
-}
-
-.artist-management .card .create-collectible-preview-description h3 {
-  font-size: 20px;
-  font-weight: 300;
-  font-family: Rubik-Light;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-.artist-management .card .create-collectible-preview-description img {
-  height: 300px;
-  overflow: hidden;
-}
-
-.artist-management .card .create-collectible-title p {
-  font-size: 12px;
-  font-weight: 500;
-  margin-top: 8px;
-  font-family: Rubik-Medium;
-  color: #888888;
 }
 
 .switch-top {
@@ -2258,142 +2118,6 @@ input:checked + .slider:before {
   align-items: flex-start;
 }
 
-.artist-management .card .artist-poll {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.artist-management .card .artist-poll .poll-green {
-  color: #00cd98;
-}
-
-.artist-management .card .artist-poll img {
-  margin-right: 5px;
-}
-
-.artist-management .card .artist-poll .amount {
-  font-size: 34px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.artist-management .card .first-row-main-dash .left-col {
-  width: 100%;
-}
-
-.artist-management .card .first-row-main-dash .left-col .below-row {
-  background-color: transparent;
-}
-
-.artist-management .card .first-row-main-dash .left-col .below-row {
-  background-color: transparent;
-}
-
-.artist-management .card .footer-btn {
-  text-align: center;
-  margin-top: 46px;
-}
-
-.artist-management .card.button-card .footer-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: calc(400px - 20px);
-}
-
-.artist-management .card .footer-btn .btn-gradiant {
-  margin: 0 auto 20px;
-  padding: 15px 35px;
-  letter-spacing: 2px;
-  font-size: 18px;
-}
-
-.artist-management .card .fans-list ul {
-  margin: 20px 0 0;
-  padding: 0;
-  max-height: 310px;
-  overflow: auto;
-}
-
-.artist-management .card .fans-list ul li {
-  display: flex;
-  align-items: center;
-  list-style: none;
-}
-
-.artist-management .card .fans-list ul li + li {
-  padding-top: 20px;
-}
-
-.artist-management .card .fans-list ul li .fan-profile img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
-.artist-management .card .fans-list ul li .fan-details {
-  display: flex;
-  align-items: center;
-  padding-right: 10px;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.artist-management .card .fans-list ul li .fan-details .donate-amount {
-  color: #c3c6d1;
-  font-size: 13px;
-  font-weight: 700;
-  font-family: Rubik-bold;
-  letter-spacing: 1px;
-  width: 80px;
-}
-
-.artist-management
-  .card
-  .fans-list
-  ul
-  li
-  .fan-details
-  .fan-details-content
-  span.name {
-  display: block;
-  text-align: left;
-  font-size: 16px;
-  font-weight: 700;
-  font-family: Rubik-Medium;
-}
-
-.artist-management
-  .card
-  .fans-list
-  ul
-  li
-  .fan-details
-  .fan-details-content
-  span.content {
-  color: #858997;
-  font-weight: 400;
-  letter-spacing: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /*max-width: 200px;*/
-  display: block;
-}
-
-.artist-management .card .fans-list .see-all-btn {
-  display: flex;
-  justify-content: center;
-  margin: 25px auto 0;
-  border: 0;
-  background-color: transparent;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 700;
-}
-
 /* ---------------Responsive----------------- */
 
 @media (max-width: 1400px) {
@@ -2631,10 +2355,6 @@ input:checked + .slider:before {
   .gray-cards-main .table-main table {
     width: 1100px;
   }
-
-  .artist-management .card .artist-poll .amount {
-    font-size: 30px;
-  }
 }
 
 @media (max-width: 991px) {
@@ -2697,7 +2417,7 @@ input:checked + .slider:before {
     .Dropdown-main-header
     .dropdown
     .btn {
-    padding-right: 100px;
+    padding-right: 10px;
   }
 
   .Inflow-music-main .inner-music-wrapper {
@@ -2858,15 +2578,6 @@ input:checked + .slider:before {
 
   .save-changes-main button {
     padding: 16px 70px;
-  }
-
-  .artist-management .card .artist-title span,
-  .artist-management .card .footer-btn .btn-gradiant {
-    font-size: 15px;
-  }
-
-  .artist-management .card .artist-poll .amount {
-    font-size: 25px;
   }
 }
 
@@ -3178,10 +2889,6 @@ input:checked + .slider:before {
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 15px;
     grid-row-gap: 25px;
-  }
-
-  .artist-management .card .artist-poll .amount {
-    font-size: 20px;
   }
 
   .edit-profile-modal .modal-dialog .modal-content {
