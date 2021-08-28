@@ -29,7 +29,10 @@ import Collectible from '../component/Collectible';
 import AdminPanel from '../page/AdminPanel';
 import ResetPassword from '../page/ResetPassword'
 import VerfiyEmail from '../page/VerifyEmail'
+import LoginModal from '../page/LoginModal';
+
 export const AppRoutes = () => {
+    
     return (
         <Switch>
             <PublicRoutes path="/login" component={Login} exact />

@@ -1,0 +1,283 @@
+.artist-management {
+  padding-bottom: 0;
+  margin-bottom: 30px;
+}
+
+.artist-management .card {
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
+  padding: 20px 40px;
+  border-radius: 15px;
+  height: 100%;
+}
+
+.artist-management .card .artist-poll {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.artist-management .card .artist-poll .poll-green {
+  color: #00cd98;
+}
+
+.artist-management .card .artist-poll img {
+  margin-right: 5px;
+}
+
+.artist-management .card .artist-poll .amount {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.artist-management .card .first-row-main-dash .left-col {
+  width: 100%;
+}
+
+.artist-management .card .first-row-main-dash .left-col .below-row {
+  background-color: transparent;
+}
+
+.artist-management .card .first-row-main-dash .left-col .below-row {
+  background-color: transparent;
+}
+
+.artist-management .card .footer-btn {
+  text-align: center;
+  margin-top: 46px;
+}
+
+.artist-management .card.button-card .footer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  /* height: calc(400px - 20px); */
+}
+
+.artist-management .card .footer-btn .btn-gradiant {
+  margin: 0 auto 20px;
+  padding: 15px 35px;
+  letter-spacing: 2px;
+  font-size: 18px;
+}
+
+.artist-management .card .fans-list ul {
+  margin: 20px 0 0;
+  padding: 0;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.artist-management .card .fans-list ul li {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.artist-management .card .fans-list ul li + li {
+  padding-top: 20px;
+}
+
+.artist-management .card .fans-list ul li .fan-profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.artist-management .card .fans-list ul li .fan-details {
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.artist-management .card .fans-list ul li .fan-details .donate-amount {
+  color: #c3c6d1;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: Rubik-bold;
+  letter-spacing: 1px;
+  width: 80px;
+}
+
+.artist-management
+  .card
+  .fans-list
+  ul
+  li
+  .fan-details
+  .fan-details-content
+  span.name {
+  display: block;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: Rubik-Medium;
+}
+
+.artist-management
+  .card
+  .fans-list
+  ul
+  li
+  .fan-details
+  .fan-details-content
+  span.content {
+  color: #858997;
+  font-weight: 400;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /*max-width: 200px;*/
+  display: block;
+}
+
+.artist-management .card .fans-list .see-all-btn {
+  display: flex;
+  justify-content: center;
+  margin: 25px auto 0;
+  border: 0;
+  background-color: transparent;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.artist-management .card.button-card {
+  min-height: 450px;
+}
+
+/* .artist-management .card .artist-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+} */
+
+.artist-management .card .artist-title span {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: Rubik-bold;
+  letter-spacing: 1px;
+}
+
+.create-collectible {
+  display: flex;
+  overflow: hidden;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.artist-management .card .create-collectible-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.artist-management .card .create-collectible-title span {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: Rubik;
+  letter-spacing: 1px;
+}
+
+.artist-management .card .create-collectible-upload-description {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.artist-management .card .create-collectible-upload-description h3 {
+  font-size: 20px;
+  font-weight: 300;
+  font-family: Rubik-Light;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.artist-management .card .create-collectible-upload-description p {
+  font-size: 15px;
+  font-weight: 500;
+  font-family: Rubik-Medium;
+  color: #888888;
+}
+
+.artist-management .card .create-collectible-preview-description {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0;
+  padding: 0 16px;
+}
+
+.artist-management .card .create-collectible-preview-description h3 {
+  font-size: 20px;
+  font-weight: 300;
+  font-family: Rubik-Light;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.artist-management .card .create-collectible-preview-description img {
+  height: 300px;
+  overflow: hidden;
+}
+
+.artist-management .card .create-collectible-title p {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 8px;
+  font-family: Rubik-Medium;
+  color: #888888;
+}
+
+.soundcloud-url {
+  height: 200px;
+  width: 100%;
+}
+
+.soundcloud-input {
+  width: 100%;
+}
+
+@media (max-width: 991px) {
+  .artist-management .card .artist-title span,
+  .artist-management .card .footer-btn .btn-gradiant {
+    font-size: 15px;
+  }
+
+  .artist-management .card .artist-poll .amount {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .artist-management .card .artist-poll .amount {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .artist-management .card .artist-title span,
+  .artist-management .card .footer-btn .btn-gradiant {
+    font-size: 15px;
+  }
+
+  .artist-management .card .artist-poll .amount {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .artist-management .card .artist-poll .amount {
+    font-size: 30px;
+  }
+}
