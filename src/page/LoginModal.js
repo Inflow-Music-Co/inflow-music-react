@@ -37,23 +37,8 @@ const LoginModal = (props) => {
   const { login, setLogin } = props;
   const [userType, setUserType] = useState("");
   const [loginType, setLoginType] = useState("login");
-
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const uData = useSelector((state) => state.auth.data);
-  const token = useSelector((state) => state.auth.token);
   // console.log(uData);
   // const history = useHistory();
-  const [authSelectFlag, setAuthSelectFlag] = useState(true);
-  const [account_type, setAccountType] = useState("user");
-  const [forgotPasswordFlag, setForgotPasswordFlag] = useState(false);
-  const [phoneRegisterFlag, setPhoneRegisterFlag] = useState(false);
-  const [optSent, setOptSent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [otpConfirmation, setOtpConfirmation] = useState(null);
-  const [alert, setAlert] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [errorFlg, setErrorFlg] = useState("");
   const [user, setUser] = useState({
     displayName: "",
     email: "",
@@ -283,11 +268,6 @@ const LoginModal = (props) => {
     //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
   }, [token]);
 
-  const handleChangeUsertype = (userType) => {
-    setUser({ ...user, account_type: userType});
-    console.log(user);
-  };
-
   const handleChange = (event) => {
     const { value, name } = event.target;
 
@@ -448,16 +428,14 @@ const LoginModal = (props) => {
                       className={`login-type ${
                         loginType === "login" && "login-type-active"
                       }`}
-                      onClick={() => setLoginType("login")}
-                    >
+                      onClick={() => setLoginType("login")}>
                       Login
                     </h4>
                     <h4
                       className={`login-type ${
                         loginType === "signup" && "login-type-active"
                       }`}
-                      onClick={() => setLoginType("signup")}
-                    >
+                      onClick={() => setLoginType("signup")}>
                       Sign Up
                     </h4>
                   </div>
@@ -466,7 +444,6 @@ const LoginModal = (props) => {
             </span>
           </div>
         </Modal.Header>
-
         <Modal.Body>
           {!forgotPasswordFlag && (
             <div className="login-type d-flex flex-row justify-content-center col-12">
