@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./base.css";
+import "./Header.css";
 //import Search from '../component/Search';
 import Notification from "../component/Notification";
 import Profiledropdown from "../component/Profiledropdown";
@@ -86,19 +87,19 @@ const Header = () => {
       {alert}
       <div className="logo-website-main">
         <Link to={"/"}>
-          <img alt="" src={assetsImages.logo} className="logo-main-test" />
+          <img alt="" src={assetsImages.logo} className="logo-main-image" />
         </Link>
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
-        <Button
+        {/* <Button
           size="sm"
           className="mr-2 wallet-button"
           //   onClick={() => connectWallet()}
           onClick={() => setLogin((login) => !login)}
         >
           {walletProvider ? "Logout" : "Login"}
-        </Button>
+        </Button> */}
         <div className="notified-main">
           <Notification />
         </div>

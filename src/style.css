@@ -22,6 +22,8 @@
   font-weight: normal;
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap");
+
 body {
   background: #000 !important;
   color: #fff !important;
@@ -45,8 +47,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .main-comman-wrapping {
   position: relative;
-  margin-left: 105px;
-  margin-top: 90px;
+  margin-left: 90px;
+  margin-top: 80px;
   background: url("./assets/images/background-pattern.svg") repeat-y fixed;
   background-size: cover;
 }
@@ -75,7 +77,7 @@ a:focus {
   padding: 35px;
   position: relative;
   z-index: 1;
-  max-width: 75vw;
+  max-width: 77vw;
   margin: auto;
 }
 
@@ -906,6 +908,18 @@ button.search-btn img {
   overflow: hidden;
 }
 
+.login-modal-main {
+  background: linear-gradient(
+    235deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(98, 32, 177, 1) 100%
+  );
+  padding: 130px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .login-page-main .left-cols-main .logos-row img {
   width: 80px;
   margin-right: 20px;
@@ -977,18 +991,18 @@ button.login-btn {
   justify-content: center;
 }
 
-.login-page-main .right-cols-main .creat-name-main {
+.creat-name-main {
   font-size: 35px;
   font-weight: 600;
   margin-bottom: 30px;
 }
 
-.login-page-main .right-cols-main .social-icons {
+.social-icons {
   display: flex;
   align-items: center;
 }
 
-.login-page-main .right-cols-main .social-icons a {
+.social-icons a {
   width: 40px;
   height: 40px;
   margin-right: 15px;
@@ -1001,29 +1015,29 @@ button.login-btn {
   padding: 10px;
 }
 
-.login-page-main .right-cols-main .social-icons a.call-icon img,
-.login-page-main .right-cols-main .social-icons a.mail-icon img {
+.social-icons a.call-icon img,
+.social-icons a.mail-icon img {
   filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg)
     brightness(102%) contrast(102%);
 }
 
-.login-page-main .right-cols-main .social-icons a img {
+.social-icons a img {
   width: 100%;
 }
 
-.login-page-main .right-cols-main .or-use {
+.or-use {
   margin-top: 30px;
   margin-bottom: 30px;
   font-size: 14px;
   font-weight: 600;
 }
 
-.login-page-main .right-cols-main .comman-row-input {
+.comman-row-input {
   margin-bottom: 20px;
   position: relative;
 }
 
-.login-page-main .right-cols-main .comman-row-input.persons-row::before {
+.comman-row-input.persons-row::before {
   position: absolute;
   content: "";
   background: url(assets/images/user.svg) no-repeat;
@@ -1036,7 +1050,7 @@ button.login-btn {
   left: 12px;
 }
 
-.login-page-main .right-cols-main .comman-row-input.email-row::before {
+.comman-row-input.email-row::before {
   position: absolute;
   content: "";
   background: url(assets/images/email.svg) no-repeat;
@@ -1049,7 +1063,7 @@ button.login-btn {
   left: 12px;
 }
 
-.login-page-main .right-cols-main .comman-row-input.password-row::before {
+.comman-row-input.password-row::before {
   position: absolute;
   content: "";
   background: url(assets/images/password.svg) no-repeat;
@@ -1062,8 +1076,13 @@ button.login-btn {
   left: 12px;
 }
 
-.login-page-main .right-cols-main .comman-row-input input {
-  width: 60%;
+.forgot-password {
+  font-size: 12px;
+  color: white;
+}
+
+.comman-row-input input {
+  width: 100%;
   padding: 10px 10px;
   font-size: 14px;
   border-radius: 5px;
@@ -1628,6 +1647,23 @@ ul.following-list li .follower-details .option-btn {
     rgba(59, 72, 193, 1) 100%
   );
   color: #ffffff;
+  padding: 15px 35px;
+  letter-spacing: 2px;
+  min-width: 150px;
+}
+
+.btn-selected {
+  border-radius: 50px;
+  border: 0;
+  background: white;
+  color: linear-gradient(
+    0deg,
+    rgba(101, 32, 181, 1) 0%,
+    rgba(59, 72, 193, 1) 100%
+  );
+  padding: 15px 35px;
+  letter-spacing: 2px;
+  min-width: 150px;
 }
 
 .edit-profile-modal .modal-body .upload-profile,
@@ -1821,6 +1857,13 @@ ul.following-list li .follower-details .option-btn {
   font-size: 14px;
   font-weight: 500;
   font-family: Rubik-Medium;
+}
+
+.create-collectible {
+  display: flex;
+  overflow: hidden;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .switch-top {
@@ -2417,7 +2460,7 @@ input:checked + .slider:before {
     .Dropdown-main-header
     .dropdown
     .btn {
-    padding-right: 10px;
+    padding-right: 100px;
   }
 
   .Inflow-music-main .inner-music-wrapper {
