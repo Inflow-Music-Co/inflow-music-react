@@ -410,28 +410,30 @@ const LoginModal = (props) => {
           {/* <span className="title">Login</span> */}
           <div className="d-flex flex-row justify-content-center align-items-center col-12">
             <span className="login-title col-12">
-              {forgotPasswordFlag
-                ? "Forgot Password"
-                : authSelectFlag && (
-                    <div className="d-flex flex-row justify-content-around col-12">
-                      <h4
-                        className={`login-type ${
-                          loginType === "login" && "login-type-active"
-                        }`}
-                        onClick={() => setLoginType("login")}
-                      >
-                        Login
-                      </h4>
-                      <h4
-                        className={`login-type ${
-                          loginType === "signup" && "login-type-active"
-                        }`}
-                        onClick={() => setLoginType("signup")}
-                      >
-                        Sign Up
-                      </h4>
-                    </div>
-                  )}
+              {forgotPasswordFlag ? (
+                <h4 className="login-type">Forgot Password</h4>
+              ) : (
+                authSelectFlag && (
+                  <div className="d-flex flex-row justify-content-around col-12">
+                    <h4
+                      className={`login-type ${
+                        loginType === "login" && "login-type-active"
+                      }`}
+                      onClick={() => setLoginType("login")}
+                    >
+                      Login
+                    </h4>
+                    <h4
+                      className={`login-type ${
+                        loginType === "signup" && "login-type-active"
+                      }`}
+                      onClick={() => setLoginType("signup")}
+                    >
+                      Sign Up
+                    </h4>
+                  </div>
+                )
+              )}
             </span>
           </div>
         </Modal.Header>
