@@ -548,12 +548,12 @@ const Login = () => {
                 ) : null}
               </>
             )}
-            {forgotPasswordFlag ? null : (
+            {!forgotPasswordFlag && (
               <button type="submit" className="sign-up-btn">
                 {authSelectFlag ? "Login" : "Sign Up"}
               </button>
             )}
-            {forgotPasswordFlag ? (
+            {forgotPasswordFlag && (
               <button
                 type="button"
                 className="sign-up-btn"
@@ -561,7 +561,8 @@ const Login = () => {
               >
                 Forgot password
               </button>
-            ) : null}
+            )}
+
             <select defaultValue="user" onChange={handleChangeUsertpe}>
               <option value="user">Admin or Fan</option>
               <option value="artist">Artist</option>

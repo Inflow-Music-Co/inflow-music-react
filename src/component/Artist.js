@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect, useContext } from "react";
 import "./component.css";
+import "./Artist.css";
 import { assetsImages } from "../constants/images";
 // import artistbg from "../assets/images/artist-background.jpg";
 // import Customdropdown from "./Customdropdown";
@@ -59,6 +60,7 @@ const Artistpic = () => {
   const [sellmodalloading, setsellmodalloading] = useState(false);
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
+  const [playlistID, setPlaylistID] = useState("522897111");
 
   useEffect(() => {
     if (!wallet.wallet_connected) {
@@ -539,6 +541,7 @@ const Artistpic = () => {
                 ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}`
                 : assetsImages.artistbg
             }
+            className="background-blur"
           />
           {/* <button
                         className="edit-profile"
@@ -708,54 +711,14 @@ const Artistpic = () => {
           <div className="row">
             <div className="col-lg-6">
               <div className="poll-details">
-                <ul className="poll-tab">
-                  <li className="active">
-                    <a href="#">Poll#1</a>
-                  </li>
-                  <li>
-                    <a href="#">Poll#2</a>
-                  </li>
-                  <li>
-                    <a href="#">Poll#2</a>
-                  </li>
-                </ul>
-
-                <div className="poll-content">
-                  <div className="poll-title">
-                    Where should the next concert be held?
-                  </div>
-                  <div className="poll-vote-list">
-                    <div className="list-title">
-                      <span>Answer</span>
-                      <span>Votes</span>
-                    </div>
-                    <div className="poll-vot-count">
-                      <div className="vote-details">
-                        <span className="poll-name">Chicago, IL</span>
-                        <span className="poll-number">137,082</span>
-                      </div>
-                    </div>
-                    <div className="poll-vot-count">
-                      <div className="vote-details">
-                        <span className="poll-name">Chicago, IL</span>
-                        <span className="poll-number">137,082</span>
-                      </div>
-                    </div>
-                    <div className="poll-vot-count">
-                      <div className="vote-details">
-                        <span className="poll-name">Chicago, IL</span>
-                        <span className="poll-number">137,082</span>
-                      </div>
-                    </div>
-                    <div className="poll-vot-count">
-                      <div className="vote-details">
-                        <span className="poll-name">Chicago, IL</span>
-                        <span className="poll-number">137,082</span>
-                      </div>
-                    </div>
-                    <button className="vote-btn">Cast Your Vote</button>
-                  </div>
-                </div>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  scrolling="no"
+                  frameborder="no"
+                  allow="autoplay"
+                  src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/${playlistID}&color=%237d2add&auto_play=false&visual=true`}
+                ></iframe>
               </div>
             </div>
             <div className="col-lg-6">

@@ -6,19 +6,13 @@ import { assetsImages } from "../constants/images";
 import { useSelector } from "react-redux";
 
 const Sidebar = () => {
-  const [activePage, updateActivePage] = useState("home");
+  const [activePage, updateActivePage] = useState("");
   const token = useSelector((state) => state.auth.token);
   const isArtist = useSelector((state) => state.auth.isArtist);
   const isAdmin = useSelector((state) => state.auth.isAdmin);
 
   return (
     <div className="side-bar-main">
-      {/* <div className="logo-website-main">
-        <Link to={"/"} className="nav-link">
-          <img alt="" src={assetsImages.logo} />
-        </Link>
-      </div> */}
-
       <div className="side-bar-navigation">
         <Link to={"/"}>
           <div
@@ -39,9 +33,9 @@ const Sidebar = () => {
         <Link to={"/labels"}>
           <div
             className={
-              activePage === "demo4" ? "nav-link-main active" : "nav-link-main"
+              activePage === "labels" ? "nav-link-main active" : "nav-link-main"
             }
-            onClick={() => updateActivePage("demo4")}
+            onClick={() => updateActivePage("labels")}
           >
             <img alt="" src={assetsImages.inventory} />
             <div className="d-flex justify-content-center align-items-center mt-2">
@@ -54,11 +48,11 @@ const Sidebar = () => {
           <Link to={"/dashboard"}>
             <div
               className={
-                activePage === "demo6"
+                activePage === "dashboard"
                   ? "nav-link-main active"
                   : "nav-link-main"
               }
-              onClick={() => updateActivePage("demo6")}
+              onClick={() => updateActivePage("dashboard")}
             >
               <img alt="" src={assetsImages.dashboard} />
               <div className="d-flex justify-content-center align-items-center mt-2">

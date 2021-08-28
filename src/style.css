@@ -77,7 +77,7 @@ a:focus {
   padding: 35px;
   position: relative;
   z-index: 1;
-  max-width: 75vw;
+  max-width: 77vw;
   margin: auto;
 }
 
@@ -110,7 +110,8 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .above-row {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
 }
 
 .first-row-main-dash .left-col .above-row a img,
@@ -120,7 +121,8 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .above-row {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
   padding: 30px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -134,9 +136,9 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .below-row {
-  background: #2d323f;
+  /* background: #2d323f; */
+  background: rgb(37, 37, 37);
   padding: 30px;
-
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }
@@ -260,7 +262,8 @@ a:focus {
 
 .first-row-main-dash .right-col {
   padding: 30px;
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
   border-radius: 8px;
 }
 
@@ -326,47 +329,6 @@ a:focus {
   width: 100%;
   font-size: 20px;
   font-weight: 600;
-}
-
-.Second-row-wave-chart {
-  margin-top: 100px;
-  background: #2f3443;
-  border-radius: 8px;
-  padding: 30px;
-}
-
-.Second-row-wave-chart .total-balance-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .card-heading {
-  margin-bottom: 10px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
-  font-size: 45px;
-  margin-bottom: 7px;
-  line-height: normal;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price span {
-  font-size: 20px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .small-heading {
-  font-size: 12px;
-  line-height: normal;
-  color: #888888;
-}
-
-.Second-row-wave-chart .total-balance-row .btn-filter a {
-  display: inline-block;
-}
-
-.Second-row-wave-chart .total-balance-row .btn-filter a img {
-  width: 26px;
 }
 
 .deposite-earning-row {
@@ -1192,7 +1154,8 @@ button.sign-up-btn {
 }
 
 .labels-mains .inner-row-labels-main {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background-color: rgb(37, 37, 37);
   padding: 25px 30px;
   border-radius: 10px;
 }
@@ -1231,7 +1194,8 @@ button.sign-up-btn {
 }
 
 .gray-cards-main {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
   padding: 30px;
   border-radius: 10px;
 }
@@ -1331,6 +1295,7 @@ button.sign-up-btn {
 .profile-dropdown-main {
   padding: 0;
   background-color: #2f3443;
+  /* background-color: rgb(37, 37, 37); */
   border-radius: 25px 0 25px 25px;
   overflow: hidden;
   transform: translate(-330px, 90px) !important;
@@ -1342,7 +1307,8 @@ button.sign-up-btn {
 .profile-dropdown-main:before {
   position: absolute;
   content: "";
-  border-bottom: 50px solid #2f3443;
+  /* border-bottom: 50px solid #2f3443; */
+  border-bottom: 50px solid gb(37, 37, 37);
   border-left: 50px solid transparent;
   right: 0;
   top: -40px;
@@ -1459,7 +1425,8 @@ button.sign-up-btn {
 }
 
 .profile-dropdown-card .profile-card-body {
-  background-color: #2f3443;
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
   margin: 40px 20px 20px 40px;
   height: 190px;
   overflow: auto;
@@ -1532,12 +1499,14 @@ ul.following-list li .follower-details .option-btn {
 }
 
 .edit-profile-modal .modal-dialog {
-  background-color: #2f3443;
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
   border-radius: 20px;
 }
 
 .edit-profile-modal .modal-dialog .modal-content {
-  background-color: #2f3443;
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
   border-radius: 20px;
   padding: 30px 50px;
 }
@@ -1704,18 +1673,6 @@ ul.following-list li .follower-details .option-btn {
   min-width: 150px;
 }
 
-.artist-management {
-  padding-bottom: 0;
-  margin-bottom: 30px;
-}
-
-.artist-management .card {
-  background-color: #2f3443;
-  padding: 20px 40px;
-  border-radius: 15px;
-  height: 100%;
-}
-
 .card-collectible {
   background-color: #000;
   padding: 20px 40px;
@@ -1871,96 +1828,11 @@ ul.following-list li .follower-details .option-btn {
   font-family: Rubik-Medium;
 }
 
-.artist-management .card.button-card {
-  min-height: 450px;
-}
-
-.artist-management .card .artist-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.artist-management .card .artist-title span {
-  font-size: 18px;
-  font-weight: 700;
-  font-family: Rubik-bold;
-  letter-spacing: 1px;
-}
-
 .create-collectible {
   display: flex;
   overflow: hidden;
   justify-content: space-between;
   align-items: center;
-}
-
-.artist-management .card .create-collectible-title {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.artist-management .card .create-collectible-title span {
-  font-size: 16px;
-  font-weight: 400;
-  font-family: Rubik;
-  letter-spacing: 1px;
-}
-
-.artist-management .card .create-collectible-upload-description {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 40px 0;
-}
-
-.artist-management .card .create-collectible-upload-description h3 {
-  font-size: 20px;
-  font-weight: 300;
-  font-family: Rubik-Light;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-.artist-management .card .create-collectible-upload-description p {
-  font-size: 15px;
-  font-weight: 500;
-  font-family: Rubik-Medium;
-  color: #888888;
-}
-
-.artist-management .card .create-collectible-preview-description {
-  display: flex;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 40px 0;
-  padding: 0 16px;
-}
-
-.artist-management .card .create-collectible-preview-description h3 {
-  font-size: 20px;
-  font-weight: 300;
-  font-family: Rubik-Light;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-.artist-management .card .create-collectible-preview-description img {
-  height: 300px;
-  overflow: hidden;
-}
-
-.artist-management .card .create-collectible-title p {
-  font-size: 12px;
-  font-weight: 500;
-  margin-top: 8px;
-  font-family: Rubik-Medium;
-  color: #888888;
 }
 
 .switch-top {
@@ -2258,142 +2130,6 @@ input:checked + .slider:before {
   align-items: flex-start;
 }
 
-.artist-management .card .artist-poll {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.artist-management .card .artist-poll .poll-green {
-  color: #00cd98;
-}
-
-.artist-management .card .artist-poll img {
-  margin-right: 5px;
-}
-
-.artist-management .card .artist-poll .amount {
-  font-size: 34px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.artist-management .card .first-row-main-dash .left-col {
-  width: 100%;
-}
-
-.artist-management .card .first-row-main-dash .left-col .below-row {
-  background-color: transparent;
-}
-
-.artist-management .card .first-row-main-dash .left-col .below-row {
-  background-color: transparent;
-}
-
-.artist-management .card .footer-btn {
-  text-align: center;
-  margin-top: 46px;
-}
-
-.artist-management .card.button-card .footer-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: calc(400px - 20px);
-}
-
-.artist-management .card .footer-btn .btn-gradiant {
-  margin: 0 auto 20px;
-  padding: 15px 35px;
-  letter-spacing: 2px;
-  font-size: 18px;
-}
-
-.artist-management .card .fans-list ul {
-  margin: 20px 0 0;
-  padding: 0;
-  max-height: 310px;
-  overflow: auto;
-}
-
-.artist-management .card .fans-list ul li {
-  display: flex;
-  align-items: center;
-  list-style: none;
-}
-
-.artist-management .card .fans-list ul li + li {
-  padding-top: 20px;
-}
-
-.artist-management .card .fans-list ul li .fan-profile img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
-.artist-management .card .fans-list ul li .fan-details {
-  display: flex;
-  align-items: center;
-  padding-right: 10px;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.artist-management .card .fans-list ul li .fan-details .donate-amount {
-  color: #c3c6d1;
-  font-size: 13px;
-  font-weight: 700;
-  font-family: Rubik-bold;
-  letter-spacing: 1px;
-  width: 80px;
-}
-
-.artist-management
-  .card
-  .fans-list
-  ul
-  li
-  .fan-details
-  .fan-details-content
-  span.name {
-  display: block;
-  text-align: left;
-  font-size: 16px;
-  font-weight: 700;
-  font-family: Rubik-Medium;
-}
-
-.artist-management
-  .card
-  .fans-list
-  ul
-  li
-  .fan-details
-  .fan-details-content
-  span.content {
-  color: #858997;
-  font-weight: 400;
-  letter-spacing: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /*max-width: 200px;*/
-  display: block;
-}
-
-.artist-management .card .fans-list .see-all-btn {
-  display: flex;
-  justify-content: center;
-  margin: 25px auto 0;
-  border: 0;
-  background-color: transparent;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 700;
-}
-
 /* ---------------Responsive----------------- */
 
 @media (max-width: 1400px) {
@@ -2631,10 +2367,6 @@ input:checked + .slider:before {
   .gray-cards-main .table-main table {
     width: 1100px;
   }
-
-  .artist-management .card .artist-poll .amount {
-    font-size: 30px;
-  }
 }
 
 @media (max-width: 991px) {
@@ -2859,15 +2591,6 @@ input:checked + .slider:before {
   .save-changes-main button {
     padding: 16px 70px;
   }
-
-  .artist-management .card .artist-title span,
-  .artist-management .card .footer-btn .btn-gradiant {
-    font-size: 15px;
-  }
-
-  .artist-management .card .artist-poll .amount {
-    font-size: 25px;
-  }
 }
 
 @media (max-width: 767px) {
@@ -3015,7 +2738,8 @@ input:checked + .slider:before {
   }
 
   .gray-cards-main {
-    background: #2f3443;
+    /* background: #2f3443; */
+    background-color: rgb(37, 37, 37);
     padding: 20px;
     border-radius: 6px;
   }
@@ -3066,6 +2790,7 @@ input:checked + .slider:before {
 
   .profile-dropdown-main:before {
     border-bottom: 30px solid #2f3443;
+    border-bottom: 30px solid rgb(37, 37, 37);
     border-left: 30px solid transparent;
     top: -30px;
   }
@@ -3178,10 +2903,6 @@ input:checked + .slider:before {
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 15px;
     grid-row-gap: 25px;
-  }
-
-  .artist-management .card .artist-poll .amount {
-    font-size: 20px;
   }
 
   .edit-profile-modal .modal-dialog .modal-content {
