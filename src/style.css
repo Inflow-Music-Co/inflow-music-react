@@ -1294,8 +1294,8 @@ button.sign-up-btn {
 
 .profile-dropdown-main {
   padding: 0;
-  /* background-color: #2f3443; */
-  background-color: rgb(37, 37, 37);
+  background-color: #2f3443;
+  /* background-color: rgb(37, 37, 37); */
   border-radius: 25px 0 25px 25px;
   overflow: hidden;
   transform: translate(-330px, 90px) !important;
