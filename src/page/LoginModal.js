@@ -33,9 +33,9 @@ const LoginModal = (props) => {
   const [alert, setAlert] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorFlg, setErrorFlg] = useState("");
-  
+
   const { login, setLogin } = props;
-  const [userType, setUserType] = useState("");
+  // const [userType, setUserType] = useState({ account_type: "user" });
   const [loginType, setLoginType] = useState("login");
   // console.log(uData);
   // const history = useHistory();
@@ -45,16 +45,17 @@ const LoginModal = (props) => {
     password: "",
     phone: "",
     otp: "",
+    account_type: "user",
   });
   const captchaRef = React.useRef(null);
 
-  useEffect(() => {
-    if (token) {
-      history.push("/");
-    }
-    //setUser({displayName:'', ...uData})
-    //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     history.push("/");
+  //   }
+  //   //setUser({displayName:'', ...uData})
+  //   //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
+  // }, [token]);
 
   // const handleLogin = async (event) => {
   //   event.preventDefault();
@@ -68,23 +69,20 @@ const LoginModal = (props) => {
   // };
 
   const handleRegister = async (event) => {
-    console.log("register func", user);
-    event.preventDefault();
     const { email, password, account_type } = user;
-    //// console.log('++++', email, password)
     const reg =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!reg.test(String(email).toLowerCase())) {
       setErrorFlg("email");
       setErrorMessage("Invalid Email");
-    } else if (password.length < 6) {
+    } else if (password.length < 8) {
       setErrorFlg("password");
-      setErrorMessage("Password must be 8 charachter long");
+      setErrorMessage("Passwords must be at least 8 characters long");
     } else {
       setErrorFlg("undefined");
       setErrorMessage("");
       try {
-        if (authSelectFlag) {
+        if (loginType === "login") {
           //login part
           // const { user } = await auth.signInWithEmailAndPassword(
           //   email,
@@ -93,7 +91,6 @@ const LoginModal = (props) => {
           // let isAdmin = false
           // const idTokenResult = await user.getIdTokenResult();
           // isAdmin = idTokenResult.claims.isAdmin ? true : false
-          console.log("aaa", account_type, email);
           await dispatch(loginUser({ email, password, account_type }));
           // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
           // const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
@@ -104,6 +101,7 @@ const LoginModal = (props) => {
           // } else {
           //   dispatch(setclienturl({ clienturl: '' }))
           // }
+          setLogin((login) => !login);
           dispatch(setclienturl({ clienturl: "" }));
           // // showAlert('Login Successful', 'success')
           // setTimeout(() => {
@@ -112,19 +110,6 @@ const LoginModal = (props) => {
           // window.location.href = "/";
         } else {
           // registeration part
-          // const { user } =
-          //   await auth.createUserWithEmailAndPassword(email, password);
-          // const data = await createUserProfileDocument(registeredUser, {
-          //   displayName,
-          // });
-          // user.sendEmailVerification();
-          // let isAdmin = false
-          // const idTokenResult = await user.getIdTokenResult()
-          // isAdmin = idTokenResult.claims.isAdmin ? true : false
-          // dispatch(
-          //   login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
-          // );
-
           const res = await Axios.post(
             `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
             {
@@ -138,22 +123,7 @@ const LoginModal = (props) => {
             showAlert(res.data.message);
             return;
           }
-          //@TODO
-          // const response = await Axios.post(
-          //   `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
-          //   { email: user.email }
-          // );
-          // // console.log(response.data);
-          // dispatch(setArtist({ isArtist: response.data.isArtist }));
-          // if (response.data.isArtist) {
-          //   dispatch(
-          //     setclienturl({ clienturl: response.data.artist.graphqlurl })
-          //   );
-          // } else {
-          //   dispatch(setclienturl({ clienturl: "" }));
-          // }
           showAlert("Check your email and verify account", "info");
-
           setTimeout(() => {
             window.location.href = "/";
           }, 1500);
@@ -277,8 +247,9 @@ const LoginModal = (props) => {
   };
 
   const handleChangeUsertype = (e) => {
+    console.log("dddd", e.target.id);
     setUser({ ...user, account_type: e.target.id });
-    setUserType(e.target.id);
+    // setUserType(e.target.id);
   };
 
   const forgotPassword = async () => {
@@ -288,7 +259,7 @@ const LoginModal = (props) => {
         { email: user.email }
       );
       showAlert("check your email for changing password", "info");
-      window.location.href = "/login";
+      // window.location.href = "/login";
     } catch (e) {
       console.error(e);
     }
@@ -408,13 +379,14 @@ const LoginModal = (props) => {
 
   return (
     <>
-      <Modal show={login}
+      <Modal
+        show={login}
         className="edit-profile-modal"
         onHide={() => {
           setLogin((login) => !login);
-          setUserType("");
         }}
       >
+        {alert}
         <Modal.Header closeButton>
           {/* <span className="title">Login</span> */}
           <div className="d-flex flex-row justify-content-center align-items-center col-12">
@@ -428,14 +400,16 @@ const LoginModal = (props) => {
                       className={`login-type ${
                         loginType === "login" && "login-type-active"
                       }`}
-                      onClick={() => setLoginType("login")}>
+                      onClick={() => setLoginType("login")}
+                    >
                       Login
                     </h4>
                     <h4
                       className={`login-type ${
                         loginType === "signup" && "login-type-active"
                       }`}
-                      onClick={() => setLoginType("signup")}>
+                      onClick={() => setLoginType("signup")}
+                    >
                       Sign Up
                     </h4>
                   </div>
@@ -450,7 +424,7 @@ const LoginModal = (props) => {
               <button
                 id="user"
                 className={`${
-                  userType === "user" ? "btn-selected" : "btn-gradiant"
+                  user.account_type === "user" ? "btn-selected" : "btn-gradiant"
                 } mr-3`}
                 onClick={handleChangeUsertype}
               >
@@ -459,7 +433,9 @@ const LoginModal = (props) => {
               <button
                 id="artist"
                 className={`${
-                  userType === "artist" ? "btn-selected" : "btn-gradiant"
+                  user.account_type === "artist"
+                    ? "btn-selected"
+                    : "btn-gradiant"
                 } ml-3`}
                 onClick={handleChangeUsertype}
               >
@@ -487,8 +463,22 @@ const LoginModal = (props) => {
                   type="text"
                   name="email"
                   value={user.email}
-                  onChange={handleChange}/>
+                  onChange={handleChange}
+                />
               </div>
+              {errorFlg === "email" && (
+                <div
+                  style={{
+                    color: "red",
+                    marginTop: `-13px`,
+                    marginBottom: "15px",
+                    fontSize: "14px",
+                  }}
+                >
+                  {errorMessage}
+                </div>
+              )}
+
               {!forgotPasswordFlag && (
                 <div className="comman-row-input password-row">
                   <input
@@ -500,6 +490,18 @@ const LoginModal = (props) => {
                   />
                 </div>
               )}
+              {errorFlg === "password" && (
+                <div
+                  style={{
+                    color: "red",
+                    marginTop: `-13px`,
+                    marginBottom: "15px",
+                    fontSize: "14px",
+                  }}
+                >
+                  {errorMessage}
+                </div>
+              )}
             </form>
           </div>
         </Modal.Body>
@@ -508,13 +510,8 @@ const LoginModal = (props) => {
           <div className="d-flex flex-column flex-wrap justify-content-center align-items-center col-12">
             <div className="">
               {!forgotPasswordFlag && (
-                <button
-                  className="btn-gradiant"
-                  onClick={() => {
-                    // window.location.href = "/login"; // ADD LOGIN FLOW LOGIC HERE
-                  }}
-                >
-                  Login
+                <button className="btn-gradiant" onClick={handleRegister}>
+                  {loginType === "login" ? "Login" : "Sign Up"}
                 </button>
               )}
 
@@ -545,6 +542,6 @@ const LoginModal = (props) => {
       </Modal>
     </>
   );
-}
+};
 
 export default LoginModal;

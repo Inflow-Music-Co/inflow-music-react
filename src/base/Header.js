@@ -41,7 +41,7 @@ const Header = () => {
 
   const connectWallet = async () => {
     if (!token) {
-      window.location.href = "/login";
+      window.location.href = "/";
       return;
     }
     try {
@@ -106,7 +106,7 @@ const Header = () => {
           <Profiledropdown />
         </div>
       </div>
-      <LoginModal login={login} setLogin={setLogin}/>
+      {/* <LoginModal login={login} setLogin={setLogin}/> */}
     </div>
   );
 };

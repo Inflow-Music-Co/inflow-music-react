@@ -219,7 +219,7 @@ const Login = () => {
         { email: user.email }
       );
       showAlert("check your email for changing password", "info");
-      window.location.href = "/login";
+      // window.location.href = "/login";
     } catch (e) {
       console.error(e);
     }
@@ -440,7 +440,8 @@ const Login = () => {
                   type="text"
                   name="displayName"
                   value={user.displayName}
-                  onChange={handleChange}/>
+                  onChange={handleChange}
+                />
               </div>
             )}
             <div className="comman-row-input email-row">
@@ -449,7 +450,8 @@ const Login = () => {
                 value={user.phone}
                 onChange={(value) => {
                   setUser({ phone: value });
-                }}/>
+                }}
+              />
             </div>
             {errorFlg === "phone" ? (
               <div
@@ -458,7 +460,8 @@ const Login = () => {
                   marginTop: `-13px`,
                   marginBottom: "15px",
                   fontSize: "14px",
-                }}>
+                }}
+              >
                 {errorMessage}
               </div>
             ) : null}
@@ -470,7 +473,8 @@ const Login = () => {
                     type="text"
                     name="otp"
                     value={user.otp}
-                    onChange={handleChange}/>
+                    onChange={handleChange}
+                  />
                 </div>
                 {errorFlg === "otp" ? (
                   <div
@@ -479,7 +483,8 @@ const Login = () => {
                       marginTop: `-13px`,
                       marginBottom: "15px",
                       fontSize: "14px",
-                    }}>
+                    }}
+                  >
                     {errorMessage}
                   </div>
                 ) : null}
@@ -502,7 +507,8 @@ const Login = () => {
                         type="text"
                         name="displayName"
                         value={user.displayName}
-                        onChange={handleChange}/>
+                        onChange={handleChange}
+                      />
                     </div>
                   </>
                 )}
@@ -512,7 +518,8 @@ const Login = () => {
                 type="text"
                 name="email"
                 value={user.email}
-                onChange={handleChange}/>
+                onChange={handleChange}
+              />
             </div>
             {errorFlg === "email" ? (
               <div
@@ -521,7 +528,8 @@ const Login = () => {
                   marginTop: `-13px`,
                   marginBottom: "15px",
                   fontSize: "14px",
-                }}>
+                }}
+              >
                 {errorMessage}
               </div>
             ) : null}
@@ -533,7 +541,8 @@ const Login = () => {
                     type="password"
                     name="password"
                     value={user.password}
-                    onChange={handleChange}/>
+                    onChange={handleChange}
+                  />
                 </div>
                 {errorFlg === "password" ? (
                   <div
@@ -542,7 +551,8 @@ const Login = () => {
                       marginTop: `-13px`,
                       marginBottom: "15px",
                       fontSize: "14px",
-                    }}>
+                    }}
+                  >
                     {errorMessage}
                   </div>
                 ) : null}
