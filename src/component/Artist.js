@@ -60,6 +60,7 @@ const Artistpic = () => {
   const [sellmodalloading, setsellmodalloading] = useState(false);
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
+  const [playlistID, setPlaylistID] = useState("522897111");
 
   useEffect(() => {
     if (!wallet.wallet_connected) {
@@ -709,7 +710,16 @@ const Artistpic = () => {
         <div className="poll-play-song-details">
           <div className="row">
             <div className="col-lg-6">
-              <div className="poll-details"></div>
+              <div className="poll-details">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  scrolling="no"
+                  frameborder="no"
+                  allow="autoplay"
+                  src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/${playlistID}&color=%237d2add&auto_play=false&visual=true`}
+                ></iframe>
+              </div>
             </div>
             <div className="col-lg-6">
               <div className="song-play-list">
