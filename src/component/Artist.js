@@ -10,22 +10,6 @@ import { assetsImages } from "../constants/images";
 // import CircularProgress from "@material-ui/core/CircularProgress";
 import Totalbalancechart from "./Totalbalancechart";
 // import Song from './Song';
-<<<<<<< HEAD
-import Mynftdropdown from './Mynftdropdown';
-import { Modal } from 'react-bootstrap';
-import Loader from './Loader';
-import SmallLoader from './SmallLoader';
-import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
-import { Contract, ethers } from 'ethers';
-import SocialToken from '../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json';
-import MockUSDC from '../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json';
-import SweetAlert from 'react-bootstrap-sweetalert';
-import { useParams } from 'react-router-dom'
-import Axios from 'axios';
-import { RINKEBY_MOCKUSDC } from '../utils/addresses'
-import { useSelector } from 'react-redux';
-import { WalletProviderContext } from '../contexts/walletProviderContext';
-=======
 // import Mynftdropdown from './Mynftdropdown';
 import { Modal } from "react-bootstrap";
 import Loader from "./Loader";
@@ -40,7 +24,6 @@ import Axios from "axios";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
->>>>>>> degen
 
 // import { Link } from '@material-ui/core';
 
@@ -79,38 +62,6 @@ const Artistpic = () => {
   const [historicalData, setHistoricalData] = useState([]);
   const [playlistID, setPlaylistID] = useState("522897111");
 
-<<<<<<< HEAD
-    useEffect(() => {
-        if (!wallet.wallet_connected) {
-            setconnectedwallet(false)
-        }
-        const init = async () => {
-            console.log({ walletProvider })
-            setLoading(true)
-            const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id })
-
-            if (data.artist) {
-                setArtist(data.artist)
-                setSocialTokenAddress(data.artist.social_token_id)
-                console.log(data.artist.social_token_id)
-                fetchTokenPrice();
-                const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist)
-                setHistoricalData(res.data.priceHistory);
-                const tokenPrice = setInterval(() => {
-                    // // console.log("HELLO3")
-                    fetchTokenPrice();
-                }, 10000);
-                setLoading(false)
-                return () => {
-                    clearInterval(tokenPrice);
-                };
-            }
-        }
-        if (id) {
-            return init();
-        }
-    }, [id, socialTokenAddress, walletProvider]);
-=======
   useEffect(() => {
     if (!wallet.wallet_connected) {
       setconnectedwallet(false);
@@ -122,7 +73,6 @@ const Artistpic = () => {
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
         { id }
       );
->>>>>>> degen
 
       if (data.artist) {
         setArtist(data.artist);
@@ -255,21 +205,11 @@ const Artistpic = () => {
     console.log(socialTokenAddress);
     console.log("WALLER PROVIDER ____", walletProvider);
 
-<<<<<<< HEAD
-                const signer = provider.getSigner();
-
-                const socialMinter = new Contract(
-                    socialTokenAddress,
-                    SocialToken.abi,
-                    signer
-                );
-=======
     if (walletProvider) {
       console.log("wallet provider is true");
       try {
         await requestAccount();
         const provider = new ethers.providers.Web3Provider(window.ethereum);
->>>>>>> degen
 
         const signer = provider.getSigner();
         console.log("bla bla bla <><><><><><><><", socialTokenAddress, signer);
@@ -279,26 +219,6 @@ const Artistpic = () => {
           signer
         );
 
-<<<<<<< HEAD
-                setbuymodalloading(false);
-                setsuccessmint(successmint => !successmint)
-                
-                await updatePriceHistory();
-
-                // setInterval(() => {
-                //     window.location.reload();
-                // }, 2000)
-                // getBalance();
-                setbuy(false)
-            } catch (err) {
-                setbuymodalloading(false);
-                setfailuremint(failuremint => !failuremint)
-                setbuy(false)
-                console.log(err);
-            }
-        } else {
-            setconnectedwallet(false);
-=======
         const usdcMinter = new Contract(RINKEBY_MOCKUSDC, MockUSDC.abi, signer);
         console.log({ usdcMinter });
         console.log("HEERREE");
@@ -315,7 +235,6 @@ const Artistpic = () => {
           setLoading(false);
           setlessusdc((lessusdc) => !lessusdc);
           return;
->>>>>>> degen
         }
         const allowance = await inflow.allowance(
           "SocialToken",
@@ -464,105 +383,11 @@ const Artistpic = () => {
     // }
   };
 
-<<<<<<< HEAD
-    const sellTokens = async () => {
-        if (walletProvider) {
-            try {
-                setsellmodalloading(true);
-                // await requestAccount();
-                // const provider = new ethers.providers.Web3Provider(
-                //     window.ethereum
-                // );
-                const provider = walletProvider;
-                // const admin = new Wallet(
-                //     process.env.REACT_APP_ADMIN_PVT_KEY,
-                //     provider
-                // );
-                const signer = provider.getSigner();
-                const socialMinter = new Contract(
-                    socialTokenAddress,
-                    SocialToken.abi,
-                    signer
-                );
-                // const socialMinter = social.connect(signer);
-                const inflow = new Inflow(provider, 4);
-                const signerAddress = await signer.getAddress();
-                const balance = await inflow.balanceOf(
-                    'SocialToken',
-                    signerAddress,
-                    socialTokenAddress
-                );
-                if (balance[0] < TokensToBurn) {
-                    setinsufficenttokens(true);
-                }
-                await burn(
-                    socialMinter,
-                    inflow.parseERC20('SocialToken', String(TokensToBurn))
-                );
-                setsellmodalloading(false);
-                setsuccessburn(successburn => !successburn)
-                setsell(false);
-                
-                await updatePriceHistory();
-                
-                // getBalance();
-            } catch (err) {
-                setsellmodalloading(false);
-                setfailureburn(failureburn => !failureburn)
-                setsell(false);
-                // // console.log(err);
-            }
-        } else {
-            setconnectedwallet(false);
-        }
-        // if (
-        //     typeof window.ethereum !== 'undefined' &&
-        //     socialTokenAddress &&
-        //     socialTokenAddress !== ''
-        // ) {
-        //     // try {
-        //     //     setsellmodalloading(true);
-        //     //     await requestAccount();
-        //     //     const provider = new ethers.providers.Web3Provider(
-        //     //         window.ethereum
-        //     //     );
-        //     //     // const admin = new Wallet(
-        //     //     //     process.env.REACT_APP_ADMIN_PVT_KEY,
-        //     //     //     provider
-        //     //     // );
-        //     //     const signer = provider.getSigner();
-        //     //     const social = new Contract(
-        //     //         socialTokenAddress,
-        //     //         SocialToken.abi,
-        //     //         signer
-        //     //     );
-        //     //     const socialMinter = social.connect(signer);
-        //     //     const inflow = new Inflow(provider, 80001);
-        //     //     await burn(
-        //     //         socialMinter,
-        //     //         inflow.parseERC20('SocialToken', String(TokensToBurn))
-        //     //     );
-        //     //     setsellmodalloading(false);
-        //     //     setsuccessburn(successburn => !successburn)
-        //     //     setInterval(() => {
-        //     //         window.location.reload();
-        //     //     }, 2000)
-        //     //     // // console.log('BURN SUCCESSFULL');
-        //     //     // getBalance();
-        //     // } catch (err) {
-        //     //     setsellmodalloading(false);
-        //     //     setfailureburn(failureburn => !failureburn)
-        //     //     // // console.log(err);
-        //     // }
-        // }
-    };
-=======
   const burn = async (social, amount) => {
     const burnPrice = await social.getBurnPrice(amount);
     await (await social.burn(amount)).wait();
     return burnPrice;
   };
->>>>>>> degen
 
   const sellTokens = async () => {
     if (walletProvider) {
@@ -705,28 +530,6 @@ const Artistpic = () => {
     return <Loader />;
   }
 
-<<<<<<< HEAD
-    const updatePriceHistory = async () => {
-
-        await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
-            mint_price_history : {
-                price: MintPrice, 
-                timestamp: Date.now()
-                }, 
-            socialTokenAddress, 
-            first_name : artist.first_name,
-            last_name : artist.last_name,
-            social_token_id: artist.social_token_id}); 
-
-    }
-
-    return (
-        <div className="artist-background">
-            <div className="artist-main">
-                <div className="background">
-                    <img alt="" src={artist.banner_image ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}` : assetsImages.artistbg} />
-                    {/* <button
-=======
   return (
     <div className="artist-background">
       <div className="artist-main">
@@ -741,7 +544,6 @@ const Artistpic = () => {
             className="background-blur"
           />
           {/* <button
->>>>>>> degen
                         className="edit-profile"
                         type="button"
                         onClick={() =>
@@ -787,19 +589,6 @@ const Artistpic = () => {
               {/* <div className="follow-btn">
                                 <button>FOLLOW</button>
                             </div> */}
-<<<<<<< HEAD
-                        </div>
-                    </div>
-                    <div className="artist-tag">
-                        <button className="tag-button">MERCH STORE</button>
-                        <button className="tag-button">LIVE STREAMS</button>
-                        <button className="tag-button">CONTENT</button>
-                        <button className="tag-button">EXPERIENCE</button>
-                        <button className="tag-button">VR ROOM</button>
-                    </div>
-                </div>
-=======
->>>>>>> degen
             </div>
           </div>
           <div className="artist-tag">
@@ -1045,51 +834,6 @@ const Artistpic = () => {
                 </div> */}
       </div>
 
-<<<<<<< HEAD
-            <Modal
-                show={profileModel}
-                className="edit-profile-modal"
-                onHide={() => setprofileModel((profileModel) => !profileModel)}>
-                <Modal.Header closeButton>
-                    <span className="title">Edit Profile</span>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <div className="form-group">
-                        <label>Name</label>
-                        <input
-                            className="form-control"
-                            type="text"
-                            placeholder=""/>
-                    </div>
-                    <div className="user-profile">
-                        <img alt="" src={assetsImages.artist} />
-                        <button className="upload-profile btn-gradiant">
-                            Upload New Profile Picture
-                        </button>
-                    </div>
-
-                    <div className="user-profile-background">
-                        <img alt="" src={assetsImages.artistbg} />
-                        <button className="upload-profile-background btn-gradiant">
-                            Upload New Background Picture
-                        </button>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <button className="save-btn btn-gradiant">
-                        Save Edits
-                    </button>
-                </Modal.Footer>
-            </Modal>
-            <Modal
-                show={buy}
-                className="edit-profile-modal sell"
-                onHide={() => setbuy((buy) => !buy)}>
-                <Modal.Header closeButton>
-                    <span className="title">Buy {artist.social_token_symbol} Token</span>
-                </Modal.Header>
-=======
       <Modal
         show={profileModel}
         className="edit-profile-modal"
@@ -1133,7 +877,6 @@ const Artistpic = () => {
         <Modal.Header closeButton>
           <span className="title">Buy {artist.social_token_symbol} Token</span>
         </Modal.Header>
->>>>>>> degen
 
         <Modal.Body>
           {buymodalloading ? (

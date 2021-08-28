@@ -22,11 +22,8 @@
   font-weight: normal;
 }
 
-<<<<<<< HEAD
-=======
 @import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap");
 
->>>>>>> degen
 body {
   background: #000 !important;
   color: #fff !important;
@@ -50,13 +47,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .main-comman-wrapping {
   position: relative;
-<<<<<<< HEAD
-  margin-left: 105px;
-  margin-top: 90px;
-=======
   margin-left: 90px;
   margin-top: 80px;
->>>>>>> degen
   background: url("./assets/images/background-pattern.svg") repeat-y fixed;
   background-size: cover;
 }
@@ -85,11 +77,7 @@ a:focus {
   padding: 35px;
   position: relative;
   z-index: 1;
-<<<<<<< HEAD
-  max-width: 75vw;
-=======
   max-width: 77vw;
->>>>>>> degen
   margin: auto;
 }
 
@@ -122,12 +110,8 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .above-row {
-<<<<<<< HEAD
-  background: #2f3443;
-=======
   /* background: #2f3443; */
   background: rgb(37, 37, 37);
->>>>>>> degen
 }
 
 .first-row-main-dash .left-col .above-row a img,
@@ -137,12 +121,8 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .above-row {
-<<<<<<< HEAD
-  background: #2f3443;
-=======
   /* background: #2f3443; */
   background: rgb(37, 37, 37);
->>>>>>> degen
   padding: 30px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -156,15 +136,9 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .below-row {
-<<<<<<< HEAD
-  background: #2d323f;
-  padding: 30px;
-
-=======
   /* background: #2d323f; */
   background: rgb(37, 37, 37);
   padding: 30px;
->>>>>>> degen
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }
@@ -288,12 +262,8 @@ a:focus {
 
 .first-row-main-dash .right-col {
   padding: 30px;
-<<<<<<< HEAD
-  background: #2f3443;
-=======
   /* background: #2f3443; */
   background: rgb(37, 37, 37);
->>>>>>> degen
   border-radius: 8px;
 }
 
@@ -359,50 +329,6 @@ a:focus {
   width: 100%;
   font-size: 20px;
   font-weight: 600;
-<<<<<<< HEAD
-}
-
-.Second-row-wave-chart {
-  margin-top: 100px;
-  background: #2f3443;
-  border-radius: 8px;
-  padding: 30px;
-}
-
-.Second-row-wave-chart .total-balance-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .card-heading {
-  margin-bottom: 10px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
-  font-size: 45px;
-  margin-bottom: 7px;
-  line-height: normal;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price span {
-  font-size: 20px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .small-heading {
-  font-size: 12px;
-  line-height: normal;
-  color: #888888;
-}
-
-.Second-row-wave-chart .total-balance-row .btn-filter a {
-  display: inline-block;
-}
-
-.Second-row-wave-chart .total-balance-row .btn-filter a img {
-  width: 26px;
-=======
->>>>>>> degen
 }
 
 .deposite-earning-row {
@@ -1189,7 +1115,6 @@ button.sign-up-btn {
 .grids-main-inputs .comman-grids.Address-main {
   grid-column-start: 1;
   grid-column-end: -1;
-<<<<<<< HEAD
 }
 
 .save-changes-main {
@@ -1212,30 +1137,6 @@ button.sign-up-btn {
   letter-spacing: 1px;
 }
 
-=======
-}
-
-.save-changes-main {
-  padding: 0 100px;
-  text-align: right;
-}
-
-.save-changes-main button {
-  background: linear-gradient(
-    0deg,
-    rgba(101, 32, 181, 1) 20%,
-    rgba(59, 72, 193, 1) 100%
-  );
-  color: #fff;
-  border: none;
-  padding: 16px 100px;
-  font-size: 14px;
-  border-radius: 100px;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
->>>>>>> degen
 .save-changes-main-button {
   background: linear-gradient(
     0deg,
@@ -1253,12 +1154,8 @@ button.sign-up-btn {
 }
 
 .labels-mains .inner-row-labels-main {
-<<<<<<< HEAD
-  background: #2f3443;
-=======
   /* background: #2f3443; */
   background-color: rgb(37, 37, 37);
->>>>>>> degen
   padding: 25px 30px;
   border-radius: 10px;
 }
@@ -1297,12 +1194,8 @@ button.sign-up-btn {
 }
 
 .gray-cards-main {
-<<<<<<< HEAD
-  background: #2f3443;
-=======
   /* background: #2f3443; */
   background: rgb(37, 37, 37);
->>>>>>> degen
   padding: 30px;
   border-radius: 10px;
 }
@@ -1402,10 +1295,7 @@ button.sign-up-btn {
 .profile-dropdown-main {
   padding: 0;
   background-color: #2f3443;
-<<<<<<< HEAD
-=======
   /* background-color: rgb(37, 37, 37); */
->>>>>>> degen
   border-radius: 25px 0 25px 25px;
   overflow: hidden;
   transform: translate(-330px, 90px) !important;
@@ -1417,12 +1307,8 @@ button.sign-up-btn {
 .profile-dropdown-main:before {
   position: absolute;
   content: "";
-<<<<<<< HEAD
-  border-bottom: 50px solid #2f3443;
-=======
   /* border-bottom: 50px solid #2f3443; */
   border-bottom: 50px solid gb(37, 37, 37);
->>>>>>> degen
   border-left: 50px solid transparent;
   right: 0;
   top: -40px;
@@ -1539,12 +1425,8 @@ button.sign-up-btn {
 }
 
 .profile-dropdown-card .profile-card-body {
-<<<<<<< HEAD
-  background-color: #2f3443;
-=======
   /* background-color: #2f3443; */
   background-color: rgb(37, 37, 37);
->>>>>>> degen
   margin: 40px 20px 20px 40px;
   height: 190px;
   overflow: auto;
@@ -1617,22 +1499,14 @@ ul.following-list li .follower-details .option-btn {
 }
 
 .edit-profile-modal .modal-dialog {
-<<<<<<< HEAD
-  background-color: #2f3443;
-=======
   /* background-color: #2f3443; */
   background-color: rgb(37, 37, 37);
->>>>>>> degen
   border-radius: 20px;
 }
 
 .edit-profile-modal .modal-dialog .modal-content {
-<<<<<<< HEAD
-  background-color: #2f3443;
-=======
   /* background-color: #2f3443; */
   background-color: rgb(37, 37, 37);
->>>>>>> degen
   border-radius: 20px;
   padding: 30px 50px;
 }
@@ -1797,21 +1671,6 @@ ul.following-list li .follower-details .option-btn {
   padding: 15px 35px;
   letter-spacing: 2px;
   min-width: 150px;
-<<<<<<< HEAD
-}
-
-.artist-management {
-  padding-bottom: 0;
-  margin-bottom: 30px;
-}
-
-.artist-management .card {
-  background-color: #2f3443;
-  padding: 20px 40px;
-  border-radius: 15px;
-  height: 100%;
-=======
->>>>>>> degen
 }
 
 .card-collectible {
@@ -1961,7 +1820,6 @@ ul.following-list li .follower-details .option-btn {
   width: 100%;
   display: flex;
   justify-content: center;
-<<<<<<< HEAD
 }
 
 .sell-token-balance span {
@@ -1985,14 +1843,6 @@ ul.following-list li .follower-details .option-btn {
   font-weight: 700;
   font-family: Rubik-bold;
   letter-spacing: 1px;
-=======
-}
-
-.sell-token-balance span {
-  font-size: 14px;
-  font-weight: 500;
-  font-family: Rubik-Medium;
->>>>>>> degen
 }
 
 .create-collectible {
@@ -2000,7 +1850,6 @@ ul.following-list li .follower-details .option-btn {
   overflow: hidden;
   justify-content: space-between;
   align-items: center;
-<<<<<<< HEAD
 }
 
 .artist-management .card .create-collectible-title {
@@ -2069,8 +1918,6 @@ ul.following-list li .follower-details .option-btn {
   margin-top: 8px;
   font-family: Rubik-Medium;
   color: #888888;
-=======
->>>>>>> degen
 }
 
 .switch-top {
@@ -2368,7 +2215,6 @@ input:checked + .slider:before {
   align-items: flex-start;
 }
 
-<<<<<<< HEAD
 .artist-management .card .artist-poll {
   text-align: center;
   margin-top: 20px;
@@ -2504,496 +2350,11 @@ input:checked + .slider:before {
   font-size: 16px;
   font-weight: 700;
 }
-=======
-/* ---------------Responsive----------------- */
-
-@media (max-width: 1400px) {
-  .main-comman-wrapping {
-    margin-left: 70px;
-    margin-top: 72px;
-  }
-
-  .dashboard-wrapper-main {
-    padding: 20px;
-  }
-
-  .heading {
-    font-size: 22px;
-    margin-bottom: 22px;
-  }
-
-  .collectible-heading {
-    font-size: 36px;
-    font-weight: 300;
-    font-family: Rubik-Light;
-    margin-bottom: 22px;
-  }
-
-  .first-row-main-dash {
-    display: flex;
-    grid-column-gap: 10px;
-  }
-
-  .comman-div-for-pro {
-    padding: 20px;
-    width: 90%;
-    margin-top: 60px;
-  }
-
-  .last-row-pricing {
-    width: 90%;
-  }
-
-  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
-    font-size: 35px;
-  }
-
-  .card-heading {
-    font-size: 14px;
-  }
-
-  .songs-grid-main .song-card-main .song-details .song-name {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .first-row-main-dash
-    .left-col
-    .below-row
-    .right-side
-    .custom-drop
-    .customised-dashdrop
-    .btn {
-    font-size: 15px;
-  }
-
-  .first-row-main-dash .left-col .below-row .right-side .labal {
-    font-size: 10px;
-  }
-
-  .Second-row-wave-chart {
-    margin-top: 140px;
-  }
-
-  .first-row-main-dash .left-col .below-row .left-pricing .price-tag {
-    font-size: 27px;
-  }
-
-  .comman-div-for-pro {
-    padding: 20px;
-    width: 90%;
-    margin-top: 20px;
-  }
-
-  .search-input-main {
-    margin-top: 50px;
-  }
-
-  .search-input-main input {
-    padding: 20px 40px;
-  }
-
-  .search-input-main button.search-btn {
-    right: 15px;
-    width: 40px;
-    height: 40px;
-  }
-
-  button.search-btn img {
-    width: 13px;
-  }
-
-  .main-table-for-lader-board {
-    overflow-x: auto;
-  }
-
-  .main-table-for-lader-board table {
-    width: 1440px;
-    overflow-x: hidden;
-  }
-
-  .login-page-main .right-cols-main .comman-row-input input {
-    width: 80%;
-  }
-
-  .new-row-for-descriptions .login-headings {
-    margin-bottom: 40px;
-    font-size: 32px;
-    font-weight: 600;
-    line-height: 1.5;
-  }
-
-  .login-page-main .left-cols-main .logos-row img {
-    width: 70px;
-    margin-right: 20px;
-  }
-
-  .login-page-main .left-cols-main .logos-row {
-    padding: 50px 80px;
-    padding-bottom: 20px;
-    font-size: 30px;
-  }
-
-  button.login-btn {
-    margin-bottom: 15px;
-    padding: 11px 44px;
-  }
-
-  .main-table-for-lader-board table tbody tr td.second-col,
-  .main-table-for-lader-board table thead tr th.second-col {
-    width: 150px;
-  }
-
-  .main-table-for-lader-board table thead tr th.sixth-col {
-    width: 200px;
-  }
-
-  .main-table-for-lader-board table tbody tr td.third-col,
-  .main-table-for-lader-board table thead tr th.third-col,
-  .main-table-for-lader-board table tbody tr td.fourth-col,
-  .main-table-for-lader-board table thead tr th.fourth-col,
-  .main-table-for-lader-board table tbody tr td.fifth-col,
-  .main-table-for-lader-board table thead tr th.fifth-col {
-    width: 150px;
-  }
-}
-
-@media (max-width: 1100px) {
-  .last-row-pricing {
-    width: 100%;
-    padding: 20px;
-    margin-top: 10px;
-  }
-
-  .comman-div-for-pro {
-    padding: 20px;
-    width: 100%;
-    margin-top: -20px;
-  }
-
-  .first-row-main-dash .left-col .above-row a img,
-  .first-row-main-dash .right-col a img {
-    width: 21px;
-    cursor: pointer;
-  }
-
-  .first-row-main-dash .right-col {
-    padding: 20px;
-  }
-
-  .first-row-main-dash .left-col .above-row {
-    padding: 20px;
-  }
-
-  .first-row-main-dash .left-col .below-row {
-    padding: 20px;
-  }
-
-  .progress-bar-cust .progress {
-    margin: 40px 0px;
-  }
-
-  .see-all-artist {
-    text-align: center;
-    margin-top: 70px;
-    margin-bottom: 50px;
-  }
-
-  .see-all-nft {
-    margin-bottom: 30px !important;
-  }
-
-  .News-main .inner-wrapper-news {
-    width: 90%;
-  }
-
-  .News-main .inner-wrapper-news .heading {
-    padding-top: 40px;
-    margin-bottom: 30px;
-    text-align: center;
-  }
-
-  .search-input-main input {
-    padding: 16px 30px;
-  }
-
-  .search-input-main button.search-btn {
-    right: 15px;
-    width: 35px;
-    height: 35px;
-  }
-
-  .artist-pic img {
-    width: 50px;
-    border-radius: 100%;
-  }
-
-  .login-page-main .right-cols-main {
-    width: 50%;
-    padding: 90px 70px;
-    padding-bottom: 0px;
-  }
-
-  .table-main {
-    overflow-x: auto;
-  }
-
-  .gray-cards-main .table-main table {
-    width: 1100px;
-  }
-}
-
-@media (max-width: 991px) {
-  .first-row-main-dash {
-    flex-direction: column;
-  }
-
-  .first-row-main-dash .left-col,
-  .first-row-main-dash .right-col {
-    width: 100%;
-  }
-
-  .first-row-main-dash .left-col {
-    margin-bottom: 20px;
-  }
-
-  .main-comman-wrapping {
-    margin-left: 50px;
-    margin-top: 66px;
-  }
-
-  .heading {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-
-  .dashboard-wrapper-main {
-    padding: 12px;
-  }
-
-  .mynfts-row-main .center-col input {
-    font-size: 12px;
-  }
-
-  .mynfts-row-main .first-col .Mynft-drop-component-main .title-name {
-    font-size: 11px;
-    margin-bottom: -2px;
-  }
-
-  .mynfts-row-main .last-icon a img {
-    width: 20px;
-  }
-
-  .mynfts-row-main .center-col {
-    width: 50%;
-  }
-
-  .mynfts-row-main .first-col .Mynft-drop-component-main .dropdown .btn {
-    font-size: 12px;
-  }
-
-  .Dropdown-main-header .dropdown .btn::after {
-    width: 10px;
-    height: 10px;
-  }
-
-  .header-main
-    .right-col-main
-    .profile-dropdown
-    .Dropdown-main-header
-    .dropdown
-    .btn {
-    padding-right: 100px;
-  }
-
-  .Inflow-music-main .inner-music-wrapper {
-    margin-top: 30px;
-  }
-
-  .see-all-artist {
-    margin-top: 30px;
-  }
-
-  .login-page-main {
-    height: auto;
-    background: #000;
-    display: flex;
-    overflow: inherit;
-    flex-direction: column;
-  }
-
-  .login-page-main .left-cols-main {
-    width: 100%;
-  }
-
-  .new-row-for-descriptions {
-    padding: 80px 70px;
-  }
-
-  .login-page-main .left-cols-main .logos-row {
-    padding: 40px 80px;
-    padding-bottom: 0px;
-    font-size: 30px;
-  }
-
-  .login-page-main .left-cols-main .logos-row {
-    padding: 20px 20px;
-    padding-bottom: 0px;
-    font-size: 26px;
-  }
-
-  .new-row-for-descriptions {
-    padding: 30px 30px;
-    padding-bottom: 80px;
-  }
-
-  .new-row-for-descriptions .login-headings {
-    margin-bottom: 25px;
-    font-size: 23px;
-    font-weight: 600;
-    line-height: 1.5;
-  }
-
-  p.descriptions-main {
-    font-size: 12px;
-    color: #fff;
-    line-height: 23px;
-    font-weight: 500;
-    margin-bottom: 40px;
-  }
-
-  .login-page-main .right-cols-main {
-    width: 100%;
-    background: linear-gradient(
-      45deg,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(98, 32, 177, 1) 100%
-    );
-    padding: 60px 30px;
-  }
-
-  .login-page-main .right-cols-main .creat-name-main {
-    font-size: 25px;
-    font-weight: 600;
-    margin-bottom: 30px;
-  }
-
-  .login-page-main .right-cols-main .or-use {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .login-page-main .right-cols-main .comman-row-input input {
-    width: 100%;
-  }
-
-  button.login-btn {
-    padding: 7px 40px;
-    font-size: 12px;
-  }
-
-  .tab-settings-main nav .nav-tabs {
-    flex-direction: column;
-    justify-content: inherit !important;
-    text-align: left !important;
-  }
-
-  .tab-settings-main nav .nav-tabs a.nav-item {
-    text-align: center;
-    padding: 17px 20px;
-  }
-
-  .grids-main-inputs {
-    padding: 30px 20px;
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-column-gap: 30px;
-    grid-row-gap: 30px;
-  }
-
-  .save-changes-main {
-    padding: 0;
-    text-align: center;
-  }
-
-  .grids-main-inputs .comman-grids input,
-  .grids-main-inputs .comman-grids .dropdown .btn {
-    padding: 15px;
-  }
-
-  .labels-mains .inner-row-labels-main {
-    padding: 21px 20px;
-  }
-
-  .labels-mains .inner-row-labels-main .small-row-heading .small-headings {
-    font-size: 18px;
-    margin-bottom: 5px;
-    line-height: normal;
-    font-weight: 600;
-  }
-
-  .labels-mains .inner-row-labels-main .small-row-heading .short-descriptions {
-    font-size: 12px;
-    font-weight: 400;
-  }
-
-  .gray-cards-main .inner-first-card-row .col-rights-main .first-headings {
-    font-size: 18px;
-  }
-
-  .side-bar-main .side-bar-navigation .nav-link-main {
-    padding: 5px 0;
-  }
-
-  .grid-for-artist {
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: 20px;
-    grid-row-gap: 50px;
-  }
-
-  .grids-main-inputs .comman-grids input,
-  .grids-main-inputs .comman-grids .dropdown .btn {
-    padding: 15px;
-  }
-
-  .grids-main-inputs .comman-grids .dropdown .btn::after {
-    top: 26px;
-  }
-
-  .save-changes-main button {
-    padding: 16px 70px;
-  }
-}
-
-@media (max-width: 767px) {
-  .header-main .right-col-main .notified-main {
-    display: none;
-  }
-
-  .dashboard-wrapper-main {
-    padding: 12px 15px;
-    padding-top: 20px;
-  }
-
-  .heading {
-    font-size: 16px;
-    margin-bottom: 15px;
-  }
-
-  .main-comman-wrapping {
-    margin-left: 40px;
-    margin-top: 56px;
-  }
->>>>>>> degen
 
   .first-row-main-dash .left-col .above-row {
     padding: 12px;
   }
 
-<<<<<<< HEAD
 @media (max-width: 1400px) {
   .main-comman-wrapping {
     margin-left: 70px;
@@ -3573,89 +2934,6 @@ input:checked + .slider:before {
     display: none;
   }
 
-=======
-  .first-row-main-dash .left-col .below-row {
-    padding: 12px;
-  }
-
-  .first-row-main-dash .left-col .below-row .left-pricing .price-tag {
-    font-size: 21px;
-  }
-
-  .spiner-bar-row .comman-col:first-child {
-    margin-right: 30px;
-    padding-right: 10px;
-    padding-left: 0px;
-  }
-
-  .spiner-bar-row .comman-col .right-side-value {
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .chart-row {
-    width: 50%;
-    margin: auto;
-    margin-bottom: 60px;
-  }
-
-  .last-row-pricing .comman-priced:first-child {
-    padding-right: 20px;
-    margin-right: 20px;
-  }
-
-  .last-row-pricing .comman-priced span.small-heading {
-    font-size: 10px;
-  }
-
-  .first-row-main-dash .right-col {
-    padding: 12px;
-  }
-
-  .Second-row-wave-chart {
-    padding: 12px;
-  }
-
-  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
-    font-size: 24px;
-  }
-
-  .deposite-earning-row {
-    grid-column-gap: 50px;
-  }
-
-  .deposite-earning-row .deposite-heaing span.labal-heading {
-    font-size: 12px;
-  }
-
-  .deposite-earning-row .deposits .square-lab,
-  .deposite-earning-row .earning .square-lab {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-  }
-
-  .mynfts-row-main {
-    margin-top: 20px;
-  }
-
-  .mynfts-row-main .first-col {
-    display: none;
-  }
-
-  .mynfts-row-main .center-col {
-    width: 90%;
-  }
-
-  .Inflow-music-main .inner-music-wrapper {
-    margin-top: 10px;
-  }
-
-  .artist-heading:before {
-    display: none;
-  }
-
->>>>>>> degen
   .table-filter-btn-row {
     flex-direction: column;
     align-items: inherit;
@@ -3674,7 +2952,6 @@ input:checked + .slider:before {
   .table-filter-btn-row .left-col-fillter .comman-btn:last-child {
     margin-right: 0px;
   }
-<<<<<<< HEAD
 
   .table-filter-btn-row .left-col-fillter .comman-btn .btn {
     width: 100%;
@@ -3721,55 +2998,6 @@ input:checked + .slider:before {
     width: 650px;
   }
 
-=======
-
-  .table-filter-btn-row .left-col-fillter .comman-btn .btn {
-    width: 100%;
-  }
-
-  .table-filter-btn-row .right-col-filter .right-col-btn {
-    margin-left: 10px;
-  }
-
-  .table-filter-btn-row .right-col-filter .right-col-btn:first-child {
-    margin-left: 0px;
-  }
-
-  .table-filter-btn-row .right-col-filter .right-col-btn button {
-    width: 100%;
-  }
-
-  .table-filter-btn-row .right-col-filter .right-col-btn {
-    width: 50%;
-  }
-
-  .gray-cards-main {
-    /* background: #2f3443; */
-    background-color: rgb(37, 37, 37);
-    padding: 20px;
-    border-radius: 6px;
-  }
-
-  .gray-cards-main .inner-first-card-row .col-rights-main .first-headings {
-    font-size: 15px;
-  }
-
-  .gray-cards-main .inner-first-card-row .col-rights-main .songs-name {
-    font-size: 11px;
-    line-height: normal;
-  }
-
-  .gray-cards-main .inner-first-card-row img {
-    width: 50px;
-    border-radius: 10px;
-    margin-right: 10px;
-  }
-
-  .gray-cards-main .table-main table {
-    width: 650px;
-  }
-
->>>>>>> degen
   .mynfts-row-main .center-col {
     width: 80%;
   }
@@ -3797,10 +3025,6 @@ input:checked + .slider:before {
 
   .profile-dropdown-main:before {
     border-bottom: 30px solid #2f3443;
-<<<<<<< HEAD
-=======
-    border-bottom: 30px solid rgb(37, 37, 37);
->>>>>>> degen
     border-left: 30px solid transparent;
     top: -30px;
   }
@@ -3898,7 +3122,6 @@ input:checked + .slider:before {
     margin: 0;
     padding: 0;
   }
-<<<<<<< HEAD
 
   .last-row-pricing .comman-priced + .comman-priced {
     padding-top: 15px;
@@ -3906,15 +3129,6 @@ input:checked + .slider:before {
     margin-top: 15px;
   }
 
-=======
-
-  .last-row-pricing .comman-priced + .comman-priced {
-    padding-top: 15px;
-    border-top: 2px solid #555;
-    margin-top: 15px;
-  }
-
->>>>>>> degen
   .chart-row {
     width: 75%;
   }
@@ -3925,13 +3139,10 @@ input:checked + .slider:before {
     grid-row-gap: 25px;
   }
 
-<<<<<<< HEAD
   .artist-management .card .artist-poll .amount {
     font-size: 20px;
   }
 
-=======
->>>>>>> degen
   .edit-profile-modal .modal-dialog .modal-content {
     padding: 30px;
   }
