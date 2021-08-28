@@ -110,7 +110,8 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .above-row {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
 }
 
 .first-row-main-dash .left-col .above-row a img,
@@ -120,7 +121,8 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .above-row {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
   padding: 30px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -134,9 +136,9 @@ a:focus {
 }
 
 .first-row-main-dash .left-col .below-row {
-  background: #2d323f;
+  /* background: #2d323f; */
+  background: rgb(37, 37, 37);
   padding: 30px;
-
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 }
@@ -260,7 +262,8 @@ a:focus {
 
 .first-row-main-dash .right-col {
   padding: 30px;
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
   border-radius: 8px;
 }
 
@@ -326,47 +329,6 @@ a:focus {
   width: 100%;
   font-size: 20px;
   font-weight: 600;
-}
-
-.Second-row-wave-chart {
-  margin-top: 100px;
-  background: #2f3443;
-  border-radius: 8px;
-  padding: 30px;
-}
-
-.Second-row-wave-chart .total-balance-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .card-heading {
-  margin-bottom: 10px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
-  font-size: 45px;
-  margin-bottom: 7px;
-  line-height: normal;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price span {
-  font-size: 20px;
-}
-
-.Second-row-wave-chart .total-balance-row .heading-cols .small-heading {
-  font-size: 12px;
-  line-height: normal;
-  color: #888888;
-}
-
-.Second-row-wave-chart .total-balance-row .btn-filter a {
-  display: inline-block;
-}
-
-.Second-row-wave-chart .total-balance-row .btn-filter a img {
-  width: 26px;
 }
 
 .deposite-earning-row {
@@ -1192,7 +1154,8 @@ button.sign-up-btn {
 }
 
 .labels-mains .inner-row-labels-main {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background-color: rgb(37, 37, 37);
   padding: 25px 30px;
   border-radius: 10px;
 }
@@ -1231,7 +1194,8 @@ button.sign-up-btn {
 }
 
 .gray-cards-main {
-  background: #2f3443;
+  /* background: #2f3443; */
+  background: rgb(37, 37, 37);
   padding: 30px;
   border-radius: 10px;
 }
@@ -1330,7 +1294,8 @@ button.sign-up-btn {
 
 .profile-dropdown-main {
   padding: 0;
-  background-color: #2f3443;
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
   border-radius: 25px 0 25px 25px;
   overflow: hidden;
   transform: translate(-330px, 90px) !important;
@@ -1342,7 +1307,8 @@ button.sign-up-btn {
 .profile-dropdown-main:before {
   position: absolute;
   content: "";
-  border-bottom: 50px solid #2f3443;
+  /* border-bottom: 50px solid #2f3443; */
+  border-bottom: 50px solid gb(37, 37, 37);
   border-left: 50px solid transparent;
   right: 0;
   top: -40px;
@@ -1459,7 +1425,8 @@ button.sign-up-btn {
 }
 
 .profile-dropdown-card .profile-card-body {
-  background-color: #2f3443;
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
   margin: 40px 20px 20px 40px;
   height: 190px;
   overflow: auto;
@@ -1532,12 +1499,14 @@ ul.following-list li .follower-details .option-btn {
 }
 
 .edit-profile-modal .modal-dialog {
-  background-color: #2f3443;
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
   border-radius: 20px;
 }
 
 .edit-profile-modal .modal-dialog .modal-content {
-  background-color: #2f3443;
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
   border-radius: 20px;
   padding: 30px 50px;
 }
@@ -2769,7 +2738,8 @@ input:checked + .slider:before {
   }
 
   .gray-cards-main {
-    background: #2f3443;
+    /* background: #2f3443; */
+    background-color: rgb(37, 37, 37);
     padding: 20px;
     border-radius: 6px;
   }
@@ -2820,6 +2790,7 @@ input:checked + .slider:before {
 
   .profile-dropdown-main:before {
     border-bottom: 30px solid #2f3443;
+    border-bottom: 30px solid rgb(37, 37, 37);
     border-left: 30px solid transparent;
     top: -30px;
   }
