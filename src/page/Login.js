@@ -13,6 +13,7 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
 import ReactBootstrap from "react-bootstrap";
+
 const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -76,46 +77,10 @@ const Login = () => {
       setErrorMessage("");
       try {
         if (authSelectFlag) {
-          //login part
-          // const { user } = await auth.signInWithEmailAndPassword(
-          //   email,
-          //   password
-          // );
-          // let isAdmin = false
-          // const idTokenResult = await user.getIdTokenResult();
-          // isAdmin = idTokenResult.claims.isAdmin ? true : false
           console.log("aaa", account_type, email);
           await dispatch(loginUser({ email, password, account_type }));
-          // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
-          // const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
-          // // console.log(response.data);
-          // dispatch(setArtist({ isArtist: response.data.isArtist }))
-          // if (response.data.isArtist) {
-          //   dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
-          // } else {
-          //   dispatch(setclienturl({ clienturl: '' }))
-          // }
           dispatch(setclienturl({ clienturl: "" }));
-          // // showAlert('Login Successful', 'success')
-          // setTimeout(() => {
-          //   window.location.href = "/"
-          // }, 1500)
-          // window.location.href = "/";
         } else {
-          // registeration part
-          // const { user } =
-          //   await auth.createUserWithEmailAndPassword(email, password);
-          // const data = await createUserProfileDocument(registeredUser, {
-          //   displayName,
-          // });
-          // user.sendEmailVerification();
-          // let isAdmin = false
-          // const idTokenResult = await user.getIdTokenResult()
-          // isAdmin = idTokenResult.claims.isAdmin ? true : false
-          // dispatch(
-          //   login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
-          // );
-
           const res = await Axios.post(
             `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
             {
@@ -129,27 +94,11 @@ const Login = () => {
             showAlert(res.data.message);
             return;
           }
-          //@TODO
-          // const response = await Axios.post(
-          //   `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
-          //   { email: user.email }
-          // );
-          // // console.log(response.data);
-          // dispatch(setArtist({ isArtist: response.data.isArtist }));
-          // if (response.data.isArtist) {
-          //   dispatch(
-          //     setclienturl({ clienturl: response.data.artist.graphqlurl })
-          //   );
-          // } else {
-          //   dispatch(setclienturl({ clienturl: "" }));
-          // }
           showAlert("Check your email and verify account", "info");
-
           setTimeout(() => {
             window.location.href = "/";
           }, 1500);
         }
-        // history.push("/");
       } catch (error) {
         console.error(error);
         showAlert("Invalid email or password");
@@ -260,7 +209,6 @@ const Login = () => {
   };
 
   const handleChangeUsertpe = (e) => {
-    console.log("999", e.target.value);
     setUser({ ...user, account_type: e.target.value });
   };
 
@@ -492,8 +440,7 @@ const Login = () => {
                   type="text"
                   name="displayName"
                   value={user.displayName}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}/>
               </div>
             )}
             <div className="comman-row-input email-row">
@@ -502,8 +449,7 @@ const Login = () => {
                 value={user.phone}
                 onChange={(value) => {
                   setUser({ phone: value });
-                }}
-              />
+                }}/>
             </div>
             {errorFlg === "phone" ? (
               <div
@@ -512,8 +458,7 @@ const Login = () => {
                   marginTop: `-13px`,
                   marginBottom: "15px",
                   fontSize: "14px",
-                }}
-              >
+                }}>
                 {errorMessage}
               </div>
             ) : null}
@@ -525,8 +470,7 @@ const Login = () => {
                     type="text"
                     name="otp"
                     value={user.otp}
-                    onChange={handleChange}
-                  />
+                    onChange={handleChange}/>
                 </div>
                 {errorFlg === "otp" ? (
                   <div
@@ -535,8 +479,7 @@ const Login = () => {
                       marginTop: `-13px`,
                       marginBottom: "15px",
                       fontSize: "14px",
-                    }}
-                  >
+                    }}>
                     {errorMessage}
                   </div>
                 ) : null}
@@ -559,8 +502,7 @@ const Login = () => {
                         type="text"
                         name="displayName"
                         value={user.displayName}
-                        onChange={handleChange}
-                      />
+                        onChange={handleChange}/>
                     </div>
                   </>
                 )}
@@ -570,8 +512,7 @@ const Login = () => {
                 type="text"
                 name="email"
                 value={user.email}
-                onChange={handleChange}
-              />
+                onChange={handleChange}/>
             </div>
             {errorFlg === "email" ? (
               <div
@@ -580,8 +521,7 @@ const Login = () => {
                   marginTop: `-13px`,
                   marginBottom: "15px",
                   fontSize: "14px",
-                }}
-              >
+                }}>
                 {errorMessage}
               </div>
             ) : null}
@@ -593,8 +533,7 @@ const Login = () => {
                     type="password"
                     name="password"
                     value={user.password}
-                    onChange={handleChange}
-                  />
+                    onChange={handleChange}/>
                 </div>
                 {errorFlg === "password" ? (
                   <div
@@ -603,8 +542,7 @@ const Login = () => {
                       marginTop: `-13px`,
                       marginBottom: "15px",
                       fontSize: "14px",
-                    }}
-                  >
+                    }}>
                     {errorMessage}
                   </div>
                 ) : null}

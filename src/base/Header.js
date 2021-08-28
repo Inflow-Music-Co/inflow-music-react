@@ -96,8 +96,7 @@ const Header = () => {
           size="sm"
           className="mr-2 wallet-button"
           //   onClick={() => connectWallet()}
-          onClick={() => setLogin((login) => !login)}
-        >
+          onClick={() => setLogin((login) => !login)}>
           {walletProvider ? "Logout" : "Login"}
         </Button> */}
         <div className="notified-main">
@@ -107,8 +106,7 @@ const Header = () => {
           <Profiledropdown />
         </div>
       </div>
-
-      <LoginModal login={login} setLogin={setLogin} />
+      <LoginModal login={login} setLogin={setLogin}/>
     </div>
   );
 };

@@ -23,9 +23,7 @@ function App() {
   });
 
   return (
-    <WalletProviderContext.Provider
-      value={{ walletProvider, setWalletProvider }}
-    >
+    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
       <ApolloProvider client={client}>
         <Router>
           <AppRoutes />

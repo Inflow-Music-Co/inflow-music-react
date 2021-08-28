@@ -17,10 +17,6 @@ import ReactBootstrap from "react-bootstrap";
 import "./LoginModal.css";
 
 const LoginModal = (props) => {
-  const { login, setLogin } = props;
-  const [userType, setUserType] = useState("");
-  const [loginType, setLoginType] = useState("login");
-
   const dispatch = useDispatch();
   const history = useHistory();
   const uData = useSelector((state) => state.auth.data);
@@ -37,6 +33,12 @@ const LoginModal = (props) => {
   const [alert, setAlert] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorFlg, setErrorFlg] = useState("");
+  
+  const { login, setLogin } = props;
+  const [userType, setUserType] = useState("");
+  const [loginType, setLoginType] = useState("login");
+  // console.log(uData);
+  // const history = useHistory();
   const [user, setUser] = useState({
     displayName: "",
     email: "",
@@ -258,6 +260,14 @@ const LoginModal = (props) => {
   //   }
   // };
 
+  useEffect(() => {
+    if (token) {
+      history.push("/");
+    }
+    //setUser({displayName:'', ...uData})
+    //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
+  }, [token]);
+
   const handleChange = (event) => {
     const { value, name } = event.target;
 
@@ -405,8 +415,7 @@ const LoginModal = (props) => {
 
   return (
     <>
-      <Modal
-        show={login}
+      <Modal show={login}
         className="edit-profile-modal"
         onHide={() => {
           setLogin((login) => !login);
@@ -428,16 +437,14 @@ const LoginModal = (props) => {
                       className={`login-type ${
                         loginType === "login" && "login-type-active"
                       }`}
-                      onClick={() => setLoginType("login")}
-                    >
+                      onClick={() => setLoginType("login")}>
                       Login
                     </h4>
                     <h4
                       className={`login-type ${
                         loginType === "signup" && "login-type-active"
                       }`}
-                      onClick={() => setLoginType("signup")}
-                    >
+                      onClick={() => setLoginType("signup")}>
                       Sign Up
                     </h4>
                   </div>
@@ -446,7 +453,6 @@ const LoginModal = (props) => {
             </span>
           </div>
         </Modal.Header>
-
         <Modal.Body>
           {!forgotPasswordFlag && (
             <div className="login-type d-flex flex-row justify-content-center col-12">
@@ -490,8 +496,7 @@ const LoginModal = (props) => {
                   type="text"
                   name="email"
                   value={user.email}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}/>
               </div>
               {!forgotPasswordFlag && (
                 <div className="comman-row-input password-row">
@@ -506,8 +511,6 @@ const LoginModal = (props) => {
               )}
             </form>
           </div>
-
-          <div className="user-profile"></div>
         </Modal.Body>
 
         <Modal.Footer>
@@ -554,6 +557,6 @@ const LoginModal = (props) => {
       </Modal>
     </>
   );
-};
+}
 
 export default LoginModal;
