@@ -396,6 +396,13 @@ const LoginModal = (props) => {
     setAlert(null);
   }
 
+  const loginOrSignup = () => {
+    // window.location.href = "/login"; // ADD LOGIN FLOW LOGIC HERE
+    if (loginType === "signup") {
+    } else if (loginType === "login") {
+    }
+  };
+
   return (
     <>
       <Modal
@@ -406,8 +413,10 @@ const LoginModal = (props) => {
           setUserType("");
         }}
       >
-        <Modal.Header closeButton>
-          {/* <span className="title">Login</span> */}
+        <Modal.Header>
+          {loading && <Loader />}
+          {alert}
+
           <div className="d-flex flex-row justify-content-center align-items-center col-12">
             <span className="login-title col-12">
               {forgotPasswordFlag ? (
@@ -506,12 +515,11 @@ const LoginModal = (props) => {
             <div className="">
               {!forgotPasswordFlag && (
                 <button
+                  type="submit"
                   className="btn-gradiant"
-                  onClick={() => {
-                    // window.location.href = "/login"; // ADD LOGIN FLOW LOGIC HERE
-                  }}
+                  onClick={loginOrSignup}
                 >
-                  Login
+                  {loginType === "signup" ? "Sign Up" : "Login"}
                 </button>
               )}
 
@@ -532,11 +540,15 @@ const LoginModal = (props) => {
               )}
             </div>
 
-            {!forgotPasswordFlag && (
-              <div className="mt-3" onClick={() => setForgotPasswordFlag(true)}>
-                <h5 className="forgot-password">Forgot Password?</h5>
-              </div>
-            )}
+            {loginType === "signup" ||
+              (!forgotPasswordFlag && (
+                <div
+                  className="mt-3"
+                  onClick={() => setForgotPasswordFlag(true)}
+                >
+                  <h5 className="forgot-password">Forgot Password?</h5>
+                </div>
+              ))}
           </div>
         </Modal.Footer>
       </Modal>
