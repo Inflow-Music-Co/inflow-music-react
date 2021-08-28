@@ -18,7 +18,7 @@ import "./LoginModal.css";
 
 const LoginModal = (props) => {
   const { login, setLogin } = props;
-  const [type, setType] = useState("");
+  const [userType, setUserType] = useState("");
   const [loginType, setLoginType] = useState("login");
 
   const dispatch = useDispatch();
@@ -268,7 +268,7 @@ const LoginModal = (props) => {
 
   const handleChangeUsertype = (e) => {
     setUser({ ...user, account_type: e.target.id });
-    setType(e.target.id);
+    setUserType(e.target.id);
   };
 
   const forgotPassword = async () => {
@@ -403,7 +403,7 @@ const LoginModal = (props) => {
         className="edit-profile-modal"
         onHide={() => {
           setLogin((login) => !login);
-          setType("");
+          setUserType("");
         }}
       >
         <Modal.Header closeButton>
@@ -442,7 +442,7 @@ const LoginModal = (props) => {
               <button
                 id="user"
                 className={`${
-                  type === "user" ? "btn-selected" : "btn-gradiant"
+                  userType === "user" ? "btn-selected" : "btn-gradiant"
                 } mr-3`}
                 onClick={handleChangeUsertype}
               >
@@ -451,7 +451,7 @@ const LoginModal = (props) => {
               <button
                 id="artist"
                 className={`${
-                  type === "artist" ? "btn-selected" : "btn-gradiant"
+                  userType === "artist" ? "btn-selected" : "btn-gradiant"
                 } ml-3`}
                 onClick={handleChangeUsertype}
               >
