@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+  import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2';
 import moment from 'moment';
 import SmallLoader from './SmallLoader';
@@ -23,16 +23,10 @@ const Totalbalancechart = ({ artist, historicalData }) => {
           item.price = parseFloat(item.price, 10).toFixed(2);
           console.log(item)
           const curDate = new Date(item.timestamp);
-          // if (templabels.length > 0) {
-          //   const prevDate = templabels[templabels.length - 1];
-          //   if ((prevDate.getMonth() === curDate.getMonth() && prevDate.getDate() < curDate.getDate()) || (prevDate.getMonth() !== curDate.getMonth())) {
-          //     templabels.push(curDate);
-          //     tempvalues.push(item.price)
-          //   }
-          // } else {
+         
             templabels.push(curDate);
             tempvalues.push(item.price)
-          // }
+
         })
         console.log(templabels, tempvalues);
         setvalues(tempvalues);
