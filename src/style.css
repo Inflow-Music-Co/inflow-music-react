@@ -2164,10 +2164,6 @@ input:checked + .slider:before {
     width: 90%;
   }
 
-  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
-    font-size: 35px;
-  }
-
   .card-heading {
     font-size: 14px;
   }
@@ -2190,10 +2186,6 @@ input:checked + .slider:before {
 
   .first-row-main-dash .left-col .below-row .right-side .labal {
     font-size: 10px;
-  }
-
-  .Second-row-wave-chart {
-    margin-top: 140px;
   }
 
   .first-row-main-dash .left-col .below-row .left-pricing .price-tag {
@@ -2648,14 +2640,6 @@ input:checked + .slider:before {
 
   .first-row-main-dash .right-col {
     padding: 12px;
-  }
-
-  .Second-row-wave-chart {
-    padding: 12px;
-  }
-
-  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
-    font-size: 24px;
   }
 
   .deposite-earning-row {

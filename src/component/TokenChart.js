@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import moment from "moment";
 import SmallLoader from "./SmallLoader";
-import "./Totalbalancechart.css";
+import "./TokenChart.css";
 
-const Totalbalancechart = ({ artist, historicalData }) => {
+const TokenChart = ({ artist, historicalData }) => {
   const [labels, setlabels] = useState([]);
   const [values, setvalues] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,12 +50,16 @@ const Totalbalancechart = ({ artist, historicalData }) => {
     },
   };
 
-  const getgraphdata = () => {
+  const graphData = (canvas) => {
     const updatedLabels = labels.map((date) => moment(date).format("DD/MM"));
     // var ctx = document.getElementById("canvas").getContext("2d");
-    // const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    // gradient.addColorStop(0, "rgba(151,187,205,0.7)");
-    // gradient.addColorStop(1, "rgba(151,187,205,0)");
+    const ctx = canvas.getContext("2d");
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, "rgba(125, 42, 221, 0.5)");
+    gradient.addColorStop(0.1, "rgba(125, 42, 221, 0.8)");
+    gradient.addColorStop(0.4, "rgba(125, 42, 221, 0.4)");
+    // gradient.addColorStop(0.65, "rgba(59, 22, 111, 0)");
+    gradient.addColorStop(0.75, "rgba(59, 72, 193, 0.6)");
 
     const graphdata = {
       labels: updatedLabels,
@@ -67,13 +71,16 @@ const Totalbalancechart = ({ artist, historicalData }) => {
           fill: true,
           borderCapStyle: "round",
           borderJoinStyle: "miter",
-          backgroundColor: "rgba(87, 47, 163, 1)",
-          // backgroundColor: gradient,
-          borderColor: "rgba(151,187,205,1)",
-          pointBackgroundColor: "rgba(151,187,205,1)",
-          pointBorderColor: "#fff",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(151,187,205,1)",
+          backgroundColor: gradient,
+          pointBackgroundColor: "rgba(115, 44, 245, 0)",
+          //   pointBorderWidth: "20px",
+          //   pointBorderColor: "#2a2e3b",
+          //   borderColor: "rgba(107, 22, 209, 0.7)",
+          //   borderWidth: "20px",
+          //   backgroundColor: "rgba(87, 47, 163, 1)",
+          //   pointHighlightFill: "#fff",
+          //   pointHighlightStroke: "rgba(151,187,205,1)",
+          tension: 0.35,
         },
       ],
     };
@@ -84,10 +91,10 @@ const Totalbalancechart = ({ artist, historicalData }) => {
       {loading ? (
         <SmallLoader />
       ) : (
-        <Line data={getgraphdata()} options={options} height={250} />
+        <Line data={graphData} options={options} height={275} />
       )}
     </>
   );
 };
 
-export default Totalbalancechart;
+export default TokenChart;

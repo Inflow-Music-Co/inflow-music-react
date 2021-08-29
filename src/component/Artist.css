@@ -205,19 +205,67 @@
 .Second-row-wave-chart .total-balance-row .btn-filter a img {
   width: 26px;
 }
-
+/* 
 .song-buy-sell {
   display: flex;
   align-items: center;
   justify-content: center;
+} */
+
+/* .song-buy-sell .song-button {
+  position: relative;
+} */
+
+.buy-sell-buttons {
+  /* width: 200px; */
+}
+.buy-button {
+  background-color: rgba(59, 72, 193, 0.3);
+  color: #fff;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 50px;
+  font-weight: 400;
+  border: 1px solid rgba(255, 255, 255, 0);
+}
+.sell-button {
+  background-color: rgba(125, 42, 221, 0.3);
+  color: #fff;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 50px;
+  font-weight: 400;
+  border: 1px solid rgba(255, 255, 255, 0);
+}
+.buy-button:hover,
+.sell-button:hover {
+  background: linear-gradient(
+    0deg,
+    rgba(101, 32, 181, 1) 20%,
+    rgba(59, 72, 193, 1) 100%
+  );
+  color: #fff;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 50px;
+  font-weight: 400;
+  border: 1px solid rgba(255, 255, 255, 1);
 }
 
-.song-buy-sell .song-button {
-  position: relative;
-}
+/* .buy-button {
+  background: linear-gradient(
+    0deg,
+    rgba(101, 32, 181, 1) 20%,
+    rgba(59, 72, 193, 1) 100%
+  );
+  color: #fff;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 50%;
+} */
 
 .song-button .button {
-  position: absolute;
+  /* position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
@@ -225,33 +273,42 @@
   padding: 15px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; */
 }
 
 .song-button .button .btn {
-  width: 65px;
+  /* width: 65px;
   height: 65px;
   border-radius: 50%;
-  background-color: #444444;
+  background-color: rgba(125, 42, 221, 0.3);
   color: #ffffff;
   border: none;
   font-family: Rubik-Medium;
   font-size: 15px;
   font-weight: 600;
-  letter-spacing: 2px;
+  letter-spacing: 2px; */
+  /* background: linear-gradient(
+    0deg,
+    rgba(101, 32, 181, 1) 20%,
+    rgba(59, 72, 193, 1) 100%
+  );
+  color: #fff;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 100px; */
 }
 
-.song-button .button .btn:hover {
+/* .song-button .button .btn:hover {
   background: linear-gradient(
     215deg,
-    rgba(85, 148, 235, 1) 0%,
-    rgba(34, 116, 229, 1) 10%,
-    rgba(85, 26, 155, 1) 45%,
-    rgba(125, 42, 221, 1) 100%
+    rgba(85, 148, 235, 0.8) 0%,
+    rgba(34, 116, 229, 0.8) 10%,
+    rgba(85, 26, 155, 0.8) 45%,
+    rgba(125, 42, 221, 0.8) 100%
   );
-}
+} */
 
-.song-button .button .add-split {
+/* .song-button .button .add-split {
   width: 65px;
   height: 65px;
   border-radius: 50%;
@@ -284,7 +341,7 @@
     rgba(85, 26, 155, 1) 45%,
     rgba(125, 42, 221, 1) 100%
   );
-}
+} */
 
 .soundcloud-embed {
   font-size: 10px;
@@ -699,31 +756,13 @@
   .songs-grid-main {
     grid-template-columns: repeat(4, 1fr);
   }
+
+  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
+    font-size: 35px;
+  }
 }
 
 @media (max-width: 1200px) {
-  .testimonials .item {
-    width: 240px;
-    padding: 20px;
-  }
-
-  .testimonials {
-    min-height: 170px;
-  }
-
-  .comman-div-for-pro .spiner-bar-row .comman-col .right-side-value {
-    font-size: 17px;
-  }
-
-  .spiner-bar-row .comman-col .right-side-value span.small-heading {
-    font-size: 10px;
-    color: #aaaaaa;
-  }
-
-  .last-row-pricing .comman-priced {
-    font-size: 16px;
-  }
-
   #t-3:checked ~ .testimonials label[for="t-1"] {
     transform: translateX(-190px) translateZ(-165px) rotateY(75deg);
   }
@@ -750,6 +789,32 @@
 
   .artist-background .artist-main .artist-details {
     bottom: -70px;
+  }
+
+  .comman-div-for-pro .spiner-bar-row .comman-col .right-side-value {
+    font-size: 17px;
+  }
+
+  .last-row-pricing .comman-priced {
+    font-size: 16px;
+  }
+
+  .Second-row-wave-chart {
+    margin-top: 140px;
+  }
+
+  .spiner-bar-row .comman-col .right-side-value span.small-heading {
+    font-size: 10px;
+    color: #aaaaaa;
+  }
+
+  .testimonials .item {
+    width: 240px;
+    padding: 20px;
+  }
+
+  .testimonials {
+    min-height: 170px;
   }
 }
 
@@ -973,7 +1038,7 @@
   }
 
   .song-buy-sell {
-    margin-top: 15px;
+    /* margin-top: 15px; */
   }
 
   .poll-vote-list {
@@ -1154,6 +1219,14 @@
   .playlist-card-footer .bid-button button {
     width: 45px;
     height: 45px;
+  }
+
+  .Second-row-wave-chart {
+    padding: 12px;
+  }
+
+  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
+    font-size: 24px;
   }
 }
 
