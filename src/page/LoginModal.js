@@ -9,11 +9,9 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 // import { auth, googleProvider, facebookProvider } from "../utils/firebase";
 // import { Link } from 'react-router-dom';
-import Loader from "../component/Loader";
 import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
-import ReactBootstrap from "react-bootstrap";
 import "./LoginModal.css";
 
 const LoginModal = (props) => {
@@ -352,10 +350,17 @@ const LoginModal = (props) => {
   function showAlert(title, type) {
     setAlert(
       <SweetAlert
-        style={{ color: "#000" }}
+        style={{
+          color: "#000",
+          fontWeight: "400",
+          fontFamily: "Rajdhani",
+          border: "1px solid black",
+          // backgroundColor: "rgb(37, 37, 37)",
+          borderRadius: "15px",
+        }}
         type={type}
         onConfirm={() => handleAlertConfirm(type)}
-        timeout={3000}
+        timeout={60000}
         title={title}
       />
     );

@@ -177,8 +177,9 @@ const Artistpic = () => {
 
   const displayTokenPrice = () => {
     if (MintPrice && MintPrice !== "") {
+      // const converted = Number(MintPrice).toFixed(4);
       return (
-        <div className="dollor-price">
+        <div className="dollar-price">
           <span>$</span> {MintPrice}
         </div>
       );
@@ -189,7 +190,7 @@ const Artistpic = () => {
 
   // const displayBalance = () => {
   //     if (MintPrice && MintPrice !== '') {
-  //         return <div className="dollor-price">{Balance ? Balance : '0.0'}</div>;
+  //         return <div className="dollar-price">{Balance ? Balance : '0.0'}</div>;
   //     } else {
   //         return <SmallLoader />;
   //     }
@@ -545,15 +546,6 @@ const Artistpic = () => {
             }
             className="background-blur"
           />
-          {/* <button
-                        className="edit-profile"
-                        type="button"
-                        onClick={() =>
-                            setprofileModel((profileModel) => !profileModel)
-                        }
-                    >
-                        EDIT PROFILE
-                    </button> */}
         </div>
         <div className="artist-details">
           <div className="artist-main-details">
@@ -572,14 +564,14 @@ const Artistpic = () => {
                 <div className="artist-name">{`${
                   artist.first_name ? artist.first_name : ""
                 } ${artist.last_name ? artist.last_name : ""}`}</div>
-                <div className="album-name">--</div>
+                {/* <div className="album-name">--</div> */}
                 <ul>
                   <li>
-                    <div className="song-total">--</div>
+                    <div className="song-total">325</div>
                     <div className="song-folder">Superfans</div>
                   </li>
                   <li>
-                    <div className="song-total">--</div>
+                    <div className="song-total">28</div>
                     <div className="song-folder">NFTs</div>
                   </li>
                   <li>
@@ -588,9 +580,18 @@ const Artistpic = () => {
                   </li>
                 </ul>
               </div>
-              {/* <div className="follow-btn">
-                                <button>FOLLOW</button>
-                            </div> */}
+              <div className="">
+                {/* <button className="follow-button">FOLLOW</button> */}
+                {/* <button
+                  className="edit-profile"
+                  type="button"
+                  onClick={() =>
+                    setprofileModel((profileModel) => !profileModel)
+                  }
+                >
+                  EDIT PROFILE
+                </button> */}
+              </div>
             </div>
           </div>
           <div className="artist-tag">
@@ -602,15 +603,16 @@ const Artistpic = () => {
           </div>
         </div>
       </div>
+
       <div className="dashboard-wrapper-main artist-main-wrapper">
         {/* ---------------Total-wallet-balance-------- */}
-        <div className="Second-row-wave-chart">
-          <div className="total-balance-row col-12">
-            <div className="heading-cols col-4">
+        <div className="token-chart">
+          <div className="chart-header-row col-12">
+            <div className="token-info col-4">
               <div className="card-heading">
                 {artist.social_token_symbol} Price
               </div>
-              <div className="dollor-price">{displayTokenPrice()}</div>
+              <div className="dollar-price">{displayTokenPrice()}</div>
               <div className="small-heading">--</div>
             </div>
             <div className="buy-sell-buttons col-4">
@@ -678,17 +680,17 @@ const Artistpic = () => {
                 )}
               </div>
             </div>
-            <div className="btn-filter d-flex justify-content-end col-4">
+            <div className="btn-filter d-flex justify-content-end col-4 mt-2">
               <a href="#">
                 <img alt="" src={assetsImages.filter} />
               </a>
             </div>
           </div>
           {/* <div className="total-balance-row">
-            <div className="heading-cols">
+            <div className="token-info">
               <div className="card-heading">Available Balance</div>
-              <div className="dollor-price">
-                <div className="dollor-price">{displayBalance()}</div>
+              <div className="dollar-price">
+                <div className="dollar-price">{displayBalance()}</div>
               </div>
               <div className="small-heading">Available Balance</div>
             </div>

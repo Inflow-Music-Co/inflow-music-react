@@ -9,7 +9,7 @@
   object-fit: cover;
   height: 350px;
 }
-.artist-background .artist-main .background button {
+.edit-profile {
   position: absolute;
   right: 50px;
   top: 50px;
@@ -111,7 +111,7 @@
   letter-spacing: 2px;
 }
 
-.follow-btn button {
+.follow-button {
   background-color: #5594eb;
   color: #ffffff;
   border: 0;
@@ -165,45 +165,45 @@
   filter: blur(3rem);
 }
 
-.Second-row-wave-chart {
+.token-chart {
   margin-top: 100px;
   background: rgb(37, 37, 37);
   border-radius: 8px;
   padding: 30px;
 }
 
-.Second-row-wave-chart .total-balance-row {
+.token-chart .chart-header-row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.Second-row-wave-chart .total-balance-row .heading-cols .card-heading {
+.token-chart .chart-header-row .token-info .card-heading {
   margin-bottom: 10px;
 }
 
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
+.token-chart .chart-header-row .token-info .dollar-price {
   font-size: 45px;
   margin-bottom: 7px;
   line-height: normal;
 }
 
-.Second-row-wave-chart .total-balance-row .heading-cols .dollor-price span {
+.token-chart .chart-header-row .token-info .dollar-price span {
   font-size: 20px;
 }
 
-.Second-row-wave-chart .total-balance-row .heading-cols .small-heading {
+.token-chart .chart-header-row .token-info .small-heading {
   font-size: 12px;
   line-height: normal;
   color: #888888;
 }
 
-.Second-row-wave-chart .total-balance-row .btn-filter a {
+.token-chart .chart-header-row .btn-filter a {
   display: inline-block;
 }
 
-.Second-row-wave-chart .total-balance-row .btn-filter a img {
+.token-chart .chart-header-row .btn-filter a img {
   width: 26px;
 }
 /* 
@@ -758,7 +758,7 @@
     grid-template-columns: repeat(4, 1fr);
   }
 
-  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
+  .token-chart .chart-header-row .token-info .dollar-price {
     font-size: 35px;
   }
 }
@@ -800,7 +800,7 @@
     font-size: 16px;
   }
 
-  .Second-row-wave-chart {
+  .token-chart {
     margin-top: 140px;
   }
 
@@ -1222,11 +1222,11 @@
     height: 45px;
   }
 
-  .Second-row-wave-chart {
+  .token-chart {
     padding: 12px;
   }
 
-  .Second-row-wave-chart .total-balance-row .heading-cols .dollor-price {
+  .token-chart .chart-header-row .token-info .dollar-price {
     font-size: 24px;
   }
 }
