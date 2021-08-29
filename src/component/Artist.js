@@ -8,7 +8,6 @@ import { assetsImages } from "../constants/images";
 // import Performbar from "./Performbar";
 // import ProgressBar from "react-bootstrap/ProgressBar";
 // import CircularProgress from "@material-ui/core/CircularProgress";
-import Totalbalancechart from "./Totalbalancechart";
 // import Song from './Song';
 // import Mynftdropdown from './Mynftdropdown';
 import { Modal } from "react-bootstrap";
@@ -606,110 +605,97 @@ const Artistpic = () => {
       <div className="dashboard-wrapper-main artist-main-wrapper">
         {/* ---------------Total-wallet-balance-------- */}
         <div className="Second-row-wave-chart">
-          <div className="total-balance-row">
-            <div className="heading-cols">
+          <div className="total-balance-row col-12">
+            <div className="heading-cols col-4">
               <div className="card-heading">
                 {artist.social_token_symbol} Price
               </div>
               <div className="dollor-price">{displayTokenPrice()}</div>
               <div className="small-heading">--</div>
             </div>
-            <div className="btn-filter">
+            <div className="buy-sell-buttons col-4">
+              <div className="d-flex justify-content-around align-items-center mt-4">
+                {/* <img alt="" src={assetsImages.button} /> */}
+
+                {token && token.trim() === "" ? (
+                  <button
+                    className="buy-button"
+                    type="button"
+                    onClick={() => {
+                      window.location.href = "/login";
+                    }}
+                  >
+                    Sell
+                  </button>
+                ) : walletProvider ? (
+                  <button
+                    className="buy-button"
+                    type="button"
+                    onClick={() => setsell((sell) => !sell)}
+                  >
+                    Sell
+                  </button>
+                ) : (
+                  <button
+                    className="buy-button"
+                    type="button"
+                    onClick={() =>
+                      setconnectedwallet((connectedwallet) => !connectedwallet)
+                    }
+                  >
+                    Sell
+                  </button>
+                )}
+
+                {token && token.trim() === "" ? (
+                  <button
+                    className="sell-button"
+                    type="button"
+                    onClick={() => {
+                      window.location.href = "/login";
+                    }}
+                  >
+                    Buy
+                  </button>
+                ) : walletProvider ? (
+                  <button
+                    className="sell-button"
+                    type="button"
+                    onClick={() => setbuy((buy) => !buy)}
+                  >
+                    Buy
+                  </button>
+                ) : (
+                  <button
+                    className="sell-button"
+                    type="button"
+                    onClick={() =>
+                      setconnectedwallet((connectedwallet) => !connectedwallet)
+                    }
+                  >
+                    Buy
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="btn-filter d-flex justify-content-end col-4">
               <a href="#">
                 <img alt="" src={assetsImages.filter} />
               </a>
             </div>
           </div>
           {/* <div className="total-balance-row">
-                        <div className="heading-cols">
-                            <div className="card-heading">
-                                Available Balance
-                            </div>
-                            <div className="dollor-price">
-                                <div className="dollor-price">
-                                    {displayBalance()}
-                                </div>
-                            </div>
-                            <div className="small-heading">
-                                Available Balance
-                            </div>
-                        </div>
-                    </div> */}
+            <div className="heading-cols">
+              <div className="card-heading">Available Balance</div>
+              <div className="dollor-price">
+                <div className="dollor-price">{displayBalance()}</div>
+              </div>
+              <div className="small-heading">Available Balance</div>
+            </div>
+          </div> */}
 
           <div className="total-bal-chart">
-            {/* <canvas id="canvas"> */}
-            {/* <Totalbalancechart
-              artist={artist}
-              historicalData={historicalData}
-            /> */}
             <TokenChart artist={artist} historicalData={historicalData} />
-            {/* </canvas> */}
-          </div>
-
-          <div className="buy-sell-buttons">
-            <div className="d-flex justify-content-around align-items-center mt-4 col-4 offset-4">
-              {/* <img alt="" src={assetsImages.button} /> */}
-
-              {token && token.trim() === "" ? (
-                <button
-                  className="buy-button"
-                  type="button"
-                  onClick={() => {
-                    window.location.href = "/login";
-                  }}
-                >
-                  Sell
-                </button>
-              ) : walletProvider ? (
-                <button
-                  className="buy-button"
-                  type="button"
-                  onClick={() => setsell((sell) => !sell)}
-                >
-                  Sell
-                </button>
-              ) : (
-                <button
-                  className="buy-button"
-                  type="button"
-                  onClick={() =>
-                    setconnectedwallet((connectedwallet) => !connectedwallet)
-                  }
-                >
-                  Sell
-                </button>
-              )}
-
-              {token && token.trim() === "" ? (
-                <button
-                  className="sell-button"
-                  type="button"
-                  onClick={() => {
-                    window.location.href = "/login";
-                  }}
-                >
-                  Buy
-                </button>
-              ) : walletProvider ? (
-                <button
-                  className="sell-button"
-                  type="button"
-                  onClick={() => setbuy((buy) => !buy)}
-                >
-                  Buy
-                </button>
-              ) : (
-                <button
-                  className="sell-button"
-                  type="button"
-                  onClick={() =>
-                    setconnectedwallet((connectedwallet) => !connectedwallet)
-                  }
-                >
-                  Buy
-                </button>
-              )}
-            </div>
           </div>
         </div>
 
