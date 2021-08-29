@@ -607,7 +607,7 @@ const Artistpic = () => {
       <div className="dashboard-wrapper-main artist-main-wrapper">
         {/* ---------------Total-wallet-balance-------- */}
         <div className="token-chart">
-          <div className="chart-header-row col-12">
+          <div className="chart-header-row d-flex flex-row col-12">
             <div className="token-info col-4">
               <div className="card-heading">
                 {artist.social_token_symbol} Price

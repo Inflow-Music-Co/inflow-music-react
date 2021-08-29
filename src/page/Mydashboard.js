@@ -16,9 +16,9 @@ import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import SmallLoader from "../component/SmallLoader";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
-import "./Dashboard.css";
+import "../component/Artist.css";
 
-const Dashboard = () => {
+const Mydashboard = () => {
   const { walletProvider } = useContext(WalletProviderContext);
   const uid = useSelector((state) => state.auth.data._id);
   const wallet = useSelector((state) => state.wallet);
@@ -319,9 +319,9 @@ const Dashboard = () => {
         </div>
       </div>
       {/* ---------------Total-wallet-balance-------- */}
-      <div className="Second-row-wave-chart">
-        <div className="total-balance-row">
-          <div className="heading-cols">
+      <div className="token-chart">
+        <div className="chart-header-row">
+          <div className="token-info">
             <div className="card-heading">Total Wallet Balance</div>
             <div className="dollar-price">
               <span>$</span> {displaytotalbalance()}
@@ -396,4 +396,4 @@ const Dashboard = () => {
     </div>
   );
 };
-export default Dashboard;
+export default Mydashboard;
