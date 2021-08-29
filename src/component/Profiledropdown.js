@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useWeb3React } from '@web3-react/core'
 import './component.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { assetsImages } from '../constants/images';
@@ -15,6 +16,7 @@ function Profiledropdown() {
     const [country, setcountry] = useState('');
     const [profileimage, setprofileimage] = useState('');
 
+    const { connector, library, chainId, account, activate, deactivate, active, error } = useWeb3React()
 
     useEffect(() => {
         getdata();
@@ -39,6 +41,7 @@ function Profiledropdown() {
     // }
 
     const onLogout = () => {
+        deactivate()
         dispatch(logout())
         window.location.href = "/login";
     }

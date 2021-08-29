@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import Wallet from "../../utils/wallet";
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -14,10 +13,9 @@ export const authSlice = createSlice({
       console.log('isAdmin', state.isAdmin)
       state.data = action.payload
       state.token = action.payload.token
-      state.isAdmin = action.payload.isAdmin
+      state.isAdmin = true
     },
     logout: () => {
-      Wallet.disconnect(true);
       localStorage.removeItem("persist:root");
       window.location.href = "/login";
     },

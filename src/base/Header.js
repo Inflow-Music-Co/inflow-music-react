@@ -1,22 +1,38 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useWeb3React } from '@web3-react/core'
+import { useEagerConnect, useInactiveListener } from '../utils/hooks'
+import { injected, fortmatic } from '../utils/connectors'
 import './base.css';
 //import Search from '../component/Search';
 import Notification from '../component/Notification';
 import Profiledropdown from '../component/Profiledropdown';
 import { Button } from "react-bootstrap";
-import Wallet from '../utils/wallet';
 import SweetAlert from "react-bootstrap-sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import { connected, disconnect } from "../store/reducers/walletSlice";
-import { WalletProviderContext } from '../contexts/walletProviderContext';
 
 const Header = () => {
-    const { walletProvider, setWalletProvider } = useContext(WalletProviderContext);
     const wallet = useSelector(state => state.wallet);
     const token = useSelector(state => state.auth.token);
     // const wallet = useSelector(state => state.wallet);
     const dispatch = useDispatch()
     const [alert, setalert] = useState(null);
+
+    const { connector, library, chainId, account, activate, deactivate, active, error } = useWeb3React()
+
+    // handle logic to recognize the connector currently being activated
+    const [activatingConnector, setActivatingConnector] = useState()
+    useEffect(() => {
+        if (activatingConnector && activatingConnector === connector) {
+            setActivatingConnector(undefined)
+        }
+    }, [activatingConnector, connector])
+
+    // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+    const triedEager = useEagerConnect()
+
+    // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+    useInactiveListener(!triedEager || !!activatingConnector)
 
     // console.log({wallet})
     useEffect(() => {
@@ -27,9 +43,9 @@ const Header = () => {
     }, [])
 
     const conn = async () => {
-        await Wallet.connect();
-        dispatch(connected({ address: Wallet.account }));
-        setWalletProvider(Wallet.ethersProvider)
+        setActivatingConnector(fortmatic)
+        await activate(fortmatic)
+        dispatch(connected({ address: account }));
     }
 
     const connectWallet = async () => {
@@ -38,21 +54,18 @@ const Header = () => {
             return;
         }
         try {
-            if (!walletProvider) {
-                if (!Wallet.ethersProvider) {
-                    await Wallet.connect();
-                }
-                dispatch(connected({ address: Wallet.account }));
-                setWalletProvider(Wallet.ethersProvider)
+            if (!account) {
+                setActivatingConnector(fortmatic)
+                await activate(fortmatic)
+                dispatch(connected({ address: account }));
                 showAlert('Wallet connected successfully', 'success');
                 // setTimeout(() => {
                 //     window.location.reload();
                 // },1500)
             } else {
-                Wallet.disconnect(true);
+                deactivate()
                 showAlert('Wallet disconnected', 'info');
                 dispatch(disconnect());
-                setWalletProvider(null)
             }
         } catch (e) {
             // console.log(e);
@@ -75,7 +88,7 @@ const Header = () => {
             </div>
             <div className="right-col-main">
                 <Button size="sm" className="mr-2 wallet-button" onClick={() => connectWallet()}>
-                    {walletProvider ? 'Disconnect Wallet' : 'Connect Wallet'}
+                    {!!account ? 'Disconnect Wallet' : 'Connect Wallet'}
                 </Button>
                 <div className="notified-main">
                         <Notification />

@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
 import { BrowserRouter } from "react-router-dom";
+import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { Web3Provider } from '@ethersproject/providers'
 
 import {
   ApolloClient,
@@ -14,10 +16,20 @@ import Header from '../src/base/Header';
 import Sidebar from '../src/base/Sidebar';
 import { WalletProviderContext } from "./contexts/walletProviderContext";
 
+function getLibrary(provider) {
+  var library
+
+  if (provider/* && provider.chainType === 'hmy'*/ && provider.chainId === 4) {
+    library = provider.blockchain
+  } else {
+    library = new Web3Provider(provider)
+    library.pollingInterval = 12000
+  }
+
+  return library
+}
 
 function App() {
-  const [walletProvider, setWalletProvider] = useState(null);
-
   // const clienturl = useSelector((state) => state.graphql.clienturl);
   const clienturl = 'https://api.studio.thegraph.com/query/6287/inflow-rinkeby/0.0.1';
 
@@ -27,7 +39,7 @@ function App() {
   });
   
   return (
-    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider}}>
+    <Web3ReactProvider getLibrary={getLibrary}>
       <ApolloProvider client={client}>
         <BrowserRouter>
           <AppRoutes />
@@ -38,7 +50,7 @@ function App() {
           </div> */}
         </BrowserRouter>
       </ApolloProvider>
-    </WalletProviderContext.Provider>
+    </Web3ReactProvider>
   );
 }
 
