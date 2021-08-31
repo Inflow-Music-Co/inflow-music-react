@@ -831,6 +831,7 @@ button.search-btn img {
 .tab-settings-main {
   background: #222222;
   padding-top: 20px;
+  border-radius: 10px;
 }
 
 .tab-settings-main nav .nav-tabs {
@@ -1080,12 +1081,21 @@ button.sign-up-btn {
   background-color: #282828;
 }
 
+.three-inputs {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .grids-main-inputs .comman-grids input {
   width: 100%;
   background: #373737;
   border: none;
   padding: 20px;
   color: #ffffff;
+}
+
+.required,
+.required::placeholder {
+  color: rgb(202, 78, 78);
 }
 
 .grids-main-inputs .comman-grids input:focus {
@@ -1512,6 +1522,11 @@ ul.following-list li .follower-details .option-btn {
   background-color: transparent;
   border: 0;
   padding-left: 15px;
+}
+
+.convertProfileModal {
+  width: 60vw;
+  max-width: 60vw;
 }
 
 .edit-profile-modal .modal-dialog {
