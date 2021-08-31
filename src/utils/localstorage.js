@@ -10,14 +10,20 @@ function getAccessToken() {
 function getRefreshToken() {
   return localStorage.getItem("refresh_token");
 }
+function getDidToken() {
+  return localStorage.getItem("didToken");
+}
+
 function clearToken() {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
+  localStorage.removeItem("didToken");
 }
 
 export default {
   setToken,
   getAccessToken,
   getRefreshToken,
+  getDidToken,
   clearToken,
 };;

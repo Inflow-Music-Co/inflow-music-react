@@ -3,7 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setArtist, loginUser } from "../store/reducers/authSlice";
+import {
+  setArtist,
+  loginUser,
+  loginWithMagicLink,
+} from "../store/reducers/authSlice";
 import { assetsImages } from "../constants/images";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -15,6 +19,9 @@ import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
 import ReactBootstrap from "react-bootstrap";
 import "./LoginModal.css";
+
+// import { Magic } from "magic-sdk";
+// const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
 
 const LoginModal = (props) => {
   const dispatch = useDispatch();
@@ -67,6 +74,18 @@ const LoginModal = (props) => {
   //     console.error(error);
   //   }
   // };
+
+  const handleRegisterWithMagic = async (e) => {
+    try {
+      const { email } = user;
+      await dispatch(loginWithMagicLink(email));
+      setLogin((login) => !login);
+      dispatch(setclienturl({ clienturl: "" }));
+    } catch (e) {
+      console.log("handleRegisterWithMagic", e);
+      // showAlert("Invalid email or password");
+    }
+  };
 
   const handleRegister = async (event) => {
     const { email, password, account_type } = user;
@@ -419,7 +438,7 @@ const LoginModal = (props) => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {!forgotPasswordFlag && (
+          {/* {!forgotPasswordFlag && (
             <div className="login-type d-flex flex-row justify-content-center col-12">
               <button
                 id="user"
@@ -442,11 +461,11 @@ const LoginModal = (props) => {
                 Artist
               </button>
             </div>
-          )}
+          )} */}
 
           <div className="mt-5 mb-0 pb-0 form-group">
-            <form onSubmit={``} className="col-12">
-              {!forgotPasswordFlag && loginType === "signup" && (
+            <div onSubmit={``} className="col-12">
+              {/* {!forgotPasswordFlag && loginType === "signup" && (
                 <div className="comman-row-input persons-row">
                   <input
                     placeholder="Name"
@@ -456,7 +475,7 @@ const LoginModal = (props) => {
                     onChange={handleChange}
                   />
                 </div>
-              )}
+              )} */}
               <div className="comman-row-input email-row">
                 <input
                   placeholder="Email"
@@ -479,7 +498,7 @@ const LoginModal = (props) => {
                 </div>
               )}
 
-              {!forgotPasswordFlag && (
+              {/* {!forgotPasswordFlag && (
                 <div className="comman-row-input password-row">
                   <input
                     placeholder="Password"
@@ -501,8 +520,8 @@ const LoginModal = (props) => {
                 >
                   {errorMessage}
                 </div>
-              )}
-            </form>
+              )} */}
+            </div>
           </div>
         </Modal.Body>
 
@@ -510,7 +529,10 @@ const LoginModal = (props) => {
           <div className="d-flex flex-column flex-wrap justify-content-center align-items-center col-12">
             <div className="">
               {!forgotPasswordFlag && (
-                <button className="btn-gradiant" onClick={handleRegister}>
+                <button
+                  className="btn-gradiant"
+                  onClick={handleRegisterWithMagic}
+                >
                   {loginType === "login" ? "Login" : "Sign Up"}
                 </button>
               )}
@@ -532,11 +554,11 @@ const LoginModal = (props) => {
               )}
             </div>
 
-            {!forgotPasswordFlag && (
+            {/* {!forgotPasswordFlag && (
               <div className="mt-3" onClick={() => setForgotPasswordFlag(true)}>
                 <h5 className="forgot-password">Forgot Password?</h5>
               </div>
-            )}
+            )} */}
           </div>
         </Modal.Footer>
       </Modal>

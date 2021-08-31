@@ -39,6 +39,7 @@
     "graphql": "^15.5.1",
     "hardhat": "^2.4.1",
     "hardhat-gas-reporter": "^1.0.4",
+    "magic-sdk": "^4.4.2",
     "moment": "^2.29.1",
     "nft.storage": "^2.1.1",
     "prettier": "^2.3.1",
