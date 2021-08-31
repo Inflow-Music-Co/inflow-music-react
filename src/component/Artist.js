@@ -69,15 +69,11 @@ const Artistpic = () => {
     const init = async () => {
       console.log({ walletProvider });
       setLoading(true);
-      const { data } = await Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
-        { id }
-      );
+      const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,{ id } );
 
       if (data.artist) {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
-        console.log(data.artist.social_token_id);
         fetchTokenPrice();
         const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist)
         setHistoricalData(res.data.priceHistory);

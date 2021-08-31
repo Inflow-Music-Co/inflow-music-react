@@ -37,11 +37,10 @@ const Mydashboard = () => {
         if (!wallet.wallet_connected) {
             setconnectedwallet(false);
         } else {
-            getTotalBalance()
+            getTotalBalance();
+            
         }
     }, [walletProvider]);
-
-
 
     const getTotalBalance = async () => {
         const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, { uid })
