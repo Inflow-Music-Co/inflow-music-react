@@ -6,7 +6,7 @@ import { assetsImages } from "../constants/images";
 // import Customdropdown from "./Customdropdown";
 import Performbar from "./Performbar";
 // import ProgressBar from "react-bootstrap/ProgressBar";
-import { Modal } from "react-bootstrap";
+import { Modal, Dropdown } from "react-bootstrap";
 // import Loader from "./Loader";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 // import { ethers } from 'ethers';
@@ -29,6 +29,7 @@ const Artistpic = () => {
   const wallet = useSelector((state) => state.wallet);
   const [tokenfrees, settokenfrees] = useState(false);
   const [newvote, setnewvote] = useState(false);
+  const [link, setLink] = useState(false);
   const [success, setsuccess] = useState(false);
   const [connectedwallet, setconnectedwallet] = useState(true);
 
@@ -216,14 +217,11 @@ const Artistpic = () => {
                   <img alt="" src={assetsImages.filter} />
                 </a>
               </div>
-              <div className="soundcloud-url d-flex flex-column justify-content-center align-items-center">
-                <h4>Soundcloud Playlist URL</h4>
-                <input type="text" className="soundcloud-input" />
-              </div>
             </div>
 
             <div className="footer-btn">
-              <button className="btn-gradiant">Create URL</button>
+              <button className="btn-gradiant"
+              onClick={() => setLink((link) => !link)}>Create URL</button>
             </div>
           </div>
         </div>
@@ -317,6 +315,43 @@ const Artistpic = () => {
       </Modal>
 
       <Modal
+        show={link}
+        className="edit-profile-modal link"
+        onHide={() => setLink((link) => !link)}
+      >
+        <Modal.Header closeButton>
+          <span className="title">Create Token Gated Link</span>
+        </Modal.Header>
+
+        <Modal.Body>
+          <div className="form-group">
+            <label>Original Content Url</label>
+            <input
+              className="form-control mb-3"
+              type="text"
+              placeholder="Example: https://youtube.com"
+            />
+            <label>Link Title</label>
+            <input
+              className="form-control mb-3 mt-3"
+              type="text"
+              placeholder="Link Title"
+            />
+            <Dropdown>
+              <Dropdown.Toggle id="dropdown-basic"></Dropdown.Toggle>
+              Choose Social Token to gate
+              <Dropdown.Menu>
+              <Dropdown.Item>0x9903a4cd589da8e434f264deafc406836418578e</Dropdown.Item>
+            </Dropdown.Menu>
+            </Dropdown>
+
+            
+            <button className="upload-profile btn-gradiant">Created Token Gated Link</button>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      <Modal
         show={success}
         className="edit-profile-modal success"
         onClick={() => setsuccess((success) => !success)}
@@ -350,6 +385,8 @@ const Artistpic = () => {
         }}
       ></SweetAlert>
     </div>
+
+    
   );
 };
 
