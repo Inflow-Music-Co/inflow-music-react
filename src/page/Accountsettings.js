@@ -320,16 +320,41 @@ const Accountsettings = () => {
   };
 
   const handleConvertProfile = async () => {
-    // profileimg &&
-    // ubannerimage &&
-    // TODO: Uncomment for profile & banner image requirement
+    // Required fields validation, uncomment image fields
+    if (
+      //   !profileimg ||
+      //   !ubannerimage ||
+      !email ||
+      !phone ||
+      !artistName ||
+      !artistSocial["socialOne"]
+    ) {
+      alert("Please check missing information.");
+      return;
+    }
+    å;
 
-    email && phone && artistName && artistSocial["socialOne"]
-      ? alert("submitted")
-      : alert("please submit required info");
-
-    // TODO: Build Functionality
-    // Send Axios post request to DB
+    // TODO: Finish Functionality based on DB Schema and routing, double check below
+    try {
+      const submitArtistProfile = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/update`,
+        { uid }
+      );
+      const { artist } = submitArtistProfile;
+      if (artist) {
+        setfirstname(artist.first_name ? artist.first_name : artist.name);
+        setcountry(artist.country ? artist.country : "");
+        setprofileimage(artist.profile_image);
+        setubannerimage(artist.banner_image);
+        setPhone(artist.phone);
+        setEmail(artist.email);
+        setArtistName(artist.artist_name);
+        setArtistSocial(artist.artistSocial["socialOne"]);
+        setIsArtist(true); // Do we need this? Or will it be automatic
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   if (loading) {
@@ -360,6 +385,7 @@ const Accountsettings = () => {
                 <a className="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">Other</a> */}
           </div>
         </nav>
+
         <div className="tab-content pt-3" id="nav-tabContent">
           <div
             className="tab-pane fade show active"
@@ -368,9 +394,8 @@ const Accountsettings = () => {
             aria-labelledby="nav-home-tab"
           >
             <div className="account-setting-form">
-              <div className="d-flex w-100 justify-content-center align-items-center col-12">
-                <div className="col-4"></div>
-                <div className="col-4 d-flex justify-content-center">
+              <div className="d-flex flex-wrap w-100 justify-content-center align-items-center col-12">
+                <div className="d-flex justify-content-center col-12 col-md-4 offset-md-4">
                   <img
                     style={{
                       borderRadius: "50%",
@@ -385,7 +410,7 @@ const Accountsettings = () => {
                     alt=""
                   />
                 </div>
-                <div className="col-4 d-flex justify-content-around">
+                <div className="d-flex justify-content-around col-12 col-md-4 pt-2">
                   {!isArtist && (
                     <div>
                       {convertProfile && (
@@ -480,7 +505,11 @@ const Accountsettings = () => {
               </div>
 
               <div className="grids-main-inputs pb-0">
-                <div className={`comman-grids ${convertProfile && "required"}`}>
+                <div
+                  className={`comman-grids ${
+                    convertProfile && !uprofileimage && "required"
+                  }`}
+                >
                   Profile Image:
                   <input
                     onChange={(e) => setuprofileimage(e.target.files[0])}
@@ -493,7 +522,9 @@ const Accountsettings = () => {
                 {isArtist ||
                   (convertProfile && (
                     <div
-                      className={`comman-grids ${convertProfile && "required"}`}
+                      className={`comman-grids ${
+                        convertProfile && !ubannerimage && "required"
+                      }`}
                     >
                       Banner Image:
                       <input
@@ -536,7 +567,7 @@ const Accountsettings = () => {
                     </div>
                     <div className="comman-grids">
                       <input
-                        placeholder="Artist Social 1"
+                        placeholder="Social Link 1"
                         className="required"
                         value={artistSocial ? artistSocial["socialOne"] : null}
                         onChange={(e) =>
@@ -551,8 +582,7 @@ const Accountsettings = () => {
                     </div>
                     <div className="comman-grids">
                       <input
-                        placeholder="Artist Social 1"
-                        className="required"
+                        placeholder="Social Link 2"
                         value={artistSocial ? artistSocial["socialTwo"] : null}
                         onChange={(e) =>
                           setArtistSocial((artistSocial) => {
@@ -566,8 +596,7 @@ const Accountsettings = () => {
                     </div>
                     <div className="comman-grids">
                       <input
-                        placeholder="Artist Social 1"
-                        className="required"
+                        placeholder="Social Link 3"
                         value={
                           artistSocial ? artistSocial["socialThree"] : null
                         }
@@ -604,7 +633,8 @@ const Accountsettings = () => {
               </div>
             </div>
           </div>
-          <div
+          <>
+            {/* <div
             className="tab-pane fade"
             id="nav-profile"
             role="tabpanel"
@@ -651,9 +681,11 @@ const Accountsettings = () => {
             sit. Exercitation mollit sit culpa nisi culpa non adipisicing
             reprehenderit do dolore. Duis reprehenderit occaecat anim ullamco ad
             duis occaecat ex.
-          </div>
+          </div> */}
+          </>
         </div>
       </div>
+
       <SweetAlert
         info
         show={resetpasswordemailsent}
@@ -671,129 +703,131 @@ const Accountsettings = () => {
         }}
       ></SweetAlert>
 
-      <Modal
-        // show={convertProfile}
-        className="edit-profile-modal"
-        onHide={() => {
-          setConvertProfile((convertProfile) => !convertProfile);
-        }}
-        dialogClassName="convertProfileModal"
-      >
-        {/* <Modal.Header>
-          <div className="d-flex flex-row justify-content-around col-12">
-            <h4 className="login-type">Artist Application</h4>
-          </div>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="account-setting-form">
-            <div className="d-flex w-100 justify-content-center align-items-center">
-              <img
-                style={{
-                  borderRadius: "50%",
-                  height: "200px",
-                  width: "200px",
-                }}
-                src={
-                  profileimg !== ""
-                    ? `${process.env.REACT_APP_SERVER_URL}/${profileimg}`
-                    : assetsImages.person
-                }
-                alt=""
-              />
+      <>
+        {/* <Modal
+          // show={convertProfile}
+          className="edit-profile-modal"
+          onHide={() => {
+            setConvertProfile((convertProfile) => !convertProfile);
+          }}
+          dialogClassName="convertProfileModal"
+        >
+          <Modal.Header>
+            <div className="d-flex flex-row justify-content-around col-12">
+              <h4 className="login-type">Artist Application</h4>
             </div>
-            <div className="grids-main-inputs">
-              <div className="comman-grids">
-                <input
-                  placeholder="First Name"
-                  value={firstname}
-                  onChange={(e) => setfirstname(e.target.value)}
+          </Modal.Header>
+          <Modal.Body>
+            <div className="account-setting-form">
+              <div className="d-flex w-100 justify-content-center align-items-center">
+                <img
+                  style={{
+                    borderRadius: "50%",
+                    height: "200px",
+                    width: "200px",
+                  }}
+                  src={
+                    profileimg !== ""
+                      ? `${process.env.REACT_APP_SERVER_URL}/${profileimg}`
+                      : assetsImages.person
+                  }
+                  alt=""
                 />
               </div>
-              <div className="comman-grids">
-                <input
-                  placeholder="Last Name"
-                  value={lastname}
-                  onChange={(e) => setlastname(e.target.value)}
-                />
-              </div>
-              <div className="comman-grids Address-main">
-                <input
-                  placeholder="Address"
-                  value={address}
-                  onChange={(e) => setaddress(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="grids-main-inputs three-inputs pt-0 pb-0">
-              <div className="comman-grids">
-                <input
-                  placeholder="City"
-                  value={city}
-                  onChange={(e) => setcity(e.target.value)}
-                />
-              </div>
-              <div className="comman-grids">
-                <input
-                  placeholder="Postcode/ZIP"
-                  value={pincode}
-                  onChange={(e) => setpincode(e.target.value)}
-                />
-              </div>
-              <div className="comman-grids">
-                <select
-                  name="countries"
-                  id="countries"
-                  form="carform"
-                  className="common-grids-select"
-                  value={country}
-                  onChange={(e) => setcountry(e.target.value)}
-                >
-                  <option value="Country" active>
-                    Country
-                  </option>
-                  {country_list.map((country, i) => (
-                    <option key={i} value={country}>
-                      {country}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="grids-main-inputs">
-              <div className="comman-grids">
-                Profile Image:
-                <input
-                  onChange={(e) => setuprofileimage(e.target.files[0])}
-                  placeholder="Profile Image"
-                  id="profileimage"
-                  type="file"
-                />
-              </div>
-
-              {!isArtist && (
+              <div className="grids-main-inputs">
                 <div className="comman-grids">
-                  Banner Image:
                   <input
-                    onChange={(e) => setubannerimage(e.target.files[0])}
-                    placeholder="Banner Image"
-                    id="bannerimage"
+                    placeholder="First Name"
+                    value={firstname}
+                    onChange={(e) => setfirstname(e.target.value)}
+                  />
+                </div>
+                <div className="comman-grids">
+                  <input
+                    placeholder="Last Name"
+                    value={lastname}
+                    onChange={(e) => setlastname(e.target.value)}
+                  />
+                </div>
+                <div className="comman-grids Address-main">
+                  <input
+                    placeholder="Address"
+                    value={address}
+                    onChange={(e) => setaddress(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grids-main-inputs three-inputs pt-0 pb-0">
+                <div className="comman-grids">
+                  <input
+                    placeholder="City"
+                    value={city}
+                    onChange={(e) => setcity(e.target.value)}
+                  />
+                </div>
+                <div className="comman-grids">
+                  <input
+                    placeholder="Postcode/ZIP"
+                    value={pincode}
+                    onChange={(e) => setpincode(e.target.value)}
+                  />
+                </div>
+                <div className="comman-grids">
+                  <select
+                    name="countries"
+                    id="countries"
+                    form="carform"
+                    className="common-grids-select"
+                    value={country}
+                    onChange={(e) => setcountry(e.target.value)}
+                  >
+                    <option value="Country" active>
+                      Country
+                    </option>
+                    {country_list.map((country, i) => (
+                      <option key={i} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grids-main-inputs">
+                <div className="comman-grids">
+                  Profile Image:
+                  <input
+                    onChange={(e) => setuprofileimage(e.target.files[0])}
+                    placeholder="Profile Image"
+                    id="profileimage"
                     type="file"
                   />
                 </div>
-              )}
+
+                {!isArtist && (
+                  <div className="comman-grids">
+                    Banner Image:
+                    <input
+                      onChange={(e) => setubannerimage(e.target.files[0])}
+                      placeholder="Banner Image"
+                      id="bannerimage"
+                      type="file"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="d-flex flex-column flex-wrap justify-content-center align-items-center col-12">
-            <button className="btn-gradiant" onClick={handleConvertProfile}>
-              Apply
-            </button>
-          </div>
-        </Modal.Footer> */}
-      </Modal>
+          </Modal.Body>
+          <Modal.Footer>
+            <div className="d-flex flex-column flex-wrap justify-content-center align-items-center col-12">
+              <button className="btn-gradiant" onClick={handleConvertProfile}>
+                Apply
+              </button>
+            </div>
+          </Modal.Footer>
+        </Modal> */}
+      </>
     </div>
   );
 };

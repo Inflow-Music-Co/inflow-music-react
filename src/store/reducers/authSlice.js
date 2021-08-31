@@ -26,7 +26,7 @@ export const authSlice = createSlice({
       Wallet.disconnect(true);
       localStorage.removeItem("persist:root");
       localStorageService.clearToken();
-      window.location.href = "/";
+      // window.location.href = "/";
       state.isLoggedIn = false;
       state.token = null;
       state.data = {};

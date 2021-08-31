@@ -48,7 +48,7 @@ function Profiledropdown() {
 
   const onLogout = () => {
     dispatch(logout());
-    window.location.href = "/";
+    // window.location.href = "/";
   };
 
   return (
