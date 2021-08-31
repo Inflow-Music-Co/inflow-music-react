@@ -334,14 +334,17 @@ const Accountsettings = () => {
     }
     å;
 
-    // TODO: Finish Functionality based on DB Schema and routing, double check below
     try {
+      // TO DO: change user profile "isArtist" to true on submit
+      // TO DO: Finish POST request based on proper DB Schema and route
       const submitArtistProfile = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/update`,
         { uid }
       );
+
       const { artist } = submitArtistProfile;
       if (artist) {
+        // TO DO: Review below setter functions and data extraction
         setfirstname(artist.first_name ? artist.first_name : artist.name);
         setcountry(artist.country ? artist.country : "");
         setprofileimage(artist.profile_image);
@@ -350,7 +353,8 @@ const Accountsettings = () => {
         setEmail(artist.email);
         setArtistName(artist.artist_name);
         setArtistSocial(artist.artistSocial["socialOne"]);
-        setIsArtist(true); // Do we need this? Or will it be automatic
+        // REVIEW: Do we need this? Or will it be automatic
+        setIsArtist(true);
       }
     } catch (e) {
       console.log(e);
