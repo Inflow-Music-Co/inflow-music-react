@@ -19,38 +19,36 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import "../component/Artist.css";
 
 const Mydashboard = () => {
-  const { walletProvider } = useContext(WalletProviderContext);
-  const uid = useSelector((state) => state.auth.data._id);
-  const wallet = useSelector((state) => state.wallet);
-  const [balarr, setbalarr] = useState("");
-  const [connectedwallet, setconnectedwallet] = useState(true);
-  const [tokennames, settokennames] = useState([]);
-  const [isfetched, setisfetched] = useState(false);
-  const [tokenValues, setTokenValues] = useState([]);
-  const [tokenPrices, setTokenPrices] = useState([]);
-  const [profileImages, setProfileImages] = useState([]);
-  let tokensBought = [];
-  let temptokenValues = [];
-  let temptokenPrices = [];
+    const { walletProvider } = useContext(WalletProviderContext);
+    const uid = useSelector((state) => state.auth.data._id);
+    const wallet = useSelector(state => state.wallet);
+    const [balarr, setbalarr] = useState('');
+    const [connectedwallet, setconnectedwallet] = useState(true);
+    const [tokennames, settokennames] = useState([]);
+    const [isfetched, setisfetched] = useState(false);
+    const [tokenValues, setTokenValues] = useState([]);
+    const [tokenPrices, setTokenPrices] = useState([]);
+    const [profileImages, setProfileImages] = useState([]);
+    let tokensBought = [];
+    let temptokenValues = [];
+    let temptokenPrices = [];
 
-  useEffect(() => {
-    if (!wallet.wallet_connected) {
-      setconnectedwallet(false);
-    } else {
-      getTotalBalance();
-    }
-  }, [walletProvider]);
+    useEffect(() => {
+        if (!wallet.wallet_connected) {
+            setconnectedwallet(false);
+        } else {
+            getTotalBalance();
+            
+        }
+    }, [walletProvider]);
 
-  const getTotalBalance = async () => {
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`,
-      { uid }
-    );
-    tokensBought = data.tokensBought;
-    settokennames(data.tokenNames);
-    console.log({ tokensBought });
+    const getTotalBalance = async () => {
+        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, { uid })
+        tokensBought = data.tokensBought;
+        settokennames(data.tokenNames);
+        console.log({ tokensBought })
 
-    //set Profile Images
+   //set Profile Images
     let imageUrls = tokensBought.map((address) => {
       if (address) {
         const result = address + "_profilePic.jpeg";
