@@ -337,9 +337,9 @@ const Artistpic = () => {
               type="text"
               placeholder="Link Title"
             />
-            <Dropdown>
-              <Dropdown.Toggle id="dropdown-basic"></Dropdown.Toggle>
-              Choose Social Token to gate
+            <Dropdown
+             className="mb-4 mt-4">
+              <Dropdown.Toggle id="dropdown-basic">Choose Social Token to gate</Dropdown.Toggle>
               <Dropdown.Menu>
               <Dropdown.Item>0x9903a4cd589da8e434f264deafc406836418578e</Dropdown.Item>
             </Dropdown.Menu>
