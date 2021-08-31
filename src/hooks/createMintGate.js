@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 
-const createMintGate = (url, title, token_address, balance, jwt) => {
+const CreateMintGate = (url, title, token_address, balance, jwt) => {
     useEffect(() => {
         const linkOptions = {
             method: 'POST',
@@ -39,4 +39,4 @@ const createMintGate = (url, title, token_address, balance, jwt) => {
     }, [])
 }
 
-export {createMintGate}
+export {CreateMintGate}

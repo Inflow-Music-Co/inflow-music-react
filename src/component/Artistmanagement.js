@@ -14,6 +14,7 @@ import SmallLoader from "./SmallLoader";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
+import { CreateMintGate } from "../hooks/createMintGate";
 
 const GET_TOKEN_FEES = gql`
   query {
@@ -59,6 +60,11 @@ const Artistpic = () => {
     // console.log({tokenfees})
     settokenfees(tokenfees);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    CreateMintGate();
+  }
 
   return (
     <div className="dashboard-wrapper-main artist-management">
@@ -324,29 +330,38 @@ const Artistpic = () => {
         </Modal.Header>
 
         <Modal.Body>
+          <form></form>
           <div className="form-group">
             <label>Original Content Url</label>
             <input
+              id="url"
               className="form-control mb-3"
               type="text"
               placeholder="Example: https://youtube.com"
             />
             <label>Link Title</label>
             <input
+              id="title"
               className="form-control mb-3 mt-3"
               type="text"
               placeholder="Link Title"
             />
             <Dropdown
-             className="mb-4 mt-4">
+             className="mb-3 mt-3">
               <Dropdown.Toggle id="dropdown-basic">Choose Social Token to gate</Dropdown.Toggle>
               <Dropdown.Menu>
-              <Dropdown.Item>0x9903a4cd589da8e434f264deafc406836418578e</Dropdown.Item>
+              <Dropdown.Item>0x6Fb4EA5198f5587A5c0573FD64A84e301DfeE8A3</Dropdown.Item>
             </Dropdown.Menu>
             </Dropdown>
-
             
-            <button className="upload-profile btn-gradiant">Created Token Gated Link</button>
+            <label>Amount of Tokens Required</label>
+            <input
+              id="balance"
+              className="form-control mb-3 mt-4"
+              type="number"
+              placeholder="ex. 100"
+            />
+            <button className="upload-profile btn-gradiant" type="submit">Created Token Gated Link</button>
           </div>
         </Modal.Body>
       </Modal>
