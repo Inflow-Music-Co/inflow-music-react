@@ -29,7 +29,8 @@ async function CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt, mi
             return;
           }
           console.log(data.url);
-          return data.url;
+          const returnlink = localStorage.setItem('link', data.url);
+          return returnlink;
         })
         .catch((e) => {
           alert("Oh no! We have an error: " + e.toString());

@@ -437,6 +437,7 @@ const Artistpic = () => {
             <h2 className="title">Success!</h2>
             <p>Your token gated link has been created</p>
             <input
+              value={localStorage.getItem('link')}
               className="form-control mb-3"
               type="text"
             />
