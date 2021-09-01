@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import moment from "moment";
 import SmallLoader from "./SmallLoader";
-import "./Totalbalancechart.css";
+import "./TokenChart.css";
 
-const Totalbalancechart = ({ artist, historicalData }) => {
+const TokenChart = (props) => {
+  const { artist, historicalData } = props;
+  const symbol = artist.social_token_symbol;
+
   const [labels, setlabels] = useState([]);
   const [values, setvalues] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +15,6 @@ const Totalbalancechart = ({ artist, historicalData }) => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(false);
-
       if (historicalData) {
         console.log("historicalData", historicalData);
         let templabels = [];
@@ -34,8 +36,6 @@ const Totalbalancechart = ({ artist, historicalData }) => {
     loadData();
   }, [historicalData]);
 
-  console.log(values, labels);
-
   const options = {
     maintainAspectRatio: false,
     responsive: true,
@@ -50,44 +50,53 @@ const Totalbalancechart = ({ artist, historicalData }) => {
     },
   };
 
-  const getgraphdata = () => {
-    const updatedLabels = labels.map((date) => moment(date).format("DD/MM"));
-    // var ctx = document.getElementById("canvas").getContext("2d");
-    // const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    // gradient.addColorStop(0, "rgba(151,187,205,0.7)");
-    // gradient.addColorStop(1, "rgba(151,187,205,0)");
+  const graphData = (canvas) => {
+    const updatedLabels = labels.map((date) => moment(date).format("MM/DD"));
+    const ctx = canvas.getContext("2d");
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, "rgba(125, 42, 221, 0.5)");
+    gradient.addColorStop(0.1, "rgba(125, 42, 221, 0.8)");
+    gradient.addColorStop(0.4, "rgba(125, 42, 221, 0.4)");
+    gradient.addColorStop(0.75, "rgba(59, 72, 193, 0.6)");
 
     const graphdata = {
       labels: updatedLabels,
-
       datasets: [
         {
-          label: "Price of Token",
+          label: `${symbol} Price`,
           data: values,
           fill: true,
+          borderWidth: 1,
+          borderColor: "rgba(107, 22, 209, 1)",
           borderCapStyle: "round",
           borderJoinStyle: "miter",
-          backgroundColor: "rgba(87, 47, 163, 1)",
-          // backgroundColor: gradient,
-          borderColor: "rgba(151,187,205,1)",
-          pointBackgroundColor: "rgba(151,187,205,1)",
-          pointBorderColor: "#fff",
+          backgroundColor: gradient,
+          pointRadius: 2,
+          pointHitRadius: 30,
+          pointBorderWidth: 1,
+          pointBorderColor: "#2a2e3b",
+          pointBackgroundColor: "rgba(115, 44, 245, 1)",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "rgba(115, 44, 245, 1)",
+          pointHoverRadius: 4,
           pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(151,187,205,1)",
+          tension: 0.35,
         },
       ],
     };
+
     return graphdata;
   };
+
   return (
     <>
       {loading ? (
         <SmallLoader />
       ) : (
-        <Line data={getgraphdata()} options={options} height={250} />
+        <Line data={graphData} options={options} height={275} />
       )}
     </>
   );
 };
 
-export default Totalbalancechart;
+export default TokenChart;

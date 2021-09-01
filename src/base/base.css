@@ -11,6 +11,8 @@
   width: 100%;
   top: 0;
   z-index: 5;
+  /* box-shadow: 1px 0px 6px #1f1f1f;
+  clip-path: inset(0px 0px -1000px 0px); */
 }
 
 .header-main .left-col-main {
@@ -22,7 +24,7 @@
   align-items: center;
 }
 
-.header-main .right-col-main .wallet-button {
+.wallet-button {
   background: linear-gradient(
     0deg,
     rgba(101, 32, 181, 1) 20%,
@@ -86,7 +88,8 @@
   overflow-y: auto;
   /* padding-top: 20px; */
   height: calc(100% - 90px);
-  box-shadow: 1px 0px 6px #1f1f1f;
+  box-shadow: 1px 0px 8px #1f1f1f;
+  clip-path: inset(0px -15px 0px 0px);
 }
 
 .side-bar-main .side-bar-navigation .nav-link-main img {
