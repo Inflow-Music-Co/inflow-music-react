@@ -39,7 +39,6 @@ const Mydashboard = () => {
             setconnectedwallet(false);
         } else {
             getTotalBalance();
-            
         }
     }, [walletProvider]);
 
