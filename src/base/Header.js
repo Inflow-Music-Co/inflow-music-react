@@ -90,6 +90,13 @@ const Header = () => {
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
+        <Button
+          size="sm"
+          className="mr-2 wallet-button"
+          onClick={() => connectWallet()}
+        >
+          {walletProvider ? "Disconnect" : "Connect"}
+        </Button>
         <div className="notified-main">
           <Notification />
         </div>
