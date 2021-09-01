@@ -450,9 +450,9 @@ const Artistpic = () => {
       <Modal
         show={linkSuccess}
         className="edit-profile-modal success"
-        onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton 
+        onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}>
           <span className="title">Your Token Gated Link</span>
         </Modal.Header>
 
