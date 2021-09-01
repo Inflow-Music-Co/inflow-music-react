@@ -466,6 +466,7 @@ const Artistpic = () => {
               className="form-control mb-3"
               type="text"
             />
+            <button className="btn-gradiant" onClick={() => {navigator.clipboard.writeText(localStorage.getItem('link'))}}>Copy Link</button>
           </div>
         </Modal.Body>
       </Modal>
