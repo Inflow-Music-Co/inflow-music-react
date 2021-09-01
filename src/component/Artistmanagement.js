@@ -6,7 +6,7 @@ import { assetsImages } from "../constants/images";
 // import Customdropdown from "./Customdropdown";
 import Performbar from "./Performbar";
 // import ProgressBar from "react-bootstrap/ProgressBar";
-import { Modal, Dropdown } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 // import Loader from "./Loader";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 // import { ethers } from 'ethers';
@@ -14,7 +14,7 @@ import SmallLoader from "./SmallLoader";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
-import { CreateMintGate } from "../hooks/createMintGate";
+import { CreateMintgateLink } from "../hooks/createMintGate";
 
 const GET_TOKEN_FEES = gql`
   query {
@@ -30,7 +30,18 @@ const Artistpic = () => {
   const wallet = useSelector((state) => state.wallet);
   const [tokenfrees, settokenfrees] = useState(false);
   const [newvote, setnewvote] = useState(false);
+
+  /*MintGate Integration state*/
   const [link, setLink] = useState(false);
+  const [url, setURL] = useState('');
+  const [linkTitle, setLinkTitle] = useState('');
+  const [tokenAddress, setTokenAddress] = useState('');
+  const [balance, setBalance] = useState('');
+  const [mintgateLink, setMintgateLink] = useState('');
+  const [linkSuccess, setLinkSuccess] = useState(false);
+
+  const jwt = process.env.REACT_APP_MINTGATE_JWT;
+
   const [success, setsuccess] = useState(false);
   const [connectedwallet, setconnectedwallet] = useState(true);
 
@@ -61,9 +72,10 @@ const Artistpic = () => {
     settokenfees(tokenfees);
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    CreateMintGate();
+    CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
   }
 
   return (
@@ -293,6 +305,40 @@ const Artistpic = () => {
       </Modal>
 
       <Modal
+        show={success}
+        className="edit-profile-modal success"
+        onClick={() => setsuccess((success) => !success)}
+      >
+        <Modal.Header closeButton>
+          <span className="title">Location of next concert</span>
+        </Modal.Header>
+
+        <Modal.Body>
+          <div className="success-popup-content">
+            <img alt="" src={assetsImages.success} />
+            <h2 className="title">Success!</h2>
+            <p>Your poll has been created and is now live</p>
+          </div>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <button className="save-btn btn-gradiant">View Poll</button>
+        </Modal.Footer>
+      </Modal>
+      <SweetAlert
+        danger
+        show={!connectedwallet}
+        title="Please Connect Wallet"
+        style={{ color: "#000" }}
+        onConfirm={() => {
+          setconnectedwallet((connectedwallet) => !connectedwallet);
+        }}
+        onCancel={() => {
+          setconnectedwallet((connectedwallet) => !connectedwallet);
+        }}
+      ></SweetAlert>
+
+      <Modal
         show={tokenfrees}
         className="edit-profile-modal sell"
         onHide={() => settokenfrees((tokenfrees) => !tokenfrees)}
@@ -330,11 +376,12 @@ const Artistpic = () => {
         </Modal.Header>
 
         <Modal.Body>
-          <form></form>
+          <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Original Content Url</label>
             <input
               id="url"
+              onChange={(e) => setURL(e.target.value)}
               className="form-control mb-3"
               type="text"
               placeholder="Example: https://youtube.com"
@@ -342,63 +389,61 @@ const Artistpic = () => {
             <label>Link Title</label>
             <input
               id="title"
+              onChange={(e) => setLinkTitle(e.target.value)}
               className="form-control mb-3 mt-3"
               type="text"
               placeholder="Link Title"
             />
-            <Dropdown
-             className="mb-3 mt-3">
-              <Dropdown.Toggle id="dropdown-basic">Choose Social Token to gate</Dropdown.Toggle>
-              <Dropdown.Menu>
-              <Dropdown.Item>0x6Fb4EA5198f5587A5c0573FD64A84e301DfeE8A3</Dropdown.Item>
-            </Dropdown.Menu>
-            </Dropdown>
-            
+
+            <label>Select Token</label>  
+            <select id="tokenAddress"
+              onChange={(e) => setTokenAddress(e.target.value)}
+              className="form-control mb-3 mt-3">
+              <option>Select Token</option>
+              <option value="0x6Fb4EA5198f5587A5c0573FD64A84e301DfeE8A3">0x6Fb4EA5198f5587A5c0573FD64A84e301DfeE8A3</option>
+              </select>
+
+
             <label>Amount of Tokens Required</label>
             <input
               id="balance"
+              onChange={(e) => setBalance(e.target.value)}
               className="form-control mb-3 mt-4"
               type="number"
               placeholder="ex. 100"
             />
-            <button className="upload-profile btn-gradiant" type="submit">Created Token Gated Link</button>
+            <button
+            className="upload-profile btn-gradiant"
+            onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
+            type="submit">Created Token Gated Link</button>
           </div>
+          </form>
         </Modal.Body>
+
       </Modal>
 
       <Modal
-        show={success}
+        show={linkSuccess}
         className="edit-profile-modal success"
-        onClick={() => setsuccess((success) => !success)}
+        onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
       >
         <Modal.Header closeButton>
-          <span className="title">Location of next concert</span>
+          <span className="title">Your Token Gated Link</span>
         </Modal.Header>
 
         <Modal.Body>
           <div className="success-popup-content">
             <img alt="" src={assetsImages.success} />
             <h2 className="title">Success!</h2>
-            <p>Your poll has been created and is now live</p>
+            <p>Your token gated link has been created</p>
+            <input
+              className="form-control mb-3"
+              type="text"
+            />
           </div>
         </Modal.Body>
-
-        <Modal.Footer>
-          <button className="save-btn btn-gradiant">View Poll</button>
-        </Modal.Footer>
       </Modal>
-      <SweetAlert
-        danger
-        show={!connectedwallet}
-        title="Please Connect Wallet"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-        onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-      ></SweetAlert>
+
     </div>
 
     
