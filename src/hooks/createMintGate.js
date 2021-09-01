@@ -11,7 +11,7 @@ async function CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt, mi
               "token": tokenAddress,
               "ttype": "20",
               "balance": balance,
-              "network": 1,
+              "network": 4,
               "subid": "",
             }
           ],

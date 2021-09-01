@@ -18,7 +18,7 @@ import { Contract, ethers } from "ethers";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
 import SweetAlert from "react-bootstrap-sweetalert";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import Axios from "axios";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
@@ -61,6 +61,7 @@ const Artistpic = () => {
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
   const [playlistID, setPlaylistID] = useState("522897111");
+  const [mintGateUrl, setMintGateUrl] = useState('')
 
   useEffect(() => {
     if (!wallet.wallet_connected) {
@@ -70,7 +71,6 @@ const Artistpic = () => {
       console.log({ walletProvider });
       setLoading(true);
       const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,{ id } );
-
       if (data.artist) {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
@@ -80,14 +80,16 @@ const Artistpic = () => {
           artist
         );
         setHistoricalData(res.data.priceHistory);
-        const tokenPrice = setInterval(() => {
-          fetchTokenPrice();
-        }, 10000);
         setLoading(false);
         // return () => {
         //     clearInterval(tokenPrice);
         // };
       }
+
+      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`, { id })
+      .then(response => {
+        setMintGateUrl(response.data.mintGatedUrls[0])
+      })
     };
     if (id) {
       return init();
@@ -252,9 +254,6 @@ const Artistpic = () => {
           setLoading(false);
           setsuccessmint((successmint) => !successmint);
           // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress })
-          setInterval(() => {
-            window.location.reload();
-          }, 2000);
           return;
         }
         const mintPrice = await socialMinter.getMintPrice(
@@ -525,6 +524,12 @@ const Artistpic = () => {
     }
   };
 
+  const redirectToTokenGate = async () => {
+      if(mintGateUrl !== ''){
+        window.location.assign(`${mintGateUrl}`);
+      }
+  }
+
   if (loading) {
     return <Loader />;
   }
@@ -591,11 +596,7 @@ const Artistpic = () => {
             </div>
           </div>
           <div className="artist-tag">
-            <button className="tag-button">MERCH STORE</button>
-            <button className="tag-button">LIVE STREAMS</button>
-            <button className="tag-button">CONTENT</button>
-            <button className="tag-button">EXPERIENCE</button>
-            <button className="tag-button">VR ROOM</button>
+            <button className="tag-button" onClick={() => redirectToTokenGate()}> EXPERIENCE </button>
           </div>
         </div>
       </div>

@@ -67,7 +67,6 @@ const Artistpic = () => {
     }     
   }, [])
 
-
   const formatAndSetTokenFees = async (value) => {
     const provider = walletProvider;
     const inflow = new Inflow(provider, 4);
@@ -75,9 +74,12 @@ const Artistpic = () => {
     settokenfees(tokenfees);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
+    //const mintGateUrl = await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
+    //console.log('MINTGATE URL', mintGateUrl);
+    const mintGateUrl = 'testurl.com'
+    Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`, { mintGateUrl })
   }
 
   const changeOwner = async () => {
@@ -425,10 +427,8 @@ const Artistpic = () => {
               onChange={(e) => setTokenAddress(e.target.value)}
               className="form-control mb-3 mt-3">
               <option>Select Token</option>
-              <option value="0x6Fb4EA5198f5587A5c0573FD64A84e301DfeE8A3">0x6Fb4EA5198f5587A5c0573FD64A84e301DfeE8A3</option>
+              <option value={`${socialTokenAddress}`}>{socialTokenAddress}</option>
               </select>
-
-
             <label>Amount of Tokens Required</label>
             <input
               id="balance"
