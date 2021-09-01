@@ -10,7 +10,6 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import { connected, disconnect } from "../store/reducers/walletSlice";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
-import LoginModal from "../page/LoginModal";
 import { assetsImages } from "../constants/images";
 import { Link } from "react-router-dom";
 
@@ -23,7 +22,6 @@ const Header = () => {
   // const wallet = useSelector(state => state.wallet);
   const dispatch = useDispatch();
   const [alert, setalert] = useState(null);
-  const [login, setLogin] = useState(false);
 
   // console.log({wallet})
   useEffect(() => {
@@ -92,13 +90,13 @@ const Header = () => {
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
-        {/* <Button
+        <Button
           size="sm"
           className="mr-2 wallet-button"
-          //   onClick={() => connectWallet()}
-          onClick={() => setLogin((login) => !login)}>
-          {walletProvider ? "Logout" : "Login"}
-        </Button> */}
+          onClick={() => connectWallet()}
+        >
+          {walletProvider ? "Disconnect" : "Connect"}
+        </Button>
         <div className="notified-main">
           <Notification />
         </div>
@@ -106,7 +104,6 @@ const Header = () => {
           <Profiledropdown />
         </div>
       </div>
-      {/* <LoginModal login={login} setLogin={setLogin}/> */}
     </div>
   );
 };

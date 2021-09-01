@@ -5,24 +5,27 @@ import "./Artistmanagement.css";
 import { assetsImages } from "../constants/images";
 // import Customdropdown from "./Customdropdown";
 import Performbar from "./Performbar";
+import { useParams } from "react-router-dom";
+import { Contract, ethers } from "ethers";
 // import ProgressBar from "react-bootstrap/ProgressBar";
 import { Modal } from "react-bootstrap";
+import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 // import Loader from "./Loader";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
-// import { ethers } from 'ethers';
+import Axios from 'axios';
 import SmallLoader from "./SmallLoader";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { CreateMintgateLink } from "../hooks/createMintGate";
 
-const GET_TOKEN_FEES = gql`
-  query {
-    minteds {
-      royaltyPaid
-    }
-  }
-`;
+// const GET_TOKEN_FEES = gql`
+//   query {
+//     minteds {
+//       royaltyPaid
+//     }
+//   }
+// `;
 
 const Artistpic = () => {
   const { walletProvider } = useContext(WalletProviderContext);
@@ -43,40 +46,58 @@ const Artistpic = () => {
   const jwt = process.env.REACT_APP_MINTGATE_JWT;
 
   const [success, setsuccess] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [connectedwallet, setconnectedwallet] = useState(true);
+  const uid = useSelector((state) => state.auth.data._id);
+  const [socialTokenAddress, setSocialTokenAddress] = useState('');
+  const [artist, setArtist] = useState('');
+  const [activated, setActivated] = useState(false);
 
-  const { loading, data } = useQuery(GET_TOKEN_FEES);
+  //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
   const [tokenfees, settokenfees] = useState(0.0);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!wallet.wallet_connected) {
       setconnectedwallet(false);
-    }
-  }, []);
+    } else {
+        const id = uid;
+        const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
+        setSocialTokenAddress(data.artist.social_token_id);
+        setLoading(false);
+    }     
+  }, [])
 
-  useEffect(() => {
-    if (data) {
-      let tokenfees = 0;
-      data.minteds.forEach((item) => {
-        tokenfees += item.royaltyPaid;
-      });
-      formatAndSetTokenFees(tokenfees);
-    }
-  }, [data]);
 
   const formatAndSetTokenFees = async (value) => {
     const provider = walletProvider;
     const inflow = new Inflow(provider, 4);
     const tokenfees = inflow.formatERC20("USDC", String(value));
-    // console.log({tokenfees})
     settokenfees(tokenfees);
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
     CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
   }
+
+  const changeOwner = async () => {
+    console.log('click')
+    const provider = walletProvider;
+    const signer = provider.getSigner();
+    const socialToken = new Contract(
+      socialTokenAddress,
+      SocialToken.abi,
+      signer
+    );
+    try {
+      await socialToken.transferOwnership('0x76aB04F8Adb222C7Bbc27991A82498906954dEae');
+      setActivated(true);
+    } catch (error) {
+      console.log(error);
+    }
+    
+
+  };
 
   return (
     <div className="dashboard-wrapper-main artist-management">
@@ -87,9 +108,6 @@ const Artistpic = () => {
             <div className="artist-title">
               <div className="d-flex flex-row justify-content-between w-100">
                 <span>Token Fees</span>
-                <a href="#">
-                  <img alt="" src={assetsImages.filter} />
-                </a>
               </div>
             </div>
             <div className="artist-poll">
@@ -105,8 +123,15 @@ const Artistpic = () => {
               </div>
             </div>
             <div className="first-row-main-dash">
-              <div className="left-col">
-                <div className="below-row">{/* <Performbar /> */}</div>
+              <div className="left-col"> 
+                <div className="below-row">
+                {activated ? <button className="btn-gradiant" onClick={changeOwner}>
+                  ACTIVATED
+                  </button> 
+                  : <button className="btn-gradiant">
+                  ACTIVATE
+                  </button>}
+                </div>
               </div>
             </div>
             <div className="footer-btn">
