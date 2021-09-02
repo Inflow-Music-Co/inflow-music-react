@@ -36,7 +36,9 @@ const Mydashboard = () => {
   const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
     network: "rinkeby",
   });
-  const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+  const magicLinkProvider = new ethers.providers.Web3Provider(
+    magic.rpcProvider
+  );
 
   let tempTokensBought = []; // user's owned token addresses
   let tempTokenNames = []; // each owned token's artist name
@@ -349,7 +351,7 @@ const Mydashboard = () => {
                 // style={{ borderRight: "2px solid black" }}
               >
                 <span className="d-flex flex-row">$ {displayTotalValue()}</span>
-                <span className="small-heading">Total Artist Balance</span>
+                <span className="small-heading">Total Wallet Balance</span>
               </div>
               {/* <div className="comman-priced">
               $3,981
