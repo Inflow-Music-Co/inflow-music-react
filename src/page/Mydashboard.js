@@ -16,102 +16,131 @@ import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import SmallLoader from "../component/SmallLoader";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
+import { ethers } from "ethers";
+import { Magic } from "magic-sdk";
 import "../component/Artist.css";
 
 const Mydashboard = () => {
-    const { walletProvider } = useContext(WalletProviderContext);
-    const uid = useSelector((state) => state.auth.data._id);
-    const wallet = useSelector(state => state.wallet);
-    const [balarr, setbalarr] = useState('');
-    const [connectedwallet, setconnectedwallet] = useState(true);
-    const [tokennames, settokennames] = useState([]);
-    const [isfetched, setisfetched] = useState(false);
-    const [tokenValues, setTokenValues] = useState([]);
-    const [tokenPrices, setTokenPrices] = useState([]);
-    const [profileImages, setProfileImages] = useState([]);
-    let tokensBought = [];
-    let temptokenValues = [];
-    let temptokenPrices = [];
+  const { walletProvider } = useContext(WalletProviderContext);
+  const uid = useSelector((state) => state.auth.data._id);
+  const wallet = useSelector((state) => state.wallet);
+  const [connectedWallet, setConnectedWallet] = useState(true);
+  const [isFetched, setIsFetched] = useState(false);
+  const [tokensBought, setTokensBought] = useState([]);
+  const [tokenNames, setTokenNames] = useState([]);
+  const [tokenBalances, setTokenBalances] = useState([]);
+  const [tokenPrices, setTokenPrices] = useState([]);
+  const [totalValues, setTotalValues] = useState([]);
+  const [profileImages, setProfileImages] = useState([]);
 
-    useEffect(() => {
-        if (!wallet.wallet_connected) {
-            setconnectedwallet(false);
-        } else {
-            getTotalBalance();
-            
-        }
-    }, [walletProvider]);
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+    network: "rinkeby",
+  });
+  const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
 
-    const getTotalBalance = async () => {
-        const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, { uid })
-        tokensBought = data.tokensBought;
-        settokennames(data.tokenNames);
-        console.log({ tokensBought })
+  let tempTokensBought = []; // need to pull owned token addresses & symbols from wallet
+  let tempTokenBalances = []; // // need to pull each token's balance
+  let tempTokenPrices = []; // need to pull each token's unit price
+  let tempTokenTotalValues = []; // need to derive total token value (amount * price)
 
-   //set Profile Images
-    let imageUrls = tokensBought.map((address) => {
-      if (address) {
-        const result = address + "_profilePic.jpeg";
-        return result;
-      }
-    });
+  useEffect(() => {
+    if (!wallet.wallet_connected) {
+      setConnectedWallet(false);
+    } else {
+      getTokensOwnedByUser();
+      getTokensBalAndPrice();
+      getArtistInfoFromDB();
+    }
+  }, [walletProvider]);
 
-    imageUrls = imageUrls.filter((url) => {
-      if (url) return url;
-    });
+  const getTokensOwnedByUser = () => {
+    console.log("need to implement fetching tokens");
+    // Should we check all tokens in user's wallet
+    // and cross reference with our DB of contracts?
 
-    setProfileImages(imageUrls);
+    tempTokensBought.push("0x7675a6189ccc1efd89e4239d30afdb2a8c763348"); // LTA
+    tempTokensBought.push("0x5Cfe6cEE86e3799B17746313160169782e7a41F2"); // HFT
+  };
 
-    console.log({ imageUrls });
+  const getTokensBalAndPrice = async () => {
+    if (tempTokensBought.length > 0) {
+      const tokenBalances = await Promise.all(
+        tempTokensBought.map(async (token) => {
+          const bal = await getTokenBalance(token);
+          // console.log({ token, bal });
 
-    if (tokensBought) {
-      const balArr = await Promise.all(
-        tokensBought.map(async (token) => {
-          console.log({ token });
-          const bal = await getBalance(token);
-          console.log({ bal });
           if (bal) {
-            const { singleval, totalval } = await getPrice(token, bal);
-            console.log({ singleval, totalval });
-            temptokenValues.push(parseFloat(totalval));
-            temptokenPrices.push(parseFloat(singleval));
+            const tokenPrice = await getTokenPrice(token, bal);
+            tempTokenBalances.push(bal);
+            tempTokenPrices.push(tokenPrice);
+            tempTokenTotalValues.push(tokenPrice * bal);
           }
-          return parseFloat(bal);
         })
       );
-      console.log({ balarr });
-      setbalarr(balArr);
-      setTokenValues(temptokenValues);
-      setTokenPrices(temptokenPrices);
-      setisfetched(true);
+
+      setTokensBought(tempTokensBought);
+      setTokenBalances(tempTokenBalances);
+      setTotalValues(tempTokenTotalValues);
+      setTokenPrices(tempTokenPrices);
+      setIsFetched(true);
     }
   };
 
-  const getPrice = async (token, balance) => {
+  const getArtistInfoFromDB = () => {
+    // TODO: need to code logic to pull only artist images/names that user owns
+    // const { data } = await axios.post(
+    //   `${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`,
+    //   { uid }
+    // );
+    // tempTokensBought = data.tokensBought;
+    // setTokenNames(data.tokenNames);
+    // console.log({ tempTokensBought });
+    //set Profile Images
+    // let imageUrls = tempTokensBought.map((address) => {
+    //   if (address) {
+    //     const result = address + "_profilePic.jpeg";
+    //     return result;
+    //   }
+    // });
+    // imageUrls = imageUrls.filter((url) => {
+    //   if (url) return url;
+    // });
+    // setProfileImages(imageUrls);
+    // console.log({ imageUrls });
+  };
+
+  const getTokenPrice = async (token, balance) => {
     if (walletProvider) {
       try {
         const provider = walletProvider;
         const inflow = new Inflow(provider, 4);
-        const mintPrice = await inflow.getMintPriceSocial(
-          token,
-          inflow.parseERC20("SocialToken", String(balance))
-        );
-        console.log({ mintPrice });
-        const singleMintPrice = await inflow.getMintPriceSocial(
+
+        const singleTokenPrice = await inflow.getMintPriceSocial(
           token,
           inflow.parseERC20("SocialToken", "1")
         );
-        console.log({ singleMintPrice });
-        const data = { singleval: singleMintPrice[0], totalval: mintPrice[0] };
-        console.log("HERE");
-        return data;
+        // console.log({ singleTokenPrice });
+
+        // const totalBalanceValue = await inflow.getMintPriceSocial(
+        //   token,
+        //   inflow.parseERC20("SocialToken", String(balance))
+        // );
+        // console.log({ totalBalanceValue });
+
+        // const data = {
+        //   singleval: singleTokenPrice[0],
+        //   totalval: totalBalanceValue[0],
+        // };
+        // return data;
+
+        return singleTokenPrice[0];
       } catch (error) {
         console.log(error);
       }
     }
   };
 
-  const getBalance = async (tokenaddress) => {
+  const getTokenBalance = async (tokenaddress) => {
     if (walletProvider) {
       try {
         const signer = walletProvider.getSigner();
@@ -122,9 +151,9 @@ const Mydashboard = () => {
           signerAddress,
           tokenaddress
         );
-        console.log({ balance });
+        return Number(balance[0]);
+        // console.log({ balance });
         // console.log({ balance: balance[0] })
-        return balance[0];
         // // console.log(`BALANCE: ${balance[0]}`);
       } catch (err) {
         console.log(err);
@@ -153,14 +182,14 @@ const Mydashboard = () => {
     return finalArr;
   };
 
-  const displaypercentagebalances = () => {
-    if (isfetched) {
-      const sum = tokenValues.reduce(function (a, b) {
+  const displayPercentageBalances = () => {
+    if (isFetched) {
+      const sum = totalValues.reduce(function (a, b) {
         return a + b;
       }, 0);
-      const amount = formatBalanceArray(tokenValues);
+      const amount = formatBalanceArray(totalValues);
       // console.log({ amount })
-      const names = formatBalanceArray(tokennames);
+      const names = formatBalanceArray(tokenNames);
       // console.log({ names })
       return (
         <div className="common-div-for-pro">
@@ -201,20 +230,24 @@ const Mydashboard = () => {
     }
   };
 
-  const displaytotalbalance = () => {
-    if (isfetched) {
-      const sum = tokenValues.reduce(function (a, b) {
+  const displayTotalBalance = () => {
+    if (isFetched) {
+      const sum = totalValues.reduce(function (a, b) {
         return a + b;
       }, 0);
       return sum.toFixed(2);
     } else {
-      return <SmallLoader />;
+      return (
+        <div className="ml-4">
+          <SmallLoader />
+        </div>
+      );
     }
   };
 
-  const displaydoughnetchart = () => {
-    if (isfetched) {
-      return <Doughnetchart balances={tokenValues} tokennames={tokennames} />;
+  const displayDoughnutChart = () => {
+    if (isFetched) {
+      return <Doughnetchart balances={totalValues} tokenNames={tokenNames} />;
     } else {
       return (
         <div className="d-flex justify-content-center align-items-center">
@@ -238,7 +271,7 @@ const Mydashboard = () => {
             </div>
             <Slider
               tokenPrices={tokenPrices}
-              tokenNames={tokennames}
+              tokenNames={tokenNames}
               profileImages={profileImages}
             />
           </div>
@@ -247,15 +280,15 @@ const Mydashboard = () => {
               <div className="left-pricing">
                 <div className="price-tag">
                   {" "}
-                  <span>$</span> {displaytotalbalance()}
+                  <span>$</span> {displayTotalBalance()}
                 </div>
                 <div className="short-des">--</div>
               </div>
               <div className="right-side">
                 {/* <div className="custom-drop">
-                                    <Customdropdown />
-                                </div>
-                                <div className="labal"> This Month</div> */}
+                        <Customdropdown />
+                    </div>
+                    <div className="labal"> This Month</div> */}
               </div>
             </div>
             {/* <Performbar /> */}
@@ -289,12 +322,14 @@ const Mydashboard = () => {
                 </div>
                 <div className="right-side-value">
                   --
-                  <span className="small-heading">Artist Tokens</span>
+                  <span className="small-heading">Artist NFTs</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* ---------------My Artist Holdings-------- */}
         <div className="right-col">
           <div className="inner-row">
             <div className="card-heading">My Artist Holdings</div>
@@ -302,27 +337,37 @@ const Mydashboard = () => {
               <img alt="" src={assetsImages.filter} />
             </a>
           </div>
-          <div className="chart-row">{displaydoughnetchart()}</div>
-          {displaypercentagebalances()}
-          <div className="last-row-pricing">
-            <div className="comman-priced" style={{ borderRight: "0px" }}>
-              $ {displaytotalbalance()}
-              <span className="small-heading">Total Artist Balance</span>
+
+          <div className="artist-holdings">
+            {/* <div className="chart-row">{displayDoughnutChart()}</div> */}
+            {/* <div className="chart-row">{displayPercentageBalances()}</div> */}
+
+            <div className="artist-holdings-total m-auto col-12 d-flex justify-content-center align-items-center">
+              <div
+                className="artist-holdings-inner d-flex flex-column"
+                // style={{ borderRight: "2px solid black" }}
+              >
+                <span className="d-flex flex-row">
+                  $ {displayTotalBalance()}
+                </span>
+                <span className="small-heading">Total Artist Balance</span>
+              </div>
+              {/* <div className="comman-priced">
+              $3,981
+              <span className="small-heading">Total Token Balance</span>
+            </div> */}
             </div>
-            {/* <div className="comman-priced">
-                            $3,981
-                            <span className="small-heading">Total Token Balance</span>
-                        </div> */}
           </div>
         </div>
       </div>
+
       {/* ---------------Total-wallet-balance-------- */}
       <div className="token-chart">
         <div className="chart-header-row">
           <div className="token-info">
             <div className="card-heading">Total Wallet Balance</div>
             <div className="dollar-price">
-              <span>$</span> {displaytotalbalance()}
+              <span>$</span> {displayTotalBalance()}
             </div>
             <div className="small-heading">+8 last week</div>
           </div>
@@ -335,24 +380,23 @@ const Mydashboard = () => {
         <div className="total-bal-chart">{/* <Totalbalancechart /> */}</div>
         <div className="deposite-earning-row">
           {/* <div className="deposits">
-                        <div className="square-lab"></div>
-                        <div className="deposite-heaing">
-                            <span className="labal-heading">Deposits</span>
-                            <span className="percent">+11.7%</span>
-                        </div>
-                    </div>
-                    <div className="earning">
-                        <div className="square-lab"></div>
-                        <div className="deposite-heaing">
-                            <span className="labal-heading">Earnings</span>
-                            <span className="percent">+11.7%</span>
-                        </div>
-                    </div> */}
+                  <div className="square-lab"></div>
+                  <div className="deposite-heaing">
+                      <span className="labal-heading">Deposits</span>
+                      <span className="percent">+11.7%</span>
+                  </div>
+              </div>
+              <div className="earning">
+                  <div className="square-lab"></div>
+                  <div className="deposite-heaing">
+                      <span className="labal-heading">Earnings</span>
+                      <span className="percent">+11.7%</span>
+                  </div>
+              </div> */}
         </div>
       </div>
 
       {/* -----------My-NFTs----------------------- */}
-
       {/* <div className="mynfts-row-main">
                 <div className="second-col">
                     <Mynftdropdown />
@@ -367,28 +411,28 @@ const Mydashboard = () => {
                 </div>
             </div> */}
       {/* <div className="songs-grid-main">
-                    <Song />
-                    <Song />
-                    <Song />
-                    <Song />
-                    <Song />
-                    <Song />
-                    <Song />
-                    <Song />
-                    <Song />
-                    <Song />
-                </div> */}
+              <Song />
+              <Song />
+              <Song />
+              <Song />
+              <Song />
+              <Song />
+              <Song />
+              <Song />
+              <Song />
+              <Song />
+          </div> */}
 
       <SweetAlert
         danger
-        show={!connectedwallet}
+        show={!connectedWallet}
         title="Please Connect Wallet"
         style={{ color: "#000" }}
         onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
+          setConnectedWallet((connectedWallet) => !connectedWallet);
         }}
         onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
+          setConnectedWallet((connectedWallet) => !connectedWallet);
         }}
       ></SweetAlert>
     </div>

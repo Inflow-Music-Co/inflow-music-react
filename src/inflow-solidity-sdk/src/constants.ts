@@ -19,16 +19,16 @@ import {
 
 export const inflowAddressesByChainId: AddressesByChainId = new Map([
   [137, MATIC_DEPLOYED_ADDRESSES as Addresses], // matic mainnet
-  [4, RINKEBY_DEPLOYED_ADDRESSES as Addresses] //rinkeby testnet
+  [4, RINKEBY_DEPLOYED_ADDRESSES as Addresses], //rinkeby testnet
 ]);
 
 export function getAddressesByChainId(
   addressesByChainId: AddressesByChainId,
   chainId: ChainId
 ): Addresses {
-  console.log({ chainId })
+  // console.log({ chainId })
   const addresses = addressesByChainId.get(chainId);
-  console.log({ addresses })
+  // console.log({ addresses });
   if (addresses === undefined) throw new Error("Addresses is undefined");
   return addresses;
 }
