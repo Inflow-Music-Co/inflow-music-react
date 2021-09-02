@@ -38,10 +38,11 @@ const Mydashboard = () => {
   });
   const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
 
-  let tempTokensBought = []; // need to pull owned token addresses & symbols from wallet
-  let tempTokenBalances = []; // // need to pull each token's balance
-  let tempTokenPrices = []; // need to pull each token's unit price
-  let tempTokenTotalValues = []; // need to derive total token value (amount * price)
+  let tempTokensBought = []; // user's owned token addresses
+  let tempTokenNames = []; // each owned token's artist name
+  let tempTokenBalances = []; // each owned token's balance
+  let tempTokenPrices = []; // each owned token's unit price
+  let tempTokenTotalValues = []; // each owned token's total value (amount * price)
 
   useEffect(() => {
     if (!wallet.wallet_connected) {
@@ -54,7 +55,7 @@ const Mydashboard = () => {
   }, [walletProvider]);
 
   const getTokensOwnedByUser = () => {
-    console.log("need to implement fetching tokens");
+    console.log("need to implement fetching tokens with magic wallet");
     // Should we check all tokens in user's wallet
     // and cross reference with our DB of contracts?
 
@@ -161,6 +162,21 @@ const Mydashboard = () => {
     }
   };
 
+  const displayTotalValue = () => {
+    if (isFetched) {
+      const sum = totalValues.reduce(function (a, b) {
+        return a + b;
+      }, 0);
+      return sum.toFixed(2);
+    } else {
+      return (
+        <div className="ml-4">
+          <SmallLoader />
+        </div>
+      );
+    }
+  };
+
   const formatBalanceArray = (arr) => {
     let index = 0;
     let temp = [];
@@ -230,21 +246,6 @@ const Mydashboard = () => {
     }
   };
 
-  const displayTotalBalance = () => {
-    if (isFetched) {
-      const sum = totalValues.reduce(function (a, b) {
-        return a + b;
-      }, 0);
-      return sum.toFixed(2);
-    } else {
-      return (
-        <div className="ml-4">
-          <SmallLoader />
-        </div>
-      );
-    }
-  };
-
   const displayDoughnutChart = () => {
     if (isFetched) {
       return <Doughnetchart balances={totalValues} tokenNames={tokenNames} />;
@@ -280,7 +281,7 @@ const Mydashboard = () => {
               <div className="left-pricing">
                 <div className="price-tag">
                   {" "}
-                  <span>$</span> {displayTotalBalance()}
+                  <span>$</span> {displayTotalValue()}
                 </div>
                 <div className="short-des">--</div>
               </div>
@@ -347,9 +348,7 @@ const Mydashboard = () => {
                 className="artist-holdings-inner d-flex flex-column"
                 // style={{ borderRight: "2px solid black" }}
               >
-                <span className="d-flex flex-row">
-                  $ {displayTotalBalance()}
-                </span>
+                <span className="d-flex flex-row">$ {displayTotalValue()}</span>
                 <span className="small-heading">Total Artist Balance</span>
               </div>
               {/* <div className="comman-priced">
@@ -367,7 +366,7 @@ const Mydashboard = () => {
           <div className="token-info">
             <div className="card-heading">Total Wallet Balance</div>
             <div className="dollar-price">
-              <span>$</span> {displayTotalBalance()}
+              <span>$</span> {displayTotalValue()}
             </div>
             <div className="small-heading">+8 last week</div>
           </div>
