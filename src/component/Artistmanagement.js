@@ -76,9 +76,8 @@ const Artistpic = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //const mintGateUrl = await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
-    //console.log('MINTGATE URL', mintGateUrl);
-    const mintGateUrl = 'testurl.com'
+    // CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
+    const mintGateUrl = 'https://mgate.io/go/hB2Pb0UVemmP/'
     Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`, { mintGateUrl })
   }
 

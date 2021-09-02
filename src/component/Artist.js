@@ -60,7 +60,7 @@ const Artistpic = () => {
   const [sellmodalloading, setsellmodalloading] = useState(false);
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
-  const [playlistID, setPlaylistID] = useState("522897111");
+  const [playlistID, setPlaylistID] = useState("529230339");
   const [mintGateUrl, setMintGateUrl] = useState('')
 
   useEffect(() => {
@@ -271,6 +271,8 @@ const Artistpic = () => {
         console.log("MINT SUCCESSFULL");
         console.log({ socialTokenAddress });
 
+        await updatePriceHistory();
+
         setbuymodalloading(false);
         setsuccessmint((successmint) => !successmint);
         // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
@@ -424,6 +426,7 @@ const Artistpic = () => {
         setsellmodalloading(false);
         setsuccessburn((successburn) => !successburn);
         setsell(false);
+        await updatePriceHistory();
         // getBalance();
       } catch (err) {
         setsellmodalloading(false);
@@ -532,6 +535,20 @@ const Artistpic = () => {
 
   if (loading) {
     return <Loader />;
+  }
+
+  const updatePriceHistory = async () => {
+
+    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
+        mint_price_history : {
+            price: MintPrice, 
+            timestamp: Date.now()
+            }, 
+        socialTokenAddress, 
+        first_name : artist.first_name,
+        last_name : artist.last_name,
+        social_token_id: artist.social_token_id}); 
+
   }
 
   return (
