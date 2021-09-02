@@ -302,14 +302,35 @@ a:focus {
   padding-bottom: 30px;
 }
 
+.artist-holdings-total {
+  padding: 10px 30px;
+  width: 80%;
+  background: #444;
+  margin-top: 20px;
+}
+
+.artist-holdings-inner {
+  /* width: 100%; */
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.small-heading {
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 2px;
+}
+
+/* 
 .last-row-pricing {
   padding: 10px 30px;
   width: 80%;
   background: #444;
   margin: auto;
   margin-top: 20px;
-  display: flex;
-  align-items: center;
+  display: flex;        
+  align-items: center; 
 }
 
 .last-row-pricing .comman-priced:first-child {
@@ -323,13 +344,13 @@ a:focus {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
   letter-spacing: 2px;
-}
+} 
 
 .last-row-pricing .comman-priced {
   width: 100%;
   font-size: 20px;
   font-weight: 600;
-}
+} */
 
 .deposite-earning-row {
   display: flex;
