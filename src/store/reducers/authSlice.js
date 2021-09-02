@@ -25,15 +25,15 @@ export const authSlice = createSlice({
       state.isArtist = user.account_type === "artist";
     },
     _logout: (state, action) => {
-        Wallet.disconnect(true);
-        localStorage.removeItem("persist:root");
-        localStorageService.clearToken();
-        // window.location.href = "/";
-        state.isLoggedIn = false;
-        state.token = null;
-        state.data = {};
-        state.isAdmin = false;
-        state.isArtist = false;
+      Wallet.disconnect(true);
+      localStorage.removeItem("persist:root");
+      localStorageService.clearToken();
+      // window.location.href = "/";
+      state.isLoggedIn = false;
+      state.token = null;
+      state.data = {};
+      state.isAdmin = false;
+      state.isArtist = false;
     },
     setArtist: (state, action) => {
       state.isArtist = action.payload.isArtist;
@@ -59,44 +59,59 @@ export const loginUser = (user) => async (dispatch) => {
   }
 };
 
-export const logout =  async (dispatch) => {
-  magic.user.logout().then(() => {
-    dispatch(_logout())
-  }).catch(e=> {
-    console.log("logout-error:", e)
-  });
-}
-
-export const loginWithMagicLink = (email) => async (dispatch) => {
-  try {
-    // Trigger Magic link to be sent to user
-    const didToken = await magic.auth.loginWithMagicLink({
-      email,
-      // redirectURI: new URL("/callback", window.location.origin).href,
+export const logout = () => (dispatch) => {
+  magic.user
+    .logout()
+    .then(() => {
+      dispatch(_logout());
+    })
+    .catch((e) => {
+      console.log("logout-error:", e);
     });
-    // Validate didToken with server
-    const res = await fetch(
-      `${process.env.REACT_APP_SERVER_URL}/v1/user/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": "Bearer " + didToken,
-        },
-      }
-    );
-    
-    if (res.status === 200) {
-      const data = await res.json();
-      console.log("rrr", data)
-      // Set the UserContext to the now logged in user
-      // const userMetadata = await magic.user.getMetadata();
-      localStorage.setItem("didToken", didToken);
-      dispatch(setUserData({ userData: data.userData, didToken, isLoggedIn: true }));
-      // await setUser(userMetadata);
-    }
-  } catch (e) {
-    console.log("handleRegisterWithMagic", e);
-  }
 };
+
+export const loginWithMagicLink =
+  ({ email, account_type }) =>
+  async (dispatch) => {
+    try {
+      // Trigger Magic link to be sent to user, it expires in 15 mins
+      const didToken = await magic.auth.loginWithMagicLink({
+        email,
+        // redirectURI: new URL("/callback", window.location.origin).href,
+      });
+      // Validate didToken with server
+      //TODO: need to discuss how to handle account_type.
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/v1/user/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": "Bearer " + didToken,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        // generate new didToken which lasts far.
+        const _didToken = await magic.user.getIdToken();
+        // const _didToken = await magic.user.generateIdToken({
+        //   lifespan: 60 * 60 * 24,
+        // });
+
+        localStorage.setItem("didToken", _didToken);
+        localStorage.setItem("email", email);
+        dispatch(
+          setUserData({
+            userData: data.userData,
+            didToken: _didToken,
+            isLoggedIn: true,
+          })
+        );
+      }
+    } catch (e) {
+      console.log("handleRegisterWithMagic", e);
+    }
+  };
 export default authSlice.reducer;

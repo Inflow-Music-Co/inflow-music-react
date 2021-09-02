@@ -75,15 +75,14 @@ const LoginModal = (props) => {
   //   }
   // };
 
-  const handleRegisterWithMagic = async (e) => {
+  const handleLoginWithMagic = async (e) => {
     try {
-      const { email } = user;
-      await dispatch(loginWithMagicLink(email));
+      const { email, account_type } = user;
+      await dispatch(loginWithMagicLink({ email, account_type }));
       setLogin((login) => !login);
       dispatch(setclienturl({ clienturl: "" }));
     } catch (e) {
-      console.log("handleRegisterWithMagic", e);
-      // showAlert("Invalid email or password");
+      console.log("handleLoginWithMagic", e);
     }
   };
 
@@ -266,7 +265,6 @@ const LoginModal = (props) => {
   };
 
   const handleChangeUsertype = (e) => {
-    console.log("dddd", e.target.id);
     setUser({ ...user, account_type: e.target.id });
     // setUserType(e.target.id);
   };
@@ -423,14 +421,14 @@ const LoginModal = (props) => {
                     >
                       Login
                     </h4>
-                    <h4
+                    {/* <h4
                       className={`login-type ${
                         loginType === "signup" && "login-type-active"
                       }`}
                       onClick={() => setLoginType("signup")}
                     >
                       Sign Up
-                    </h4>
+                    </h4> */}
                   </div>
                 )
               )}
@@ -438,7 +436,7 @@ const LoginModal = (props) => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {/* {!forgotPasswordFlag && (
+          {!forgotPasswordFlag && (
             <div className="login-type d-flex flex-row justify-content-center col-12">
               <button
                 id="user"
@@ -461,7 +459,7 @@ const LoginModal = (props) => {
                 Artist
               </button>
             </div>
-          )} */}
+          )}
 
           <div className="mt-5 mb-0 pb-0 form-group">
             <div onSubmit={``} className="col-12">
@@ -529,10 +527,7 @@ const LoginModal = (props) => {
           <div className="d-flex flex-column flex-wrap justify-content-center align-items-center col-12">
             <div className="">
               {!forgotPasswordFlag && (
-                <button
-                  className="btn-gradiant"
-                  onClick={handleRegisterWithMagic}
-                >
+                <button className="btn-gradiant" onClick={handleLoginWithMagic}>
                   {loginType === "login" ? "Login" : "Sign Up"}
                 </button>
               )}

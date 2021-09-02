@@ -225,9 +225,7 @@ const Accountsettings = () => {
   const isArtist = useSelector((state) => state.auth.isArtist);
   const [firstname, setfirstname] = useState("");
   const [lastname, setlastname] = useState("");
-  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [artistName, setArtistName] = useState("");
   const [artistSocial, setArtistSocial] = useState({});
   const [city, setcity] = useState("");
   const [country, setcountry] = useState("");
@@ -274,28 +272,32 @@ const Accountsettings = () => {
   };
 
   const savechanges = async () => {
-    setloading(true);
-    const data = new FormData();
-    data.append("uid", uid);
-    data.append("first_name", firstname ? firstname : "");
-    data.append("last_name", lastname ? lastname : "");
-    data.append("city", city ? city : "");
-    data.append("country", country ? country : "");
-    data.append("pin_code", pincode ? pincode : "");
-    data.append("address", address ? address : "");
-    if (uprofileimage) {
-      data.append("profile", uprofileimage);
+    try {
+      setloading(true);
+      const data = new FormData();
+      data.append("uid", uid);
+      data.append("first_name", firstname ? firstname : "");
+      data.append("last_name", lastname ? lastname : "");
+      data.append("city", city ? city : "");
+      data.append("country", country ? country : "");
+      data.append("pin_code", pincode ? pincode : "");
+      data.append("address", address ? address : "");
+      if (uprofileimage) {
+        data.append("profile", uprofileimage);
+      }
+      if (ubannerimage) {
+        data.append("banner", ubannerimage);
+      }
+      await axios.patch(
+        `${process.env.REACT_APP_SERVER_URL}/v1/user/profile/update`,
+        data
+      );
+      await getdata();
+      setloading(false);
+      // window.location.href = "/accountsettings";
+    } catch (e) {
+      console.log("when saveChanges", e);
     }
-    if (ubannerimage) {
-      data.append("banner", ubannerimage);
-    }
-    await axios.patch(
-      `${process.env.REACT_APP_SERVER_URL}/v1/user/profile/update`,
-      data
-    );
-    await getdata();
-    setloading(false);
-    window.location.href = "/accountsettings";
   };
 
   const forgotPassword = async () => {
@@ -319,45 +321,72 @@ const Accountsettings = () => {
     //   });
   };
 
-  const handleConvertProfile = async () => {
+  const handleApplyArtist = async () => {
     // Required fields validation, uncomment image fields
     if (
       //   !profileimg ||
       //   !ubannerimage ||
-      !email ||
       !phone ||
-      !artistName ||
       !artistSocial["socialOne"]
     ) {
       alert("Please check missing information.");
       return;
     }
-    å;
 
     try {
-      // TO DO: change user profile "isArtist" to true on submit
-      // TO DO: Finish POST request based on proper DB Schema and route
-      const submitArtistProfile = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/update`,
-        { uid }
+      setloading(true);
+      const data = new FormData();
+      console.log("seeeemail:", userdata.email);
+      data.append("email", userdata.email);
+      data.append("first_name", firstname ? firstname : "");
+      data.append("last_name", lastname ? lastname : "");
+      data.append("city", city ? city : "");
+      data.append("phone", phone ? phone : "");
+      data.append("country", country ? country : "");
+      data.append("pin_code", pincode ? pincode : "");
+      data.append("address", address ? address : "");
+      data.append(
+        "socialLink_1",
+        artistSocial["socialOne"] ? artistSocial["socialOne"] : ""
+      );
+      data.append(
+        "socialLink_2",
+        artistSocial["socialTwo"] ? artistSocial["socialTwo"] : ""
+      );
+      data.append(
+        "socialLink_3",
+        artistSocial["socialThree"] ? artistSocial["socialThree"] : ""
       );
 
-      const { artist } = submitArtistProfile;
-      if (artist) {
-        // TO DO: Review below setter functions and data extraction
-        setfirstname(artist.first_name ? artist.first_name : artist.name);
-        setcountry(artist.country ? artist.country : "");
-        setprofileimage(artist.profile_image);
-        setubannerimage(artist.banner_image);
-        setPhone(artist.phone);
-        setEmail(artist.email);
-        setArtistName(artist.artist_name);
-        setArtistSocial(artist.artistSocial["socialOne"]);
-        // REVIEW: Do we need this? Or will it be automatic
-        setIsArtist(true);
+      if (uprofileimage) {
+        data.append("profile", uprofileimage);
       }
+      if (ubannerimage) {
+        data.append("banner", ubannerimage);
+      }
+
+      const submitArtistProfile = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artistapplication/apply`,
+        data
+      );
+      // await getdata();
+      setloading(false);
+      // const { artist } = submitArtistProfile;
+      // if (artist) {
+      //   // TO DO: Review below setter functions and data extraction
+      //   setfirstname(artist.first_name ? artist.first_name : artist.name);
+      //   setcountry(artist.country ? artist.country : "");
+      //   setprofileimage(artist.profile_image);
+      //   setubannerimage(artist.banner_image);
+      //   setPhone(artist.phone);
+      //   setEmail(artist.email);
+      //   setArtistName(artist.artist_name);
+      //   setArtistSocial(artist.artistSocial["socialOne"]);
+      //   // REVIEW: Do we need this? Or will it be automatic
+      //   setIsArtist(true);
+      // }
     } catch (e) {
-      console.log(e);
+      console.log("when apply as artist", e);
     }
   };
 
@@ -546,14 +575,6 @@ const Accountsettings = () => {
                   <>
                     <div className="comman-grids">
                       <input
-                        placeholder="Email"
-                        className="required"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                    <div className="comman-grids">
-                      <input
                         placeholder="Phone"
                         className="required"
                         value={phone}
@@ -561,14 +582,6 @@ const Accountsettings = () => {
                       />
                     </div>
 
-                    <div className="comman-grids">
-                      <input
-                        placeholder="Artist Name"
-                        className="required"
-                        value={artistName}
-                        onChange={(e) => setArtistName(e.target.value)}
-                      />
-                    </div>
                     <div className="comman-grids">
                       <input
                         placeholder="Social Link 1"
@@ -632,7 +645,7 @@ const Accountsettings = () => {
                 )}
 
                 {convertProfile && (
-                  <button onClick={handleConvertProfile}>Apply</button>
+                  <button onClick={handleApplyArtist}>Apply</button>
                 )}
               </div>
             </div>

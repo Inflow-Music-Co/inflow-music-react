@@ -18,6 +18,7 @@ function clearToken() {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   localStorage.removeItem("didToken");
+  localStorage.removeItem("email");
 }
 
 export default {
@@ -26,4 +27,4 @@ export default {
   getRefreshToken,
   getDidToken,
   clearToken,
-};;
+};
