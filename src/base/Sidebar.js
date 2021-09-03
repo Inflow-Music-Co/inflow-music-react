@@ -10,7 +10,7 @@ const Sidebar = () => {
   const token = useSelector((state) => state.auth.token);
   const isArtist = useSelector((state) => state.auth.isArtist);
   const isAdmin = useSelector((state) => state.auth.isAdmin);
-
+  const userData = useSelector((state) => state.auth.data)
   return (
     <div className="side-bar-main">
       <div className="side-bar-navigation">
@@ -44,7 +44,7 @@ const Sidebar = () => {
           </div>
         </Link>
 
-        {token !== "" && (
+        {token && (
           <Link to={"/dashboard"}>
             <div
               className={
@@ -62,7 +62,7 @@ const Sidebar = () => {
           </Link>
         )}
 
-        {isArtist && token && (
+        {isArtist && token && userData.status==="active" && (
           <Link to={"/artistmanage"}>
             <div
               className={

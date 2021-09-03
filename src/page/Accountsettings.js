@@ -226,7 +226,7 @@ const Accountsettings = () => {
   const [firstname, setfirstname] = useState("");
   const [lastname, setlastname] = useState("");
   const [phone, setPhone] = useState("");
-  const [artistSocial, setArtistSocial] = useState({});
+  const [artistSocial, setArtistSocial] = useState([]);
   const [city, setcity] = useState("");
   const [country, setcountry] = useState("");
   const [pincode, setpincode] = useState("");
@@ -243,32 +243,37 @@ const Accountsettings = () => {
   }, []);
 
   const getdata = async () => {
-    setloading(true);
-    let user;
-    if (isArtist) {
-      const res = await Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
-        { id: uid }
-      );
-      user = res.data.artist;
-    } else {
-      const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`,
-        { uid }
-      );
-      user = res.data.user;
+    try {
+      setloading(true);
+      let user;
+      if (isArtist) {
+        const res = await Axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+          { id: uid }
+        );
+        user = res.data.artist;
+      } else {
+        const res = await axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`,
+          { uid }
+        );
+        user = res.data.user;
+      }
+  
+      if (user) {
+        setfirstname(user.first_name ? user.first_name : user.name);
+        setlastname(user.last_name);
+        setcity(user.city);
+        setcountry(user.country);
+        setpincode(user.pin_code ? user.pin_code : "");
+        setaddress(user.address ? user.address : "");
+        setprofileimg(user.profile_image);
+      }
+      setloading(false);
+    } catch (e) {
+      setloading(false);
+      alert("Something wrong!")
     }
-
-    if (user) {
-      setfirstname(user.first_name ? user.first_name : user.name);
-      setlastname(user.last_name);
-      setcity(user.city);
-      setcountry(user.country);
-      setpincode(user.pin_code ? user.pin_code : "");
-      setaddress(user.address ? user.address : "");
-      setprofileimg(user.profile_image);
-    }
-    setloading(false);
   };
 
   const savechanges = async () => {
@@ -336,7 +341,9 @@ const Accountsettings = () => {
     try {
       setloading(true);
       const data = new FormData();
-      console.log("seeeemail:", userdata.email);
+      
+      const socialLinks = [artistSocial["socialOne"], artistSocial["socialTwo"], artistSocial["socialThree"]]
+      console.log("socialLinks:", socialLinks);
       data.append("email", userdata.email);
       data.append("first_name", firstname ? firstname : "");
       data.append("last_name", lastname ? lastname : "");
@@ -345,18 +352,7 @@ const Accountsettings = () => {
       data.append("country", country ? country : "");
       data.append("pin_code", pincode ? pincode : "");
       data.append("address", address ? address : "");
-      data.append(
-        "socialLink_1",
-        artistSocial["socialOne"] ? artistSocial["socialOne"] : ""
-      );
-      data.append(
-        "socialLink_2",
-        artistSocial["socialTwo"] ? artistSocial["socialTwo"] : ""
-      );
-      data.append(
-        "socialLink_3",
-        artistSocial["socialThree"] ? artistSocial["socialThree"] : ""
-      );
+      data.append("socialLinks", socialLinks)
 
       if (uprofileimage) {
         data.append("profile", uprofileimage);
@@ -365,8 +361,8 @@ const Accountsettings = () => {
         data.append("banner", ubannerimage);
       }
 
-      const submitArtistProfile = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artistapplication/apply`,
+      await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/onboarding`,
         data
       );
       // await getdata();
@@ -586,7 +582,7 @@ const Accountsettings = () => {
                       <input
                         placeholder="Social Link 1"
                         className="required"
-                        value={artistSocial ? artistSocial["socialOne"] : null}
+                        value={artistSocial ? artistSocial[1] : null}
                         onChange={(e) =>
                           setArtistSocial((artistSocial) => {
                             return {

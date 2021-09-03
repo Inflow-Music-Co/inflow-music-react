@@ -33,7 +33,7 @@ const AllArtists = () => {
 
 	const getArtists = async () => {
 		setloading(true)
-		const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
+		const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`, {params: {status: "active"}})
 		setartists(data.artists)
 		setloading(false);
 	}

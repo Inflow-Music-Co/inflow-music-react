@@ -13,27 +13,28 @@ export const authSlice = createSlice({
     data: {},
     isAdmin: false,
     isArtist: false,
+    isFan: true
   },
   reducers: {
     setUserData: (state, action) => {
-      // console.log('isAdmin', state.isAdmin)
       const { userData: user } = action.payload;
       state.data = action.payload.userData;
-      state.token = action.payload.didToken;
+      state.token = action.payload.access_token;
       state.isLoggedIn = action.payload.isLoggedIn;
       state.isAdmin = user.account_type === "admin";
       state.isArtist = user.account_type === "artist";
+      state.isFan = user.account_type === "user";
     },
     _logout: (state, action) => {
       Wallet.disconnect(true);
       localStorage.removeItem("persist:root");
       localStorageService.clearToken();
-      // window.location.href = "/";
       state.isLoggedIn = false;
       state.token = null;
       state.data = {};
       state.isAdmin = false;
       state.isArtist = false;
+      state.isArtist = true;
     },
     setArtist: (state, action) => {
       state.isArtist = action.payload.isArtist;
@@ -75,41 +76,51 @@ export const loginWithMagicLink =
   async (dispatch) => {
     try {
       // Trigger Magic link to be sent to user, it expires in 15 mins
-      const didToken = await magic.auth.loginWithMagicLink({
-        email,
-        // redirectURI: new URL("/callback", window.location.origin).href,
+      const initialDidToken = await magic.auth.loginWithMagicLink({ email });
+      console.log("initial didToken", initialDidToken)
+      //validate the didToken
+      // await axios({
+      //   url: `${process.env.REACT_APP_SERVER_URL}/v1/user/loginWithMagicLink`,
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "x-access-token": "Bearer " + initialDidToken,
+      //   }
+      // })
+      console.log("validate initial didToken")
+      // after validate the initialDidToken, create new didToken that expires far
+
+      // 15 mins lifespan token
+      // const didToken = initialDidToken;
+      //very long lifespan token
+      // const didToken = await magic.user.getIdToken()   
+      //customized lifespan token
+      const didToken = await magic.user.generateIdToken({
+        lifespan: 60 * 60 * 25,
       });
-      // Validate didToken with server
-      //TODO: need to discuss how to handle account_type.
-      const res = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/v1/user/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": "Bearer " + didToken,
-          },
-        }
-      );
 
-      if (res.status === 200) {
-        const data = await res.json();
-        // generate new didToken which lasts far.
-        const _didToken = await magic.user.getIdToken();
-        // const _didToken = await magic.user.generateIdToken({
-        //   lifespan: 60 * 60 * 24,
-        // });
-
-        localStorage.setItem("didToken", _didToken);
-        localStorage.setItem("email", email);
+      console.log("new token", didToken)
+      // Validate didToken with server and Create new token which includes didToken and account_type
+      const { data } = await axios({
+        url: `${process.env.REACT_APP_SERVER_URL}/v1/user/login`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": "Bearer " + didToken,
+        },
+        data: {account_type}
+      })
+      const { access_token } = data
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("id",  data.userData._id);
+      localStorage.setItem("account_type",  data.userData.account_type);
         dispatch(
           setUserData({
             userData: data.userData,
-            didToken: _didToken,
+            access_token,
             isLoggedIn: true,
           })
         );
-      }
     } catch (e) {
       console.log("handleRegisterWithMagic", e);
     }

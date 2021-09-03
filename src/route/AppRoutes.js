@@ -18,6 +18,7 @@ import ArtistRoutes from './ArtistRoutes';
 // import Artistpic from '../component/Artistpic';
 import Artist from '../component/Artist';
 import Artistmanagement from '../component/Artistmanagement';
+import ApproveArtist from '../page/ApproveArtist';
 import CreateSocialToken from '../page/CreateSocialToken';
 import GetMintPrice from '../page/GetMintPrice';
 import MintUSDC from '../component/MintUSDC';
@@ -41,6 +42,7 @@ export const AppRoutes = () => {
             <PublicRoutes path="/collectible/:collectibleId" component={Collectible} />
             <PublicRoutes path="/" component={Inflowmusic} exact />
             <AdminRoutes path="/artistonboarding" component={CreateSocialToken} exact />
+            <AdminRoutes path="/approveartist" component={ApproveArtist} exact />
             <Route path="/getmintprice" component={GetMintPrice} exact />
             <Route path="/mintusdc" component={MintUSDC} exact />
             <AdminRoutes path="/adminpanel" component={AdminPanel} exact />

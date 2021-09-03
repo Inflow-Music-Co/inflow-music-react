@@ -37,9 +37,14 @@ const AdminPanel = () => {
 										<div className="save-changes-main-button text-center">Add Admin</div>
 									</Link>
 								</div>
-								<div className="comman-grids d-flex justify-content-center align-items-center">
+								{/* <div className="comman-grids d-flex justify-content-center align-items-center">
 									<Link to="/artistonboarding">
 										<div className="save-changes-main-button text-center">Onboard Artist</div>
+									</Link>
+								</div> */}
+								<div className="comman-grids d-flex justify-content-center align-items-center">
+									<Link to="/approveartist">
+										<div className="save-changes-main-button text-center">Approve Artist</div>
 									</Link>
 								</div>
 							</div>
