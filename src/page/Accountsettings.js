@@ -382,6 +382,8 @@ const Accountsettings = () => {
       //   setIsArtist(true);
       // }
     } catch (e) {
+      setloading(false);
+      alert(e.response.data.message)
       console.log("when apply as artist", e);
     }
   };
