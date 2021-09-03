@@ -6,7 +6,6 @@ import person from "../assets/images/person.png"
 import filter from "../assets/images/filter-btn.svg"
 import songposter from "../assets/images/songposter.jpeg"
 import playbtn from "../assets/images/play-button.svg"
-import artist from "../assets/images/mike-posner.jpeg"
 import threedot from "../assets/images/more.svg"
 import like from "../assets/images/heart.svg"
 import comment from "../assets/images/message.svg"
@@ -58,7 +57,6 @@ export const assetsImages = {
     filter:filter,
     songposter:songposter,
     playbtn:playbtn,
-    artist:artist,
     threedot:threedot,
     like:like,
     commnet:comment,

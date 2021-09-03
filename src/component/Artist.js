@@ -68,17 +68,15 @@ const Artistpic = () => {
       setconnectedwallet(false);
     }
     const init = async () => {
-      console.log({ walletProvider });
+      setconnectedwallet(true);
+      console.log({ uid });
       setLoading(true);
       const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,{ id } );
       if (data.artist) {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
         fetchTokenPrice();
-        const res = await Axios.post(
-          `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
-          artist
-        );
+        const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist);
         setHistoricalData(res.data.priceHistory);
         setLoading(false);
         // return () => {
@@ -89,10 +87,15 @@ const Artistpic = () => {
       Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`, { id })
       .then(response => {
         setMintGateUrl(response.data.mintGatedUrls[0])
+        console.log('response', response)
       })
     };
-    if (id) {
+    console.log('uid', uid);
+    if (uid) {
       return init();
+    } else {
+      console.log('NOT LOGGED IN');
+      setconnectedwallet(false);
     }
   }, [id, socialTokenAddress, walletProvider]);
 
@@ -145,7 +148,6 @@ const Artistpic = () => {
         window.location.reload();
       }
       errcode = err.code;
-      console.log(err);
     }
   };
 
@@ -556,10 +558,9 @@ const Artistpic = () => {
         <div className="background">
           <img
             alt=""
-            src={
-              artist.banner_image
+            src={artist.banner_image
                 ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}`
-                : assetsImages.artistbg
+                : null
             }
             className="background-blur"
           />
@@ -572,7 +573,7 @@ const Artistpic = () => {
                 src={
                   artist.profile_image
                     ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
-                    : assetsImages.artist
+                    : null
                 }
               />
             </div>
@@ -629,9 +630,6 @@ const Artistpic = () => {
               <div className="small-heading">--</div>
             </div>
             <div className="btn-filter mt-2">
-              <a href="#">
-                <img alt="" src={assetsImages.filter} />
-              </a>
             </div>
           </div>
           {/* <div className="total-balance-row">
@@ -1052,10 +1050,11 @@ const Artistpic = () => {
       <SweetAlert
         danger
         show={!connectedwallet}
-        title="Please Connect Wallet"
+        title="Please Connect Wallet and Login"
         style={{ color: "#000" }}
         onConfirm={() => {
           setconnectedwallet((connectedwallet) => !connectedwallet);
+          window.location.href = '/';
         }}
         onCancel={() => {
           setconnectedwallet((connectedwallet) => !connectedwallet);
