@@ -529,7 +529,7 @@ const Artistpic = () => {
 
   const redirectToTokenGate = async () => {
       if(mintGateUrl !== ''){
-        window.location.assign(`${mintGateUrl}`);
+        window.location.assign(mintGateUrl);
       }
   }
 
@@ -548,7 +548,6 @@ const Artistpic = () => {
         first_name : artist.first_name,
         last_name : artist.last_name,
         social_token_id: artist.social_token_id}); 
-
   }
 
   return (
@@ -613,7 +612,7 @@ const Artistpic = () => {
             </div>
           </div>
           <div className="artist-tag">
-            <button className="tag-button" onClick={() => redirectToTokenGate()}> EXPERIENCE </button>
+            <button className="tag-button" onClick={() => redirectToTokenGate()}> UNRELEASED MUSIC VIDEO </button>
           </div>
         </div>
       </div>
