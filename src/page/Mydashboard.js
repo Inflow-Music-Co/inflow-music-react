@@ -61,8 +61,8 @@ const Mydashboard = () => {
   useEffect(() => {
     !connectedWallet &&
       MySwal.fire({
-        title: <p style={{ color: "white" }}>Please connect wallet</p>,
-        icon: "error",
+        title: <p style={{ color: "white" }}>Please Login</p>,
+        icon: "warning",
         confirmButtonText: "Login",
         customClass: {
           confirmButton: "btn-gradiant",
