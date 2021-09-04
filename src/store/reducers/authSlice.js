@@ -13,7 +13,7 @@ export const authSlice = createSlice({
     data: {},
     isAdmin: false,
     isArtist: false,
-    isFan: true
+    isFan: true,
   },
   reducers: {
     setUserData: (state, action) => {
@@ -34,7 +34,6 @@ export const authSlice = createSlice({
       state.data = {};
       state.isAdmin = false;
       state.isArtist = false;
-      state.isArtist = true;
     },
     setArtist: (state, action) => {
       state.isArtist = action.payload.isArtist;
@@ -77,7 +76,7 @@ export const loginWithMagicLink =
     try {
       // Trigger Magic link to be sent to user, it expires in 15 mins
       const initialDidToken = await magic.auth.loginWithMagicLink({ email });
-      console.log("initial didToken", initialDidToken)
+      console.log("initial didToken", initialDidToken);
       //validate the didToken
       // await axios({
       //   url: `${process.env.REACT_APP_SERVER_URL}/v1/user/loginWithMagicLink`,
@@ -87,19 +86,19 @@ export const loginWithMagicLink =
       //     "x-access-token": "Bearer " + initialDidToken,
       //   }
       // })
-      console.log("validate initial didToken")
+      console.log("validate initial didToken");
       // after validate the initialDidToken, create new didToken that expires far
 
       // 15 mins lifespan token
       // const didToken = initialDidToken;
       //very long lifespan token
-      // const didToken = await magic.user.getIdToken()   
+      // const didToken = await magic.user.getIdToken()
       //customized lifespan token
       const didToken = await magic.user.generateIdToken({
         lifespan: 60 * 60 * 25,
       });
 
-      console.log("new token", didToken)
+      console.log("new token", didToken);
       // Validate didToken with server and Create new token which includes didToken and account_type
       const { data } = await axios({
         url: `${process.env.REACT_APP_SERVER_URL}/v1/user/login`,
@@ -108,19 +107,19 @@ export const loginWithMagicLink =
           "Content-Type": "application/json",
           "x-access-token": "Bearer " + didToken,
         },
-        data: {account_type}
-      })
-      const { access_token } = data
+        data: { account_type },
+      });
+      const { access_token } = data;
       localStorage.setItem("access_token", access_token);
-      localStorage.setItem("id",  data.userData._id);
-      localStorage.setItem("account_type",  data.userData.account_type);
-        dispatch(
-          setUserData({
-            userData: data.userData,
-            access_token,
-            isLoggedIn: true,
-          })
-        );
+      localStorage.setItem("id", data.userData._id);
+      localStorage.setItem("account_type", data.userData.account_type);
+      dispatch(
+        setUserData({
+          userData: data.userData,
+          access_token,
+          isLoggedIn: true,
+        })
+      );
     } catch (e) {
       console.log("handleRegisterWithMagic", e);
     }
