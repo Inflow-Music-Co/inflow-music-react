@@ -6,7 +6,6 @@ import Notification from "../component/Notification";
 import Profiledropdown from "../component/Profiledropdown";
 import { Button } from "react-bootstrap";
 import Wallet from "../utils/wallet";
-import SweetAlert from "react-bootstrap-sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import { connected, disconnect } from "../store/reducers/walletSlice";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
@@ -25,7 +24,6 @@ const Header = () => {
   const wallet = useSelector((state) => state.wallet);
   const token = useSelector((state) => state.auth.token);
   // const wallet = useSelector(state => state.wallet);
-  const [alert, setalert] = useState(null);
 
   // console.log({wallet})
   useEffect(() => {
@@ -43,7 +41,6 @@ const Header = () => {
 
   const connectWallet = async () => {
     if (!token) {
-      // window.location.href = "/";
       history.push("/");
       return;
     }
@@ -54,21 +51,31 @@ const Header = () => {
         }
         dispatch(connected({ address: Wallet.account }));
         setWalletProvider(Wallet.ethersProvider);
-        // showAlert("Wallet connected successfully", "success");
-        return MySwal.fire({
-          title: <p>Wallet connected successfully</p>,
+        MySwal.fire({
+          title: (
+            <p style={{ color: "white" }}>Wallet connected successfully</p>
+          ),
           icon: "success",
+          customClass: {
+            confirmButton: "btn-gradiant",
+          },
+          buttonsStyling: false,
+          background: "#303030",
         });
         // setTimeout(() => {
         //     window.location.reload();
         // },1500)
       } else {
         Wallet.disconnect(true);
-        // showAlert("Wallet disconnected", "info");
         dispatch(disconnect());
         MySwal.fire({
-          title: <p>Wallet disconnected</p>,
+          title: <p style={{ color: "white" }}>Wallet disconnected</p>,
           icon: "info",
+          customClass: {
+            confirmButton: "btn-gradiant",
+          },
+          buttonsStyling: false,
+          background: "#303030",
         });
         setWalletProvider(null);
         history.push("/");
@@ -78,25 +85,8 @@ const Header = () => {
     }
   };
 
-  const showAlert = (title, type) => {
-    setalert(
-      <SweetAlert
-        style={{ color: "#000" }}
-        type={type}
-        onConfirm={hideAlert}
-        timeout={2000}
-        title={title}
-      />
-    );
-  };
-
-  const hideAlert = () => {
-    setalert(null);
-  };
-
   return (
     <div className="header-main">
-      {alert}
       <div className="logo-website-main">
         <Link to={"/"}>
           <img alt="" src={assetsImages.logo} className="logo-main-image" />
@@ -105,7 +95,7 @@ const Header = () => {
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
         <button className="btn-gradiant mr-4" onClick={connectWallet}>
-          temp-connect
+          temp-web3-btn
         </button>
         <div className="notified-main">
           <Notification />

@@ -7,9 +7,10 @@ import axios from "axios";
 import Loader from "../component/Loader";
 import { useSelector } from "react-redux";
 import { assetsImages } from "../constants/images";
-import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
 import { Modal } from "react-bootstrap";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 let country_list = [
   "Afghanistan",
@@ -220,6 +221,7 @@ let country_list = [
 ];
 
 const Accountsettings = () => {
+  const MySwal = withReactContent(Swal);
   const userdata = useSelector((state) => state.auth.data);
   const uid = useSelector((state) => state.auth.data._id);
   const isArtist = useSelector((state) => state.auth.isArtist);
@@ -241,6 +243,25 @@ const Accountsettings = () => {
   useEffect(() => {
     getdata();
   }, []);
+  useEffect(() => {
+    resetpasswordemailsent &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Reset Password</p>,
+        html: (
+          <p style={{ color: "white" }}>Check your email for password reset</p>
+        ),
+        icon: "success",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setresetpasswordemailsent(
+          (resetpasswordemailsent) => !resetpasswordemailsent
+        );
+      });
+  }, [resetpasswordemailsent]);
 
   const getdata = async () => {
     try {
@@ -259,7 +280,7 @@ const Accountsettings = () => {
         );
         user = res.data.user;
       }
-  
+
       if (user) {
         setfirstname(user.first_name ? user.first_name : user.name);
         setlastname(user.last_name);
@@ -272,7 +293,7 @@ const Accountsettings = () => {
       setloading(false);
     } catch (e) {
       setloading(false);
-      alert("Something wrong!")
+      alert("Something wrong!");
     }
   };
 
@@ -341,8 +362,12 @@ const Accountsettings = () => {
     try {
       setloading(true);
       const data = new FormData();
-      
-      const socialLinks = [artistSocial["socialOne"], artistSocial["socialTwo"], artistSocial["socialThree"]]
+
+      const socialLinks = [
+        artistSocial["socialOne"],
+        artistSocial["socialTwo"],
+        artistSocial["socialThree"],
+      ];
       console.log("socialLinks:", socialLinks);
       data.append("email", userdata.email);
       data.append("first_name", firstname ? firstname : "");
@@ -352,7 +377,7 @@ const Accountsettings = () => {
       data.append("country", country ? country : "");
       data.append("pin_code", pincode ? pincode : "");
       data.append("address", address ? address : "");
-      data.append("socialLinks", socialLinks)
+      data.append("socialLinks", socialLinks);
 
       if (uprofileimage) {
         data.append("profile", uprofileimage);
@@ -383,7 +408,7 @@ const Accountsettings = () => {
       // }
     } catch (e) {
       setloading(false);
-      alert(e.response.data.message)
+      alert(e.response.data.message);
       console.log("when apply as artist", e);
     }
   };
@@ -700,23 +725,6 @@ const Accountsettings = () => {
           </>
         </div>
       </div>
-
-      <SweetAlert
-        info
-        show={resetpasswordemailsent}
-        title="Check your email for changing password"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setresetpasswordemailsent(
-            (resetpasswordemailsent) => !resetpasswordemailsent
-          );
-        }}
-        onCancel={() => {
-          setresetpasswordemailsent(
-            (resetpasswordemailsent) => !resetpasswordemailsent
-          );
-        }}
-      ></SweetAlert>
 
       <>
         {/* <Modal

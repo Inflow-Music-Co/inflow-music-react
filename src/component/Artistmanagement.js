@@ -12,11 +12,12 @@ import { Modal } from "react-bootstrap";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 // import Loader from "./Loader";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
-import Axios from 'axios';
+import Axios from "axios";
 import SmallLoader from "./SmallLoader";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
-import SweetAlert from "react-bootstrap-sweetalert";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 // const GET_TOKEN_FEES = gql`
 //   query {
@@ -28,6 +29,7 @@ import SweetAlert from "react-bootstrap-sweetalert";
 
 const Artistpic = () => {
   const { walletProvider } = useContext(WalletProviderContext);
+  const MySwal = withReactContent(Swal);
   // const [profileModel, setProfileModel] = useState(false);
   const wallet = useSelector((state) => state.wallet);
   const [tokenfrees, settokenfrees] = useState(false);
@@ -36,8 +38,8 @@ const Artistpic = () => {
   const [loading, setLoading] = useState(true);
   const [connectedwallet, setconnectedwallet] = useState(true);
   const uid = useSelector((state) => state.auth.data._id);
-  const [socialTokenAddress, setSocialTokenAddress] = useState('');
-  const [artist, setArtist] = useState('');
+  const [socialTokenAddress, setSocialTokenAddress] = useState("");
+  const [artist, setArtist] = useState("");
   const [activated, setActivated] = useState(false);
 
   //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
@@ -47,13 +49,33 @@ const Artistpic = () => {
     if (!wallet.wallet_connected) {
       setconnectedwallet(false);
     } else {
-        const id = uid;
-        const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
-        setSocialTokenAddress(data.artist.social_token_id);
-        setLoading(false);
-    }     
-  }, [])
-
+      const id = uid;
+      const { data } = await Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+        { id }
+      );
+      setSocialTokenAddress(data.artist.social_token_id);
+      setLoading(false);
+    }
+  }, []);
+  useEffect(() => {
+    !connectedwallet &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Please Login</p>,
+        icon: "warning",
+        confirmButtonText: "Login",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log("need to implement magiclink login");
+          // setconnectedwallet((connectedwallet) => !connectedwallet);
+        }
+      });
+  }, [connectedwallet]);
 
   const formatAndSetTokenFees = async (value) => {
     const provider = walletProvider;
@@ -63,7 +85,7 @@ const Artistpic = () => {
   };
 
   const changeOwner = async () => {
-    console.log('click')
+    console.log("click");
     const provider = walletProvider;
     const signer = provider.getSigner();
     const socialToken = new Contract(
@@ -72,13 +94,13 @@ const Artistpic = () => {
       signer
     );
     try {
-      await socialToken.transferOwnership('0x76aB04F8Adb222C7Bbc27991A82498906954dEae');
+      await socialToken.transferOwnership(
+        "0x76aB04F8Adb222C7Bbc27991A82498906954dEae"
+      );
       setActivated(true);
     } catch (error) {
       console.log(error);
     }
-    
-
   };
 
   return (
@@ -105,14 +127,15 @@ const Artistpic = () => {
               </div>
             </div>
             <div className="first-row-main-dash">
-              <div className="left-col"> 
+              <div className="left-col">
                 <div className="below-row">
-                {activated ? <button className="btn-gradiant" onClick={changeOwner}>
-                  ACTIVATED
-                  </button> 
-                  : <button className="btn-gradiant">
-                  ACTIVATE
-                  </button>}
+                  {activated ? (
+                    <button className="btn-gradiant" onClick={changeOwner}>
+                      ACTIVATED
+                    </button>
+                  ) : (
+                    <button className="btn-gradiant">ACTIVATE</button>
+                  )}
                 </div>
               </div>
             </div>
@@ -363,18 +386,6 @@ const Artistpic = () => {
           <button className="save-btn btn-gradiant">View Poll</button>
         </Modal.Footer>
       </Modal>
-      <SweetAlert
-        danger
-        show={!connectedwallet}
-        title="Please Connect Wallet"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-        onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-      ></SweetAlert>
     </div>
   );
 };

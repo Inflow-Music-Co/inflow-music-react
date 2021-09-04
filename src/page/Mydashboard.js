@@ -15,7 +15,6 @@ import axios from "axios";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import SmallLoader from "../component/SmallLoader";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
-import SweetAlert from "react-bootstrap-sweetalert";
 import { ethers } from "ethers";
 import { Magic } from "magic-sdk";
 import "../component/Artist.css";
@@ -27,7 +26,7 @@ const Mydashboard = () => {
   const MySwal = withReactContent(Swal);
   const uid = useSelector((state) => state.auth.data._id);
   const wallet = useSelector((state) => state.wallet);
-  const [connectedWallet, setConnectedWallet] = useState(false);
+  const [connectedWallet, setConnectedWallet] = useState(true);
   const [isFetched, setIsFetched] = useState(false);
   const [tokensBought, setTokensBought] = useState([]);
   const [tokenNames, setTokenNames] = useState([]);
@@ -62,10 +61,21 @@ const Mydashboard = () => {
   useEffect(() => {
     !connectedWallet &&
       MySwal.fire({
-        title: <p>Please connect wallet</p>,
+        title: <p style={{ color: "white" }}>Please connect wallet</p>,
         icon: "error",
+        confirmButtonText: "Login",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log("need to implement magiclink login");
+          // setconnectedwallet((connectedwallet) => !connectedwallet);
+        }
       });
-  });
+  }, [connectedWallet]);
 
   const getTokensOwnedByUser = () => {
     console.log("need to implement fetching tokens with magic wallet");
@@ -434,19 +444,6 @@ const Mydashboard = () => {
               <Song />
               <Song />
           </div> */}
-
-      {/* <SweetAlert
-        danger
-        show={!connectedWallet}
-        title="Please Connect Wallet"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setConnectedWallet((connectedWallet) => !connectedWallet);
-        }}
-        onCancel={() => {
-          setConnectedWallet((connectedWallet) => !connectedWallet);
-        }}
-      ></SweetAlert> */}
     </div>
   );
 };

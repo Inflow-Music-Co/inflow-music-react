@@ -17,20 +17,22 @@ import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import { Contract, ethers } from "ethers";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
-import SweetAlert from "react-bootstrap-sweetalert";
 import { useParams, useHistory } from "react-router-dom";
 import Axios from "axios";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import TokenChart from "./TokenChart";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 // import { Link } from '@material-ui/core';
 
 let errcode = "";
 
-const Artistpic = () => {
+const Artist = () => {
   const history = useHistory();
+  const MySwal = withReactContent(Swal);
   const { walletProvider } = useContext(WalletProviderContext);
   const wallet = useSelector((state) => state.wallet);
   const token = useSelector((state) => state.auth.token);
@@ -40,7 +42,6 @@ const Artistpic = () => {
   const [profileModel, setprofileModel] = useState(false);
   const [sell, setsell] = useState(false);
   const [buy, setbuy] = useState(false);
-  const [lessusdc, setlessusdc] = useState(false);
   const [MintPrice, setMintPrice] = useState("");
   // const [BurnPrice, setBurnPrice] = useState();
   const [TokensToMint, setTokensToMint] = useState(0);
@@ -48,9 +49,10 @@ const Artistpic = () => {
   // const [Balance, setBalance] = useState();
   const [loading, setLoading] = useState(false);
   const [successmint, setsuccessmint] = useState(false);
-  const [failuremint, setfailuremint] = useState(false);
   const [successburn, setsuccessburn] = useState(false);
+  const [failuremint, setfailuremint] = useState(false);
   const [failureburn, setfailureburn] = useState(false);
+  const [lessusdc, setlessusdc] = useState(false);
   const [connectedwallet, setconnectedwallet] = useState(true);
   const [socialTokenAddress, setSocialTokenAddress] = useState("");
   const [sellflag, setsellflag] = useState(false);
@@ -97,6 +99,111 @@ const Artistpic = () => {
       return init();
     }
   }, [id, socialTokenAddress, walletProvider]);
+  useEffect(() => {
+    !connectedwallet &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Please Login</p>,
+        icon: "warning",
+        confirmButtonText: "Login",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log("need to implement magiclink login");
+          // setconnectedwallet((connectedwallet) => !connectedwallet);
+        }
+      });
+  }, [connectedwallet]);
+  useEffect(() => {
+    lessusdc &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Denied</p>,
+        icon: "error",
+        html: <span style={{ color: "white" }}>Insufficient USDC Balance</span>,
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setlessusdc((lessusdc) => !lessusdc);
+      });
+  }, [lessusdc]);
+  useEffect(() => {
+    insufficenttokens &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Insufficient Tokens To Sell</p>,
+        icon: "error",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setinsufficenttokens((insufficenttokens) => !insufficenttokens);
+      });
+  }, [insufficenttokens]);
+  useEffect(() => {
+    failureburn &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Denied</p>,
+        icon: "error",
+        html: <span style={{ color: "white" }}>Error selling tokens</span>,
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setfailureburn((failureburn) => !failureburn);
+      });
+  }, [failureburn]);
+  useEffect(() => {
+    successburn &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Successfull</p>,
+        icon: "success",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setsuccessburn((successburn) => !successburn);
+      });
+  }, [successburn]);
+  useEffect(() => {
+    failuremint &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Denied</p>,
+        icon: "error",
+        html: <span style={{ color: "white" }}>Error buying tokens</span>,
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setfailuremint((failuremint) => !failuremint);
+      });
+  }, [failuremint]);
+  useEffect(() => {
+    successmint &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Successful</p>,
+        icon: "success",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setsuccessmint((successmint) => !successmint);
+      });
+  }, [successmint]);
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -971,99 +1078,8 @@ const Artistpic = () => {
           </button>
         </Modal.Footer>
       </Modal>
-
-      <SweetAlert
-        danger
-        show={lessusdc}
-        title="Transaction Denied"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setlessusdc((lessusdc) => !lessusdc);
-        }}
-        onCancel={() => {
-          setlessusdc((lessusdc) => !lessusdc);
-        }}
-      >
-        Insufficient USDC Balance
-      </SweetAlert>
-      <SweetAlert
-        success
-        show={successmint}
-        title="Transaction Successfull"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setsuccessmint((successmint) => !successmint);
-        }}
-        onCancel={() => {
-          setsuccessmint((successmint) => !successmint);
-        }}
-      />
-      <SweetAlert
-        danger
-        show={failuremint}
-        title="Transaction Denied"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setfailuremint((failuremint) => !failuremint);
-        }}
-        onCancel={() => {
-          setfailuremint((failuremint) => !failuremint);
-        }}
-      >
-        Error buying tokens
-      </SweetAlert>
-      <SweetAlert
-        success
-        show={successburn}
-        title="Transaction Successfull"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setsuccessburn((successburn) => !successburn);
-        }}
-        onCancel={() => {
-          setsuccessburn((successburn) => !successburn);
-        }}
-      />
-      <SweetAlert
-        danger
-        show={failureburn}
-        title="Transaction Denied"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setfailureburn((failureburn) => !failureburn);
-        }}
-        onCancel={() => {
-          setfailureburn((failureburn) => !failureburn);
-        }}
-      >
-        Error selling tokens
-      </SweetAlert>
-      <SweetAlert
-        danger
-        show={!connectedwallet}
-        title="Please Connect Wallet"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-        onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-      ></SweetAlert>
-      <SweetAlert
-        danger
-        show={insufficenttokens}
-        title="Insufficient Tokens To Sell"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-        onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-      ></SweetAlert>
     </div>
   );
 };
 
-export default Artistpic;
+export default Artist;

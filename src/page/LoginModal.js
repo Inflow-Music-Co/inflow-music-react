@@ -14,16 +14,19 @@ import "react-phone-input-2/lib/style.css";
 // import { auth, googleProvider, facebookProvider } from "../utils/firebase";
 // import { Link } from 'react-router-dom';
 import Loader from "../component/Loader";
-import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
 import ReactBootstrap from "react-bootstrap";
 import "./LoginModal.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 // import { Magic } from "magic-sdk";
 // const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
 
 const LoginModal = (props) => {
+  const { login, setLogin } = props;
+  const MySwal = withReactContent(Swal);
   const dispatch = useDispatch();
   const history = useHistory();
   const uData = useSelector((state) => state.auth.data);
@@ -37,15 +40,11 @@ const LoginModal = (props) => {
   const [optSent, setOptSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpConfirmation, setOtpConfirmation] = useState(null);
-  const [alert, setAlert] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorFlg, setErrorFlg] = useState("");
-
-  const { login, setLogin } = props;
   // const [userType, setUserType] = useState({ account_type: "user" });
   const [loginType, setLoginType] = useState("login");
   // console.log(uData);
-  // const history = useHistory();
   const [user, setUser] = useState({
     displayName: "",
     email: "",
@@ -150,7 +149,7 @@ const LoginModal = (props) => {
         // history.push("/");
       } catch (error) {
         console.error(error);
-        showAlert("Invalid email or password");
+        showAlert("Invalid email or password", "error");
       }
     }
   };
@@ -276,7 +275,7 @@ const LoginModal = (props) => {
         `${process.env.REACT_APP_SERVER_URL}/v1/user/resetpassword`,
         { email: user.email }
       );
-      showAlert("check your email for changing password", "info");
+      showAlert("Check your email for changing password", "info");
       // window.location.href = "/login";
     } catch (e) {
       console.error(e);
@@ -369,32 +368,29 @@ const LoginModal = (props) => {
   };
 
   function showAlert(title, type) {
-    setAlert(
-      <SweetAlert
-        style={{ color: "#000" }}
-        type={type}
-        onConfirm={() => handleAlertConfirm(type)}
-        timeout={3000}
-        title={title}
-      />
-    );
+    MySwal.fire({
+      title: <p style={{ color: "white" }}>{title}</p>,
+      icon: type || "info",
+      customClass: {
+        confirmButton: "btn-gradiant",
+      },
+      buttonsStyling: false,
+      background: "#303030",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleAlertConfirm(type);
+      }
+    });
     setLoading(false);
   }
 
   function handleAlertConfirm(type) {
     if (type === "success") {
-      hideAlert();
       setTimeout(() => {
         // window.location.href = "/";
         history.push("/");
       }, 1500);
-    } else {
-      hideAlert();
     }
-  }
-
-  function hideAlert() {
-    setAlert(null);
   }
 
   return (
@@ -406,7 +402,6 @@ const LoginModal = (props) => {
           setLogin((login) => !login);
         }}
       >
-        {alert}
         <Modal.Header closeButton>
           {/* <span className="title">Login</span> */}
           <div className="d-flex flex-row justify-content-center align-items-center col-12">

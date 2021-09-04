@@ -9,14 +9,16 @@ import "react-phone-input-2/lib/style.css";
 // import { auth, googleProvider, facebookProvider } from "../utils/firebase";
 // import { Link } from 'react-router-dom';
 import Loader from "../component/Loader";
-import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
 import ReactBootstrap from "react-bootstrap";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const MySwal = withReactContent(Swal);
   const uData = useSelector((state) => state.auth.data);
   const token = useSelector((state) => state.auth.token);
   // console.log(uData);
@@ -312,27 +314,28 @@ const Login = () => {
   };
 
   function showAlert(title, type) {
-    setAlert(
-      <SweetAlert
-        style={{ color: "#000" }}
-        type={type}
-        onConfirm={() => handleAlertConfirm(type)}
-        timeout={3000}
-        title={title}
-      />
-    );
+    MySwal.fire({
+      title: <p style={{ color: "white" }}>{title}</p>,
+      icon: type || "info",
+      customClass: {
+        confirmButton: "btn-gradiant",
+      },
+      buttonsStyling: false,
+      background: "#303030",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleAlertConfirm(type);
+      }
+    });
     setLoading(false);
   }
 
   function handleAlertConfirm(type) {
     if (type === "success") {
-      hideAlert();
       setTimeout(() => {
         // window.location.href = "/";
         history.push("/");
       }, 1500);
-    } else {
-      hideAlert();
     }
   }
 
