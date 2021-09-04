@@ -3,6 +3,7 @@ import Wallet from "../../utils/wallet";
 import axios from "axios";
 import localStorageService from "../../utils/localstorage";
 import { Magic } from "magic-sdk";
+import { disconnect } from "./walletSlice";
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY);
 
 export const authSlice = createSlice({
@@ -26,8 +27,8 @@ export const authSlice = createSlice({
       state.isFan = user.account_type === "user";
     },
     _logout: (state, action) => {
-      Wallet.disconnect(true);
-      localStorage.removeItem("persist:root");
+      // Wallet.disconnect(true);
+      // localStorage.removeItem("persist:root");
       localStorageService.clearToken();
       state.isLoggedIn = false;
       state.token = null;
@@ -63,6 +64,7 @@ export const logout = () => (dispatch) => {
   magic.user
     .logout()
     .then(() => {
+      dispatch(disconnect());
       dispatch(_logout());
     })
     .catch((e) => {
