@@ -19,20 +19,19 @@ import { persistStore } from "redux-persist";
 import store from "./store/configureStore";
 import App from "./App";
 //style
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
-import './style.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
+import "./style.css";
 
-const persistor = persistStore(store);
+// const persistor = persistStore(store);
 
 ReactDOM.render(
   <Provider store={store}>
-    <PersistGate persistor={persistor}>
-        <App />
-    </PersistGate>
+    {/* <PersistGate persistor={persistor}> */}
+    <App />
+    {/* </PersistGate> */}
   </Provider>,
   document.getElementById("root")
 );
 
 reportWebVitals();
-
