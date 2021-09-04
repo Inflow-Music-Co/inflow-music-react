@@ -18,7 +18,7 @@ import { Contract, ethers } from "ethers";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
 import SweetAlert from "react-bootstrap-sweetalert";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import Axios from "axios";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
@@ -30,6 +30,7 @@ import TokenChart from "./TokenChart";
 let errcode = "";
 
 const Artistpic = () => {
+  const history = useHistory();
   const { walletProvider } = useContext(WalletProviderContext);
   const wallet = useSelector((state) => state.wallet);
   const token = useSelector((state) => state.auth.token);
@@ -69,7 +70,10 @@ const Artistpic = () => {
     const init = async () => {
       console.log({ walletProvider });
       setLoading(true);
-      const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,{ id } );
+      const { data } = await Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+        { id }
+      );
 
       if (data.artist) {
         setArtist(data.artist);
@@ -640,7 +644,8 @@ const Artistpic = () => {
                   className="buy-button"
                   type="button"
                   onClick={() => {
-                    window.location.href = "/login";
+                    // window.location.href = "/login";
+                    history.push("/login");
                   }}
                 >
                   Sell
@@ -670,7 +675,8 @@ const Artistpic = () => {
                   className="sell-button"
                   type="button"
                   onClick={() => {
-                    window.location.href = "/login";
+                    // window.location.href = "/login";
+                    history.push("/login");
                   }}
                 >
                   Buy

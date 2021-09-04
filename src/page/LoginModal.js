@@ -143,7 +143,8 @@ const LoginModal = (props) => {
           }
           showAlert("Check your email and verify account", "info");
           setTimeout(() => {
-            window.location.href = "/";
+            // window.location.href = "/";
+            history.push("/");
           }, 1500);
         }
         // history.push("/");
@@ -356,7 +357,8 @@ const LoginModal = (props) => {
       } else {
         dispatch(setclienturl({ clienturl: "" }));
       }
-      window.location.href = "/";
+      // window.location.href = "/";
+      history.push("/");
     } catch (error) {
       // const errorCode = error.code;
       const errorMessage = error.message;
@@ -383,7 +385,8 @@ const LoginModal = (props) => {
     if (type === "success") {
       hideAlert();
       setTimeout(() => {
-        window.location.href = "/";
+        // window.location.href = "/";
+        history.push("/");
       }, 1500);
     } else {
       hideAlert();

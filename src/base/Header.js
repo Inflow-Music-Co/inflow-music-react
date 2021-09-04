@@ -11,16 +11,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { connected, disconnect } from "../store/reducers/walletSlice";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import { assetsImages } from "../constants/images";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const Header = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const MySwal = withReactContent(Swal);
   const { walletProvider, setWalletProvider } = useContext(
     WalletProviderContext
   );
   const wallet = useSelector((state) => state.wallet);
   const token = useSelector((state) => state.auth.token);
   // const wallet = useSelector(state => state.wallet);
-  const dispatch = useDispatch();
   const [alert, setalert] = useState(null);
 
   // console.log({wallet})
@@ -39,7 +43,8 @@ const Header = () => {
 
   const connectWallet = async () => {
     if (!token) {
-      window.location.href = "/";
+      // window.location.href = "/";
+      history.push("/");
       return;
     }
     try {
@@ -49,15 +54,24 @@ const Header = () => {
         }
         dispatch(connected({ address: Wallet.account }));
         setWalletProvider(Wallet.ethersProvider);
-        showAlert("Wallet connected successfully", "success");
+        // showAlert("Wallet connected successfully", "success");
+        return MySwal.fire({
+          title: <p>Wallet connected successfully</p>,
+          icon: "success",
+        });
         // setTimeout(() => {
         //     window.location.reload();
         // },1500)
       } else {
         Wallet.disconnect(true);
-        showAlert("Wallet disconnected", "info");
+        // showAlert("Wallet disconnected", "info");
         dispatch(disconnect());
+        MySwal.fire({
+          title: <p>Wallet disconnected</p>,
+          icon: "info",
+        });
         setWalletProvider(null);
+        history.push("/");
       }
     } catch (e) {
       // console.log(e);
@@ -90,6 +104,9 @@ const Header = () => {
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
+        <button className="btn-gradiant mr-4" onClick={connectWallet}>
+          temp-connect
+        </button>
         <div className="notified-main">
           <Notification />
         </div>

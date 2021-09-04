@@ -19,12 +19,15 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import { ethers } from "ethers";
 import { Magic } from "magic-sdk";
 import "../component/Artist.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const Mydashboard = () => {
   const { walletProvider } = useContext(WalletProviderContext);
+  const MySwal = withReactContent(Swal);
   const uid = useSelector((state) => state.auth.data._id);
   const wallet = useSelector((state) => state.wallet);
-  const [connectedWallet, setConnectedWallet] = useState(true);
+  const [connectedWallet, setConnectedWallet] = useState(false);
   const [isFetched, setIsFetched] = useState(false);
   const [tokensBought, setTokensBought] = useState([]);
   const [tokenNames, setTokenNames] = useState([]);
@@ -55,6 +58,14 @@ const Mydashboard = () => {
       getArtistInfoFromDB();
     }
   }, [walletProvider]);
+
+  useEffect(() => {
+    !connectedWallet &&
+      MySwal.fire({
+        title: <p>Please connect wallet</p>,
+        icon: "error",
+      });
+  });
 
   const getTokensOwnedByUser = () => {
     console.log("need to implement fetching tokens with magic wallet");
@@ -424,7 +435,7 @@ const Mydashboard = () => {
               <Song />
           </div> */}
 
-      <SweetAlert
+      {/* <SweetAlert
         danger
         show={!connectedWallet}
         title="Please Connect Wallet"
@@ -435,7 +446,7 @@ const Mydashboard = () => {
         onCancel={() => {
           setConnectedWallet((connectedWallet) => !connectedWallet);
         }}
-      ></SweetAlert>
+      ></SweetAlert> */}
     </div>
   );
 };

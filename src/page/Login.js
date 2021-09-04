@@ -96,7 +96,8 @@ const Login = () => {
           }
           showAlert("Check your email and verify account", "info");
           setTimeout(() => {
-            window.location.href = "/";
+            // window.location.href = "/";
+            history.push("/");
           }, 1500);
         }
       } catch (error) {
@@ -299,7 +300,8 @@ const Login = () => {
       } else {
         dispatch(setclienturl({ clienturl: "" }));
       }
-      window.location.href = "/";
+      // window.location.href = "/";
+      history.push("/");
     } catch (error) {
       // const errorCode = error.code;
       const errorMessage = error.message;
@@ -326,7 +328,8 @@ const Login = () => {
     if (type === "success") {
       hideAlert();
       setTimeout(() => {
-        window.location.href = "/";
+        // window.location.href = "/";
+        history.push("/");
       }, 1500);
     } else {
       hideAlert();
