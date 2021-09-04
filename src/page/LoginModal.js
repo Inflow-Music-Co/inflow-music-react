@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,22 +8,17 @@ import {
   loginUser,
   loginWithMagicLink,
 } from "../store/reducers/authSlice";
-import { assetsImages } from "../constants/images";
-import PhoneInput from "react-phone-input-2";
+import Wallet from "../utils/wallet";
+import { WalletProviderContext } from "../contexts/walletProviderContext";
+import { connected, disconnect } from "../store/reducers/walletSlice";
 import "react-phone-input-2/lib/style.css";
-// import { auth, googleProvider, facebookProvider } from "../utils/firebase";
-// import { Link } from 'react-router-dom';
-import Loader from "../component/Loader";
 import Axios from "axios";
 import { setclienturl } from "../store/reducers/graphqlSlice";
-import ReactBootstrap from "react-bootstrap";
 import "./LoginModal.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { ethers } from 'ethers'
 import { Magic } from "magic-sdk";
-
-
 
 const LoginModal = (props) => {
   const { login, setLogin } = props;
@@ -43,9 +38,10 @@ const LoginModal = (props) => {
   const [otpConfirmation, setOtpConfirmation] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorFlg, setErrorFlg] = useState("");
-  // const [userType, setUserType] = useState({ account_type: "user" });
   const [loginType, setLoginType] = useState("login");
-  // console.log(uData);
+  const { walletProvider, setWalletProvider } = useContext(
+    WalletProviderContext
+  );
   const [user, setUser] = useState({
     displayName: "",
     email: "",
@@ -70,6 +66,8 @@ const LoginModal = (props) => {
         magic.rpcProvider,
         4      
     );
+    setWalletProvider(provider);
+    dispatch(connected({ address: Wallet.account }));
     const signer = provider.getSigner();
     const address = await signer.getAddress();
     return { address, provider };

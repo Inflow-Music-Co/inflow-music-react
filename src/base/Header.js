@@ -102,9 +102,9 @@ const Header = () => {
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
-        <button className="btn-gradiant mr-3" onClick={connectWallet}>
+        {/* <button className="btn-gradiant mr-3" onClick={connectWallet}>
           temp-connect
-        </button>
+        </button> */}
         <div className="notified-main">
           <Notification />
         </div>
