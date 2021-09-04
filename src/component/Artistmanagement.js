@@ -14,10 +14,11 @@ import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/Soc
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import Axios from "axios";
 import SmallLoader from "./SmallLoader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { updateActivePage } from "../store/reducers/appSlice";
 
 // const GET_TOKEN_FEES = gql`
 //   query {
@@ -28,6 +29,7 @@ import withReactContent from "sweetalert2-react-content";
 // `;
 
 const Artistpic = () => {
+  const dispatch = useDispatch();
   const { walletProvider } = useContext(WalletProviderContext);
   const MySwal = withReactContent(Swal);
   // const [profileModel, setProfileModel] = useState(false);
@@ -58,6 +60,9 @@ const Artistpic = () => {
       setLoading(false);
     }
   }, []);
+  useEffect(() => {
+    dispatch(updateActivePage("artistmanage"));
+  });
   useEffect(() => {
     !connectedwallet &&
       MySwal.fire({

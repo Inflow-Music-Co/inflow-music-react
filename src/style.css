@@ -2648,7 +2648,7 @@ input:checked + .slider:before {
   }
 
   .main-comman-wrapping {
-    margin-left: 40px;
+    margin-left: 0px;
     margin-top: 56px;
   }
 

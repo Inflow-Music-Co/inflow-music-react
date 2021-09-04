@@ -13,6 +13,7 @@ import { assetsImages } from "../constants/images";
 import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { updateActivePage } from "../store/reducers/appSlice";
 
 const Header = () => {
   const history = useHistory();
@@ -89,13 +90,20 @@ const Header = () => {
     <div className="header-main">
       <div className="logo-website-main">
         <Link to={"/"}>
-          <img alt="" src={assetsImages.logo} className="logo-main-image" />
+          <img
+            alt=""
+            src={assetsImages.logo}
+            className="logo-main-image"
+            onClick={() => {
+              dispatch(updateActivePage("artist"));
+            }}
+          />
         </Link>
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
-        <button className="btn-gradiant mr-4" onClick={connectWallet}>
-          temp-web3-btn
+        <button className="btn-gradiant mr-3" onClick={connectWallet}>
+          temp-connect
         </button>
         <div className="notified-main">
           <Notification />

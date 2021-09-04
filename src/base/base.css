@@ -146,6 +146,12 @@
   color: white;
 }
 
+@media (max-width: 767px) {
+  .side-bar-main {
+    display: none;
+  }
+}
+
 /* @media (max-width: 1400px) {
   .header-main {
     padding: 11px 20px;

@@ -10,7 +10,7 @@ import Doughnetchart from "../component/Doughnetchart";
 import MyBalanceChart from "../component/MyBalanceChart";
 // import Mynftdropdown from '../component/Mynftdropdown';
 // import Song from '../component/Song';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import SmallLoader from "../component/SmallLoader";
@@ -20,8 +20,10 @@ import { Magic } from "magic-sdk";
 import "../component/Artist.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { updateActivePage } from "../store/reducers/appSlice";
 
-const Mydashboard = () => {
+const Dashboard = () => {
+  const dispatch = useDispatch();
   const { walletProvider } = useContext(WalletProviderContext);
   const MySwal = withReactContent(Swal);
   const uid = useSelector((state) => state.auth.data._id);
@@ -49,6 +51,9 @@ const Mydashboard = () => {
   let tempTokenTotalValues = []; // each owned token's total value (amount * price)
 
   useEffect(() => {
+    dispatch(updateActivePage("dashboard"));
+  }, []);
+  useEffect(() => {
     if (!wallet.wallet_connected) {
       setConnectedWallet(false);
     } else {
@@ -57,7 +62,6 @@ const Mydashboard = () => {
       getArtistInfoFromDB();
     }
   }, [walletProvider]);
-
   useEffect(() => {
     !connectedWallet &&
       MySwal.fire({
@@ -433,18 +437,18 @@ const Mydashboard = () => {
                 </div>
             </div> */}
       {/* <div className="songs-grid-main">
-              <Song />
-              <Song />
-              <Song />
-              <Song />
-              <Song />
-              <Song />
-              <Song />
-              <Song />
-              <Song />
-              <Song />
-          </div> */}
+          <Song />
+          <Song />
+          <Song />
+          <Song />
+          <Song />
+          <Song />
+          <Song />
+          <Song />
+          <Song />
+          <Song />
+      </div> */}
     </div>
   );
 };
-export default Mydashboard;
+export default Dashboard;

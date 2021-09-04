@@ -5,12 +5,13 @@ import React, { useState, useEffect } from "react";
 // import TabContainer from 'react-bootstrap/TabContainer'
 import axios from "axios";
 import Loader from "../component/Loader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { assetsImages } from "../constants/images";
 import Axios from "axios";
 import { Modal } from "react-bootstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { updateActivePage } from "../store/reducers/appSlice";
 
 let country_list = [
   "Afghanistan",
@@ -221,6 +222,7 @@ let country_list = [
 ];
 
 const Accountsettings = () => {
+  const dispatch = useDispatch();
   const MySwal = withReactContent(Swal);
   const userdata = useSelector((state) => state.auth.data);
   const uid = useSelector((state) => state.auth.data._id);
@@ -243,6 +245,9 @@ const Accountsettings = () => {
   useEffect(() => {
     getdata();
   }, []);
+  useEffect(() => {
+    dispatch(updateActivePage("account"));
+  });
   useEffect(() => {
     resetpasswordemailsent &&
       MySwal.fire({
