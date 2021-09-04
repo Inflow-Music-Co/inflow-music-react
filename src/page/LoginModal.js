@@ -17,7 +17,7 @@ import { setclienturl } from "../store/reducers/graphqlSlice";
 import "./LoginModal.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { ethers } from 'ethers'
+import { ethers } from "ethers";
 import { Magic } from "magic-sdk";
 
 const LoginModal = (props) => {
@@ -27,8 +27,6 @@ const LoginModal = (props) => {
   const history = useHistory();
   const uData = useSelector((state) => state.auth.data);
   const token = useSelector((state) => state.auth.token);
-  // console.log(uData);
-  // const history = useHistory();
   const [authSelectFlag, setAuthSelectFlag] = useState(true);
   const [account_type, setAccountType] = useState("user");
   const [forgotPasswordFlag, setForgotPasswordFlag] = useState(false);
@@ -53,25 +51,21 @@ const LoginModal = (props) => {
   const captchaRef = React.useRef(null);
 
   const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-    network: 'rinkeby'
+    network: "rinkeby",
   });
 
-  magic.network = 'ethereum';
+  magic.network = "ethereum";
 
-  useEffect(() => {
-  },[]);
+  useEffect(() => {}, []);
 
   const getAddressAndProvider = async () => {
-    const provider = new ethers.providers.Web3Provider(
-        magic.rpcProvider,
-        4      
-    );
+    const provider = new ethers.providers.Web3Provider(magic.rpcProvider, 4);
     setWalletProvider(provider);
     dispatch(connected({ address: Wallet.account }));
     const signer = provider.getSigner();
     const address = await signer.getAddress();
     return { address, provider };
-};
+  };
 
   const handleLoginWithMagic = async (e) => {
     try {
@@ -86,177 +80,6 @@ const LoginModal = (props) => {
     }
   };
 
-  const handleRegister = async (event) => {
-    const { email, password, account_type } = user;
-    const reg =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!reg.test(String(email).toLowerCase())) {
-      setErrorFlg("email");
-      setErrorMessage("Invalid Email");
-    } else if (password.length < 8) {
-      setErrorFlg("password");
-      setErrorMessage("Passwords must be at least 8 characters long");
-    } else {
-      setErrorFlg("undefined");
-      setErrorMessage("");
-      try {
-        if (loginType === "login") {
-          //login part
-          // const { user } = await auth.signInWithEmailAndPassword(
-          //   email,
-          //   password
-          // );
-          // let isAdmin = false
-          // const idTokenResult = await user.getIdTokenResult();
-          // isAdmin = idTokenResult.claims.isAdmin ? true : false
-          await dispatch(loginUser({ email, password, account_type }));
-          // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken })
-          // const response = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
-          // // console.log(response.data);
-          // dispatch(setArtist({ isArtist: response.data.isArtist }))
-          // if (response.data.isArtist) {
-          //   dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
-          // } else {
-          //   dispatch(setclienturl({ clienturl: '' }))
-          // }
-          setLogin((login) => !login);
-          dispatch(setclienturl({ clienturl: "" }));
-          // // showAlert('Login Successful', 'success')
-          // setTimeout(() => {
-          //   window.location.href = "/"
-          // }, 1500)
-          // window.location.href = "/";
-        } else {
-          // registeration part
-          const res = await Axios.post(
-            `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
-            {
-              name: user.displayName,
-              email: user.email,
-              password: user.password,
-            }
-          );
-          if (!res.data.status) {
-            //when this email is already used
-            showAlert(res.data.message);
-            return;
-          }
-          showAlert("Check your email and verify account", "info");
-          setTimeout(() => {
-            // window.location.href = "/";
-            history.push("/");
-          }, 1500);
-        }
-        // history.push("/");
-      } catch (error) {
-        console.error(error);
-        showAlert("Invalid email or password", "error");
-      }
-    }
-  };
-
-  // const handleRegisterWithPhone = async (event) => {
-  //   event.preventDefault();
-  //   setLoading(true);
-  //   if (optSent) {
-  //     if (!user.otp) {
-  //       setErrorFlg("otp");
-  //       setErrorMessage("Please enter OTP sent to your phone");
-  //       return;
-  //     }
-  //     //alert("send successfully");
-  //     // const code = window.prompt('Please enter the verification ' +
-  //     //     'code that was sent to your mobile device.');
-  //     otpConfirmation
-  //       .confirm(user.otp)
-  //       .then((result) => {
-  //         setLoading(false);
-  //         showAlert("Login Successful", "success");
-  //         setTimeout(() => {
-  //           const loginUser = result.user;
-  //           let isAdmin = false;
-  //           loginUser
-  //             .getIdTokenResult()
-  //             .then((idTokenResult) => {
-  //               isAdmin = idTokenResult.claims.isAdmin ? true : false;
-  //               // dispatch(
-  //               //   login({
-  //               //     phoneNumber: user.phone,
-  //               //     uid: loginUser.uid,
-  //               //     token: loginUser.refreshToken,
-  //               //     isAdmin,
-  //               //   })
-  //               // );
-  //               Axios.post(
-  //                 `${process.env.REACT_APP_SERVER_URL}/v1/user/register`,
-  //                 {
-  //                   uid: user.uid,
-  //                   phone: user.phone,
-  //                   refresh_token: user.refreshToken,
-  //                 }
-  //               );
-  //             })
-  //             .then(() => {
-  //               Axios.post(
-  //                 `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
-  //                 { email: user.email }
-  //               );
-  //             })
-  //             .then((response) => {
-  //               // console.log(response.data);
-  //               dispatch(setArtist({ isArtist: response.data.isArtist }));
-  //               if (response.data.isArtist) {
-  //                 dispatch(
-  //                   setclienturl({ clienturl: response.data.artist.graphqlurl })
-  //                 );
-  //               } else {
-  //                 dispatch(setclienturl({ clienturl: "" }));
-  //               }
-  //               hideAlert();
-  //             });
-  //         }, 2000);
-  //       })
-  //       .catch((error) => {
-  //         showAlert("Invalid OTP", "error");
-  //       });
-  //   } else {
-  //     if (user.phone.length < 10) {
-  //       setErrorFlg("phone");
-  //       setErrorMessage("Phone must be 10 charachter long");
-  //     } else {
-  //       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-  //         captchaRef.current,
-  //         {
-  //           size: "invisible",
-  //         }
-  //       );
-  //       const appVerifier = window.recaptchaVerifier;
-  //       const phoneNumber = "+" + user.phone;
-  //       auth
-  //         .signInWithPhoneNumber(String(phoneNumber), appVerifier)
-  //         .then((confirmResult) => {
-  //           setOptSent(true);
-  //           setOtpConfirmation(confirmResult);
-  //           setLoading(false);
-  //         })
-  //         .catch((error) =>
-  //           showAlert(
-  //             `Sign In With Phone Number Error: ${error.message}`,
-  //             "error"
-  //           )
-  //         );
-  //     }
-  //   }
-  // };
-
-  useEffect(() => {
-    if (token) {
-      history.push("/");
-    }
-    //setUser({displayName:'', ...uData})
-    //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-  }, [token]);
-
   const handleChange = (event) => {
     const { value, name } = event.target;
 
@@ -267,7 +90,6 @@ const LoginModal = (props) => {
 
   const handleChangeUsertype = (e) => {
     setUser({ ...user, account_type: e.target.id });
-    // setUserType(e.target.id);
   };
 
   const forgotPassword = async () => {
@@ -277,94 +99,8 @@ const LoginModal = (props) => {
         { email: user.email }
       );
       showAlert("Check your email for changing password", "info");
-      // window.location.href = "/login";
     } catch (e) {
       console.error(e);
-    }
-  };
-
-  const signInWithSocialAccount = async (provider) => {
-    // auth
-    //   .signInWithPopup(provider)
-    //   .then((result) => {
-    //     const credential = result.credential;
-    //     const token = credential.accessToken;
-    //     const user = result.user;
-    //     let isAdmin = false;
-    //     // console.log(user.displayName)
-    //     user.getIdTokenResult().then(idTokenResult => {
-    //       isAdmin = idTokenResult.claims.isAdmin ? true : false
-    //       dispatch(
-    //         login({ email: user.email, uid: user.uid, token: user.refreshToken, isAdmin })
-    //       );
-    //       Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, { firebase_user_id: user.uid, email: user.email, refresh_token: user.refreshToken, name: user.displayName })
-    //     }).then(() => {
-    //       Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`, { email: user.email })
-    //     }).then((response) => {
-    //       if (response) {
-    //         // console.log({ response });
-    //         dispatch(setArtist({ isArtist: response.data.isArtist }));
-    //         if (response.data.isArtist) {
-    //           dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }))
-    //         } else {
-    //           dispatch(setclienturl({ clienturl: '' }))
-    //         }
-    //         window.location.href = "/"
-    //       }
-
-    //     })
-    //     //// console.log('++++++',user.email, user.uid, token);
-
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     const email = error.email;
-    //     const credential = error.credential;
-    //     console.error(credential, errorMessage, email);
-    //   });
-
-    try {
-      const result = await auth.signInWithPopup(provider);
-      // const credential = result.credential;
-      // const token = credential.accessToken;
-      const user = result.user;
-      let isAdmin = false;
-      const idTokenResult = await user.getIdTokenResult();
-      isAdmin = idTokenResult.claims.isAdmin ? true : false;
-      // dispatch(
-      //   login({
-      //     email: user.email,
-      //     uid: user.uid,
-      //     token: user.refreshToken,
-      //     isAdmin,
-      //   })
-      // );
-      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/register`, {
-        uid: user.uid,
-        email: user.email,
-        refresh_token: user.refreshToken,
-        name: user.displayName,
-      });
-      const response = await Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/isArtist`,
-        { email: user.email }
-      );
-      // console.log(response.data)
-      dispatch(setArtist({ isArtist: response.data.isArtist }));
-      if (response.data.isArtist) {
-        dispatch(setclienturl({ clienturl: response.data.artist.graphqlurl }));
-      } else {
-        dispatch(setclienturl({ clienturl: "" }));
-      }
-      // window.location.href = "/";
-      history.push("/");
-    } catch (error) {
-      // const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.email;
-      const credential = error.credential;
-      console.error(credential, errorMessage, email);
     }
   };
 
@@ -388,7 +124,6 @@ const LoginModal = (props) => {
   function handleAlertConfirm(type) {
     if (type === "success") {
       setTimeout(() => {
-        // window.location.href = "/";
         history.push("/");
       }, 1500);
     }
@@ -420,14 +155,6 @@ const LoginModal = (props) => {
                     >
                       Login
                     </h4>
-                    {/* <h4
-                      className={`login-type ${
-                        loginType === "signup" && "login-type-active"
-                      }`}
-                      onClick={() => setLoginType("signup")}
-                    >
-                      Sign Up
-                    </h4> */}
                   </div>
                 )
               )}
@@ -462,17 +189,6 @@ const LoginModal = (props) => {
 
           <div className="mt-5 mb-0 pb-0 form-group">
             <div onSubmit={``} className="col-12">
-              {/* {!forgotPasswordFlag && loginType === "signup" && (
-                <div className="comman-row-input persons-row">
-                  <input
-                    placeholder="Name"
-                    type="text"
-                    name="displayName"
-                    value={user.displayName}
-                    onChange={handleChange}
-                  />
-                </div>
-              )} */}
               <div className="comman-row-input email-row">
                 <input
                   placeholder="Email"
@@ -494,30 +210,6 @@ const LoginModal = (props) => {
                   {errorMessage}
                 </div>
               )}
-
-              {/* {!forgotPasswordFlag && (
-                <div className="comman-row-input password-row">
-                  <input
-                    placeholder="Password"
-                    type="password"
-                    name="password"
-                    value={user.password}
-                    onChange={handleChange}
-                  />
-                </div>
-              )}
-              {errorFlg === "password" && (
-                <div
-                  style={{
-                    color: "red",
-                    marginTop: `-13px`,
-                    marginBottom: "15px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {errorMessage}
-                </div>
-              )} */}
             </div>
           </div>
         </Modal.Body>
@@ -547,12 +239,6 @@ const LoginModal = (props) => {
                 </div>
               )}
             </div>
-
-            {/* {!forgotPasswordFlag && (
-              <div className="mt-3" onClick={() => setForgotPasswordFlag(true)}>
-                <h5 className="forgot-password">Forgot Password?</h5>
-              </div>
-            )} */}
           </div>
         </Modal.Footer>
       </Modal>
