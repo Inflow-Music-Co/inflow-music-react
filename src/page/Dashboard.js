@@ -37,7 +37,7 @@ const Dashboard = () => {
   const [totalValues, setTotalValues] = useState([]);
   const [profileImages, setProfileImages] = useState([]);
 
-  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
     network: "rinkeby",
   });
   const magicLinkProvider = new ethers.providers.Web3Provider(
@@ -114,27 +114,27 @@ const Dashboard = () => {
     }
   };
 
-  const getArtistInfoFromDB = () => {
+  const getArtistInfoFromDB = async() => {
     // TODO: need to code logic to pull only artist images/names that user owns
-    // const { data } = await axios.post(
-    //   `${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`,
-    //   { uid }
-    // );
-    // tempTokensBought = data.tokensBought;
-    // setTokenNames(data.tokenNames);
-    // console.log({ tempTokensBought });
-    //set Profile Images
-    // let imageUrls = tempTokensBought.map((address) => {
-    //   if (address) {
-    //     const result = address + "_profilePic.jpeg";
-    //     return result;
-    //   }
-    // });
-    // imageUrls = imageUrls.filter((url) => {
-    //   if (url) return url;
-    // });
-    // setProfileImages(imageUrls);
-    // console.log({ imageUrls });
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`,
+      { uid }
+    );
+    tempTokensBought = data.tokensBought;
+    setTokenNames(data.tokenNames);
+    console.log({ tempTokensBought });
+    // set Profile Images
+    let imageUrls = tempTokensBought.map((address) => {
+      if (address) {
+        const result = address + "_profilePic.jpeg";
+        return result;
+      }
+    });
+    imageUrls = imageUrls.filter((url) => {
+      if (url) return url;
+    });
+    setProfileImages(imageUrls);
+    console.log({ imageUrls });
   };
 
   const getTokenPrice = async (token, balance) => {

@@ -20,9 +20,10 @@ import ReactBootstrap from "react-bootstrap";
 import "./LoginModal.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { ethers } from 'ethers'
+import { Magic } from "magic-sdk";
 
-// import { Magic } from "magic-sdk";
-// const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
+
 
 const LoginModal = (props) => {
   const { login, setLogin } = props;
@@ -55,24 +56,24 @@ const LoginModal = (props) => {
   });
   const captchaRef = React.useRef(null);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     history.push("/");
-  //   }
-  //   //setUser({displayName:'', ...uData})
-  //   //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-  // }, [token]);
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+    network: 'rinkeby'
+  });
 
-  // const handleLogin = async (event) => {
-  //   event.preventDefault();
-  //   const { email, password } = user;
-  //   try {
-  //     await auth.signInWithEmailAndPassword(email, password);
-  //     setUser({ email: "", password: "" });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  magic.network = 'ethereum';
+
+  useEffect(() => {
+  },[]);
+
+  const getAddressAndProvider = async () => {
+    const provider = new ethers.providers.Web3Provider(
+        magic.rpcProvider,
+        4      
+    );
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
+    return { address, provider };
+};
 
   const handleLoginWithMagic = async (e) => {
     try {
@@ -80,6 +81,8 @@ const LoginModal = (props) => {
       await dispatch(loginWithMagicLink({ email, account_type }));
       setLogin((login) => !login);
       dispatch(setclienturl({ clienturl: "" }));
+      const walletInstance = await getAddressAndProvider();
+      console.log({ walletInstance });
     } catch (e) {
       console.log("handleLoginWithMagic", e);
     }

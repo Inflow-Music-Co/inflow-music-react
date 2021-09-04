@@ -15,6 +15,7 @@ import Loader from "./Loader";
 import SmallLoader from "./SmallLoader";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import { Contract, ethers } from "ethers";
+import { Magic } from 'magic-sdk';
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
 import { useParams, useHistory } from "react-router-dom";
@@ -26,11 +27,14 @@ import TokenChart from "./TokenChart";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+const magic = new Magic (process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY);
+
 // import { Link } from '@material-ui/core';
 
 let errcode = "";
 
 const Artist = () => {
+
   const history = useHistory();
   const MySwal = withReactContent(Swal);
   const { walletProvider } = useContext(WalletProviderContext);
@@ -86,13 +90,12 @@ const Artist = () => {
           artist
         );
         setHistoricalData(res.data.priceHistory);
+        
         const tokenPrice = setInterval(() => {
           fetchTokenPrice();
         }, 10000);
         setLoading(false);
-        // return () => {
-        //     clearInterval(tokenPrice);
-        // };
+        
       }
     };
     if (id) {

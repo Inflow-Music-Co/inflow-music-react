@@ -19,7 +19,7 @@ const Inflowmusic = () => {
                 setloading(true)
                 const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
                 setArtists(data.artists)
-
+                console.log(data)
                 setloading(false);
 
             } catch (e) {
