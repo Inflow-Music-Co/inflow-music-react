@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Wallet from "../../utils/wallet";
 import axios from "axios";
 import localStorageService from "../../utils/localstorage";
 import { Magic } from "magic-sdk";

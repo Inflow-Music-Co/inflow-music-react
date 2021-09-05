@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* exported global_var */
 import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -23,16 +24,12 @@ function App() {
   });
 
   return (
-    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
+    <WalletProviderContext.Provider
+      value={{ walletProvider, setWalletProvider }}
+    >
       <ApolloProvider client={client}>
         <Router>
           <AppRoutes />
-          {/* <Login />
-          <Header />
-          <Sidebar /> */}
-          {/* <div className="main-comman-wrapping">
-            <AppRoutes />
-          </div> */}
         </Router>
       </ApolloProvider>
     </WalletProviderContext.Provider>

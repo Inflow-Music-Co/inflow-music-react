@@ -4,7 +4,8 @@ export const walletSlice = createSlice({
   name: "wallet",
   initialState: {
     wallet_address: "",
-    wallet_connected: "",
+    wallet_connected: false,
+    provider: {},
   },
   reducers: {
     connected: (state, action) => {
@@ -16,10 +17,13 @@ export const walletSlice = createSlice({
       state.wallet_address = "";
       state.wallet_connected = false;
     },
+    setProvider: (state, action) => {
+      state.provider = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { connected, disconnect } = walletSlice.actions;
+export const { connected, disconnect, setProvider } = walletSlice.actions;
 
 export default walletSlice.reducer;

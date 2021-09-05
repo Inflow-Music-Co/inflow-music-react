@@ -37,13 +37,6 @@ const Dashboard = () => {
   const [totalValues, setTotalValues] = useState([]);
   const [profileImages, setProfileImages] = useState([]);
 
-  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
-    network: "rinkeby",
-  });
-  const magicLinkProvider = new ethers.providers.Web3Provider(
-    magic.rpcProvider
-  );
-
   let tempTokensBought = []; // user's owned token addresses
   let tempTokenNames = []; // each owned token's artist name
   let tempTokenBalances = []; // each owned token's balance
@@ -75,7 +68,7 @@ const Dashboard = () => {
         background: "#303030",
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log("need to implement magiclink login");
+          console.log("need to implement direct magiclink login button here");
           // setconnectedwallet((connectedwallet) => !connectedwallet);
         }
       });
@@ -360,7 +353,7 @@ const Dashboard = () => {
         {/* ---------------My Artist Holdings-------- */}
         <div className="right-col">
           <div className="inner-row">
-            <div className="card-heading">My Artist Holdings</div>
+            <div className="card-heading">Wallet</div>
             <a href="#">
               <img alt="" src={assetsImages.filter} />
             </a>
@@ -370,7 +363,22 @@ const Dashboard = () => {
             {/* <div className="chart-row">{displayDoughnutChart()}</div> */}
             {/* <div className="chart-row">{displayPercentageBalances()}</div> */}
 
-            <div className="artist-holdings-total m-auto col-12 d-flex justify-content-center align-items-center">
+            <div className="artist-holdings-total m-auto col-12 d-flex align-items-center">
+              <div
+                className="artist-holdings-inner d-flex flex-column"
+                // style={{ borderRight: "2px solid black" }}
+              >
+                <span
+                  className="d-flex flex-row"
+                  style={{ fontSize: "1.1rem" }}
+                >
+                  {wallet.wallet_address}
+                </span>
+                <span className="small-heading">Your Address</span>
+              </div>
+            </div>
+
+            <div className="artist-holdings-total mr-auto mt-3 ml-auto col-12 d-flex align-items-center">
               <div
                 className="artist-holdings-inner d-flex flex-column"
                 // style={{ borderRight: "2px solid black" }}
@@ -391,7 +399,7 @@ const Dashboard = () => {
       <div className="token-chart">
         <div className="chart-header-row">
           <div className="token-info">
-            <div className="card-heading">Total Wallet Balance</div>
+            <div className="card-heading">Total Wallet Performance</div>
             <div className="dollar-price">
               <span>$</span> {displayTotalValue()}
             </div>

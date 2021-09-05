@@ -23,11 +23,12 @@ import withReactContent from "sweetalert2-react-content";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import { Magic } from "magic-sdk";
 import { ethers } from "ethers";
-import { connected } from "../store/reducers/walletSlice";
+import { connected, setProvider } from "../store/reducers/walletSlice";
 // const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
 
 const LoginModal = (props) => {
   const { login, setLogin } = props;
+  WalletProviderContext;
   const MySwal = withReactContent(Swal);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -54,20 +55,10 @@ const LoginModal = (props) => {
   const { walletProvider, setWalletProvider } = useContext(
     WalletProviderContext
   );
-  const captchaRef = React.useRef(null);
 
   const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
     network: "rinkeby",
   });
-
-  const getAddressAndProvider = async () => {
-    const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-    setWalletProvider(provider);
-    const signer = provider.getSigner();
-    const address = await signer.getAddress();
-    dispatch(connected({ address: address }));
-    return { address, provider };
-  };
 
   const handleLoginWithMagic = async (e) => {
     try {
@@ -75,8 +66,14 @@ const LoginModal = (props) => {
       await dispatch(loginWithMagicLink({ email, account_type }));
       setLogin((login) => !login);
       dispatch(setclienturl({ clienturl: "" }));
-      const walletInstance = await getAddressAndProvider();
-      console.log({ walletInstance });
+
+      const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+
+      dispatch(connected({ address: address }));
+      dispatch(setProvider(provider));
+      setWalletProvider(provider);
     } catch (e) {
       console.log("handleLoginWithMagic", e);
     }
@@ -99,45 +96,6 @@ const LoginModal = (props) => {
     setUser({ ...user, account_type: e.target.id });
     // setUserType(e.target.id);
   };
-
-  const forgotPassword = async () => {
-    try {
-      await Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/user/resetpassword`,
-        { email: user.email }
-      );
-      showAlert("Check your email for changing password", "info");
-      history.push("/");
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  function showAlert(title, type) {
-    MySwal.fire({
-      title: <p style={{ color: "white" }}>{title}</p>,
-      icon: type || "info",
-      customClass: {
-        confirmButton: "btn-gradiant",
-      },
-      buttonsStyling: false,
-      background: "#303030",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleAlertConfirm(type);
-      }
-    });
-    setLoading(false);
-  }
-
-  function handleAlertConfirm(type) {
-    if (type === "success") {
-      setTimeout(() => {
-        // window.location.href = "/";
-        history.push("/");
-      }, 1500);
-    }
-  }
 
   return (
     <>
