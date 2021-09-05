@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateActivePage } from "../store/reducers/appSlice";
 
 const Sidebar = () => {
-  // const [activePage, updateActivePage] = useState("");
   const dispatch = useDispatch();
   const activePage = useSelector((state) => state.app.activePage);
   const token = useSelector((state) => state.auth.token);

@@ -137,7 +137,7 @@ const LoginModal = (props) => {
         { email: user.email }
       );
       showAlert("Check your email for changing password", "info");
-      // window.location.href = "/login";
+      history.push("/");
     } catch (e) {
       console.error(e);
     }

@@ -7,9 +7,10 @@ import { logout } from "../store/reducers/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import LoginModal from "../page/LoginModal";
-// import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function Profiledropdown() {
+  const history = useHistory();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const uid = useSelector((state) => state.auth.data._id);
@@ -38,17 +39,16 @@ function Profiledropdown() {
   };
 
   const onLogin = () => {
-    // window.location.href = "/login";
     setLogin((login) => !login);
   };
 
-  // const onEdit = () => {
-  //     window.location.href = "/accountsettings";
-  // }
+  const onEdit = () => {
+    history.push("/accountsettings");
+  };
 
   const onLogout = () => {
     dispatch(logout());
-    // window.location.href = "/";
+    history.push("/");
   };
 
   return (
@@ -107,7 +107,7 @@ function Profiledropdown() {
             <div className="user-details">
               <div className="user-name">{firstname}</div>
               <div className="user-album">{country}</div>
-              {token === null ? (
+              {!token ? (
                 <button className="wallet-button" onClick={onLogin}>
                   Login
                 </button>
@@ -121,6 +121,12 @@ function Profiledropdown() {
                   </button>
                 </div>
               )}
+
+              <div className="d-flex justify-content-around mt-2">
+                <button className="wallet-button" onClick={onLogout}>
+                  Force Logout
+                </button>
+              </div>
             </div>
 
             <LoginModal login={login} setLogin={setLogin} />

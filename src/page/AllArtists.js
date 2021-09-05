@@ -5,8 +5,10 @@ import Loader from "../component/Loader";
 import { assetsImages } from "../constants/images";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useHistory } from "react-router-dom";
 
 const AllArtists = () => {
+  const history = useHistory();
   const MySwal = withReactContent(Swal);
   const [artists, setartists] = useState([]);
   const [loading, setloading] = useState(false);
@@ -140,7 +142,8 @@ const AllArtists = () => {
     setmodal(false);
     setartistupdate(true);
     setloading(false);
-    window.location.href = "/allartists";
+    // window.location.href = "/allartists";
+    history.push("/allartists");
   };
 
   if (loading) {

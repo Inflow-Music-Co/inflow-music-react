@@ -35,7 +35,7 @@ import LoginModal from "../page/LoginModal";
 export const AppRoutes = () => {
   return (
     <Switch>
-      <PublicRoutes path="/login" component={Login} exact />
+      {/* <PublicRoutes path="/login" component={Inflowmusic} exact /> */}
       <PublicRoutes path="/auth/resetpassword" component={ResetPassword} />
       <PublicRoutes path="/auth/verifyemail" component={VerfiyEmail} />
       <PublicRoutes
@@ -83,8 +83,8 @@ export const AppRoutes = () => {
       <PublicRoutes path="/labels/:labelid" component={LabelArtists} exact />
       <PublicRoutes path="/artist/:id" component={Artist} exact />
       <PublicRoutes path="/artist" component={Artist} exact />
-      {/* <PrivateRoutes path="/demo" component={DemoPage} exact />
-            <PrivateRoutes path="/login" component={Login} exact /> */}
+      {/* <PrivateRoutes path="/demo" component={DemoPage} exact /> */}
+      {/* <PrivateRoutes path="/login" component={Login} exact /> */}
     </Switch>
   );
 };

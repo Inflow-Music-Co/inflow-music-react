@@ -251,7 +251,8 @@ const Artist = () => {
     } catch (err) {
       if (errcode === -32002) {
         errcode = "";
-        window.location.reload();
+        // window.location.reload();
+        history.go(0);
       }
       errcode = err.code;
       console.log(err);
@@ -364,7 +365,8 @@ const Artist = () => {
           setsuccessmint((successmint) => !successmint);
           // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress })
           setInterval(() => {
-            window.location.reload();
+            // window.location.reload();
+            history.go(0);
           }, 2000);
           return;
         }
@@ -752,7 +754,7 @@ const Artist = () => {
                   type="button"
                   onClick={() => {
                     // window.location.href = "/login";
-                    history.push("/login");
+                    history.push("/");
                   }}
                 >
                   Sell
@@ -783,7 +785,7 @@ const Artist = () => {
                   type="button"
                   onClick={() => {
                     // window.location.href = "/login";
-                    history.push("/login");
+                    history.push("/");
                   }}
                 >
                   Buy
