@@ -105,6 +105,7 @@ export const loginWithMagicLink =
           isLoggedIn: true,
         })
       );
+
       if (data.userData.account_type === "artist") {
         dispatch(setArtist(true));
       }

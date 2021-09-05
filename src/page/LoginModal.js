@@ -35,12 +35,8 @@ const LoginModal = (props) => {
   const uData = useSelector((state) => state.auth.data);
   const token = useSelector((state) => state.auth.token);
   const [authSelectFlag, setAuthSelectFlag] = useState(true);
-  const [account_type, setAccountType] = useState("user");
+  // const [account_type, setAccountType] = useState("user");
   const [forgotPasswordFlag, setForgotPasswordFlag] = useState(false);
-  const [phoneRegisterFlag, setPhoneRegisterFlag] = useState(false);
-  const [optSent, setOptSent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [otpConfirmation, setOtpConfirmation] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorFlg, setErrorFlg] = useState("");
   const [loginType, setLoginType] = useState("login");
@@ -62,15 +58,16 @@ const LoginModal = (props) => {
 
   const handleLoginWithMagic = async (e) => {
     try {
+      // MagicLink Authentication
       const { email, account_type } = user;
       await dispatch(loginWithMagicLink({ email, account_type }));
       setLogin((login) => !login);
       dispatch(setclienturl({ clienturl: "" }));
 
+      // MagicLink Wallet Load
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
-
       dispatch(connected({ address: address }));
       dispatch(setProvider(provider));
       setWalletProvider(provider);
@@ -106,56 +103,45 @@ const LoginModal = (props) => {
           setLogin((login) => !login);
         }}
       >
-        <Modal.Header closeButton>
-          {/* <span className="title">Login</span> */}
+        <Modal.Header>
           <div className="d-flex flex-row justify-content-center align-items-center col-12">
             <span className="login-title col-12">
-              {forgotPasswordFlag ? (
-                <h4 className="login-type">Forgot Password</h4>
-              ) : (
-                authSelectFlag && (
-                  <div className="d-flex flex-row justify-content-around col-12">
-                    <h4
-                      className={`login-type ${
-                        loginType === "login" && "login-type-active"
-                      }`}
-                      onClick={() => setLoginType("login")}
-                    >
-                      Login
-                    </h4>
-                  </div>
-                )
+              {authSelectFlag && (
+                <div className="d-flex flex-row justify-content-around col-12">
+                  <h4
+                    className="login-type"
+                    onClick={() => setLoginType("login")}
+                  >
+                    Login
+                  </h4>
+                </div>
               )}
             </span>
           </div>
         </Modal.Header>
         <Modal.Body>
-          {!forgotPasswordFlag && (
-            <div className="login-type d-flex flex-row justify-content-center col-12">
-              <button
-                id="user"
-                className={`${
-                  user.account_type === "user" ? "btn-selected" : "btn-gradiant"
-                } mr-3`}
-                onClick={handleChangeUsertype}
-              >
-                Fan
-              </button>
-              <button
-                id="artist"
-                className={`${
-                  user.account_type === "artist"
-                    ? "btn-selected"
-                    : "btn-gradiant"
-                } ml-3`}
-                onClick={handleChangeUsertype}
-              >
-                Artist
-              </button>
-            </div>
-          )}
+          {/* <div className="login-type d-flex flex-row justify-content-center col-12">
+            <button
+              id="user"
+              className={`${
+                user.account_type === "user" ? "btn-selected" : "btn-gradiant"
+              } mr-3`}
+              onClick={handleChangeUsertype}
+            >
+              Fan
+            </button>
+            <button
+              id="artist"
+              className={`${
+                user.account_type === "artist" ? "btn-selected" : "btn-gradiant"
+              } ml-3`}
+              onClick={handleChangeUsertype}
+            >
+              Artist
+            </button>
+          </div> */}
 
-          <div className="mt-5 mb-0 pb-0 form-group">
+          <div className="mb-0 pb-0 form-group">
             <div className="col-12">
               <div className="comman-row-input email-row">
                 <input

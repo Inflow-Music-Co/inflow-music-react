@@ -10,6 +10,7 @@ import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
+import { logout } from "../store/reducers/authSlice";
 
 const Header = () => {
   const history = useHistory();
@@ -33,7 +34,14 @@ const Header = () => {
         </Link>
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
+
       <div className="right-col-main">
+        <button
+          className="btn-gradiant mr-4"
+          onClick={() => dispatch(logout())}
+        >
+          Force Logout
+        </button>
         <div className="notified-main">
           <Notification />
         </div>

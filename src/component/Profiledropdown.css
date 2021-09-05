@@ -1,0 +1,177 @@
+.profile-dropdown-main {
+  padding: 0;
+  background-color: #2f3443;
+  /* background-color: rgb(37, 37, 37); */
+  border-radius: 25px 0 25px 25px;
+  overflow: hidden;
+  transform: translate(-330px, 90px) !important;
+  border: none;
+  position: relative;
+  overflow: unset;
+}
+
+.profile-dropdown-main:before {
+  position: absolute;
+  content: "";
+  /* border-bottom: 50px solid #2f3443; */
+  border-bottom: 50px solid gb(37, 37, 37);
+  border-left: 50px solid transparent;
+  right: 0;
+  top: -40px;
+}
+
+.profile-dropdown-card .card-header {
+  border-bottom: 0;
+  padding: 20px;
+}
+
+.profile-dropdown-card .card-header span {
+  text-shadow: none;
+  color: #ffffff;
+  opacity: 1;
+  cursor: pointer;
+  font-size: 20px;
+  display: block;
+  float: unset;
+  text-align: right;
+}
+
+.Profile-dropdown-img {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-dropdown-card .background-img-wrapper {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+}
+
+.profile-dropdown-card .background-img-wrapper .img-wrapper {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.profile-dropdown-card .background-img-wrapper .img-wrapper .full-scree-icon,
+.profile-dropdown-card .background-img-wrapper .img-wrapper .money-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 10px;
+  background-color: #444444;
+  display: flex;
+}
+
+.profile-dropdown-card .background-img-wrapper .img-wrapper .profile-img img {
+  width: 65px;
+  border-radius: 50%;
+}
+
+.profile-dropdown-card .user-details {
+  text-align: center;
+  color: #ffffff;
+  margin-top: 10px;
+}
+
+.profile-dropdown-card .user-details .user-name {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.profile-dropdown-card .user-details .edit-button {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background-color: #5594eb;
+  border-radius: 5px;
+  padding: 10px 35px;
+  border: 0;
+}
+.profile-dropdown-card .user-profile-details ul {
+  color: #ffffff;
+  padding-left: 0;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+.profile-dropdown-card .user-profile-details ul li {
+  text-align: center;
+  list-style: none;
+  padding: 0 20px;
+}
+.profile-dropdown-card .user-profile-details ul li + li {
+  border-left: 2px solid #707070;
+}
+.profile-dropdown-card .user-profile-details ul li .number {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+.profile-dropdown-card .user-profile-details ul li .name {
+  font-size: 12px;
+  font-family: Rubik-Medium;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 2px;
+}
+
+.profile-dropdown-card .user-details .user-album {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+.profile-dropdown-card .profile-card-body {
+  /* background-color: #2f3443; */
+  background-color: rgb(37, 37, 37);
+  margin: 40px 20px 20px 40px;
+  height: 190px;
+  overflow: auto;
+}
+
+.profile-dropdown-card .profile-card-body .card-body-title {
+  color: #aaaaaa;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.profile-dropdown-card .profile-card-body ul.following-list {
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.profile-dropdown-card .profile-card-body ul.following-list li {
+  display: flex;
+}
+
+@media (max-width: 767px) {
+  .profile-dropdown-main {
+    transform: translate(-345px, 57px) !important;
+  }
+
+  .profile-dropdown-main:before {
+    border-bottom: 30px solid #2f3443;
+    border-left: 30px solid transparent;
+    top: -30px;
+  }
+
+  .profile-dropdown-card .card-header {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 991px) {
+  .profile-dropdown .Dropdown-main-header .dropdown .btn {
+    padding-right: 10px;
+  }
+}

@@ -5,38 +5,18 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { assetsImages } from "../constants/images";
 import { logout } from "../store/reducers/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import LoginModal from "../page/LoginModal";
 import { useHistory } from "react-router-dom";
+import "./Profiledropdown.css";
 
 function Profiledropdown() {
   const history = useHistory();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const uid = useSelector((state) => state.auth.data._id);
-  const [firstname, setfirstname] = useState("");
-  const [country, setcountry] = useState("");
-  const [profileimage, setprofileimage] = useState("");
+  const firstName = useSelector((state) => state.auth.data.first_name);
+  const country = useSelector((state) => state.auth.data.country);
+  const profileImage = useSelector((state) => state.auth.data.profile_image);
   const [login, setLogin] = useState(false);
-
-  useEffect(() => {
-    getdata();
-  }, []);
-
-  const getdata = async () => {
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`,
-        { uid }
-      );
-      const { user } = data;
-      if (user) {
-        setfirstname(user.first_name ? user.first_name : user.name);
-        setcountry(user.country ? user.country : "");
-        setprofileimage(user.profile_image);
-      }
-    } catch (e) {}
-  };
 
   const onLogin = () => {
     setLogin((login) => !login);
@@ -58,8 +38,8 @@ function Profiledropdown() {
           <img
             alt=""
             src={
-              profileimage !== ""
-                ? `${process.env.REACT_APP_SERVER_URL}/${profileimage}`
+              profileImage
+                ? `${process.env.REACT_APP_SERVER_URL}/${profileImage}`
                 : assetsImages.person
             }
           />
@@ -91,8 +71,8 @@ function Profiledropdown() {
                       src={
                         !token
                           ? assetsImages.person
-                          : profileimage
-                          ? `${process.env.REACT_APP_SERVER_URL}/${profileimage}`
+                          : profileImage
+                          ? `${process.env.REACT_APP_SERVER_URL}/${profileImage}`
                           : assetsImages.person
                       }
                     />
@@ -105,7 +85,7 @@ function Profiledropdown() {
             </div>
 
             <div className="user-details">
-              <div className="user-name">{firstname}</div>
+              <div className="user-name">{firstName}</div>
               <div className="user-album">{country}</div>
               {!token ? (
                 <button className="wallet-button" onClick={onLogin}>
@@ -114,19 +94,13 @@ function Profiledropdown() {
               ) : (
                 <div className="d-flex justify-content-around">
                   {/* <button className="edit-button" onClick={onEdit} >
-                                        Edit
-                                    </button> */}
+                          Edit
+                      </button> */}
                   <button className="wallet-button" onClick={onLogout}>
                     Logout
                   </button>
                 </div>
               )}
-
-              <div className="d-flex justify-content-around mt-2">
-                <button className="wallet-button" onClick={onLogout}>
-                  Force Logout
-                </button>
-              </div>
             </div>
 
             <LoginModal login={login} setLogin={setLogin} />
