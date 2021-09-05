@@ -35,6 +35,7 @@ const Artist = () => {
   const MySwal = withReactContent(Swal);
   const { walletProvider } = useContext(WalletProviderContext);
   const wallet = useSelector((state) => state.wallet);
+  const provider = useSelector((state) => state.wallet.provider);
   const token = useSelector((state) => state.auth.token);
   const uid = useSelector((state) => state.auth.data._id);
   const { id } = useParams();
@@ -70,7 +71,7 @@ const Artist = () => {
       setconnectedwallet(false);
     }
     const init = async () => {
-      console.log({ walletProvider });
+      console.log({ provider });
       setLoading(true);
       const { data } = await Axios.post(
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
@@ -240,8 +241,8 @@ const Artist = () => {
       "https://eth-rinkeby.alchemyapi.io/v2/Oq7yS7NdZbdW-beaojb1-8CuN_mjBpFc"
     );
     try {
-      if (walletProvider) {
-        const inflow = new Inflow(walletProvider, 4);
+      if (provider) {
+        const inflow = new Inflow(provider, 4);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
           inflow.parseERC20("SocialToken", "1")
@@ -314,14 +315,16 @@ const Artist = () => {
 
   const buyTokens = async () => {
     console.log(socialTokenAddress);
-    console.log("WALLER PROVIDER ____", walletProvider);
+    console.log("MAGIC PROVIDER ____", provider);
+    if (!provider) {
+      alert("Please log in");
+      return;
+    }
 
-    if (walletProvider) {
+    if (provider) {
       console.log("wallet provider is true");
       try {
-        await requestAccount();
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-
+        // await requestAccount();
         const signer = provider.getSigner();
         console.log("bla bla bla <><><><><><><><", socialTokenAddress, signer);
         const socialMinter = new Contract(
@@ -1006,7 +1009,8 @@ const Artist = () => {
               </div>
 
               <div className="sell-total-amount">
-                Amount you'll spend: ${totalmintprice}
+                {/* Amount you'll spend: ${totalmintprice} */}
+                Amount you'll spend: ${MintPrice * TokensToMint}
               </div>
             </>
           )}

@@ -24,10 +24,11 @@ import { updateActivePage } from "../store/reducers/appSlice";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { walletProvider } = useContext(WalletProviderContext);
+  // const { walletProvider } = useContext(WalletProviderContext);
   const MySwal = withReactContent(Swal);
   const uid = useSelector((state) => state.auth.data._id);
   const wallet = useSelector((state) => state.wallet);
+  const walletProvider = useSelector((state) => state.wallet.provider);
   const [connectedWallet, setConnectedWallet] = useState(true);
   const [isFetched, setIsFetched] = useState(false);
   const [tokensBought, setTokensBought] = useState([]);
@@ -54,7 +55,7 @@ const Dashboard = () => {
       getTokensBalAndPrice();
       getArtistInfoFromDB();
     }
-  }, [walletProvider]);
+  }, [wallet]);
   useEffect(() => {
     !connectedWallet &&
       MySwal.fire({

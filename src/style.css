@@ -2301,11 +2301,6 @@ input:checked + .slider:before {
     font-size: 12px;
   }
 
-  .Dropdown-main-header .dropdown .btn::after {
-    width: 10px;
-    height: 10px;
-  }
-
   .Inflow-music-main .inner-music-wrapper {
     margin-top: 30px;
   }

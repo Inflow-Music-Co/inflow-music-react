@@ -10,7 +10,6 @@ function PrivateRoute(props) {
 
   if (!token) {
     history.push("/");
-    return;
   }
   return (
     <>

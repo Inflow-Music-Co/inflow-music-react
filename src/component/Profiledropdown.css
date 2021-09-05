@@ -1,10 +1,14 @@
+.profile-dropdown .Dropdown-main-header .dropdown .btn {
+  padding-right: 20px;
+}
+
 .profile-dropdown-main {
   padding: 0;
-  background-color: #2f3443;
+  background-color: #2f3443 !important;
   /* background-color: rgb(37, 37, 37); */
   border-radius: 25px 0 25px 25px;
   overflow: hidden;
-  transform: translate(-330px, 90px) !important;
+  transform: translate(-275px, 80px) !important;
   border: none;
   position: relative;
   overflow: unset;
@@ -154,15 +158,15 @@
   display: flex;
 }
 
+.profile-dropdown-main:before {
+  border-bottom: 30px solid #2f3443;
+  border-left: 30px solid transparent;
+  top: -30px;
+}
+
 @media (max-width: 767px) {
   .profile-dropdown-main {
     transform: translate(-345px, 57px) !important;
-  }
-
-  .profile-dropdown-main:before {
-    border-bottom: 30px solid #2f3443;
-    border-left: 30px solid transparent;
-    top: -30px;
   }
 
   .profile-dropdown-card .card-header {
