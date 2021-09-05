@@ -33,8 +33,6 @@ const LoginModal = (props) => {
   const history = useHistory();
   const uData = useSelector((state) => state.auth.data);
   const token = useSelector((state) => state.auth.token);
-  // console.log(uData);
-  // const history = useHistory();
   const [authSelectFlag, setAuthSelectFlag] = useState(true);
   const [account_type, setAccountType] = useState("user");
   const [forgotPasswordFlag, setForgotPasswordFlag] = useState(false);
@@ -44,9 +42,7 @@ const LoginModal = (props) => {
   const [otpConfirmation, setOtpConfirmation] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorFlg, setErrorFlg] = useState("");
-  // const [userType, setUserType] = useState({ account_type: "user" });
   const [loginType, setLoginType] = useState("login");
-  // console.log(uData);
   const [user, setUser] = useState({
     displayName: "",
     email: "",
@@ -60,30 +56,9 @@ const LoginModal = (props) => {
   );
   const captchaRef = React.useRef(null);
 
-  // useEffect(() => {
-  //   if (token) {
-  //     history.push("/");
-  //   }
-  //   //setUser({displayName:'', ...uData})
-  //   //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
-  // }, [token]);
-
-  // const handleLogin = async (event) => {
-  //   event.preventDefault();
-  //   const { email, password } = user;
-  //   try {
-  //     await auth.signInWithEmailAndPassword(email, password);
-  //     setUser({ email: "", password: "" });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
     network: "rinkeby",
   });
-
-  // magic.network = "ethereum";
 
   const getAddressAndProvider = async () => {
     const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
@@ -102,8 +77,6 @@ const LoginModal = (props) => {
       dispatch(setclienturl({ clienturl: "" }));
       const walletInstance = await getAddressAndProvider();
       console.log({ walletInstance });
-      // alert(walletInstance.provider);
-      // alert(walletInstance.address);
     } catch (e) {
       console.log("handleLoginWithMagic", e);
     }
@@ -113,13 +86,10 @@ const LoginModal = (props) => {
     if (token) {
       history.push("/");
     }
-    //setUser({displayName:'', ...uData})
-    //window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container')
   }, [token]);
 
   const handleChange = (event) => {
     const { value, name } = event.target;
-
     setUser({ ...user, [name]: value });
     setErrorFlg("");
     setErrorMessage("");
@@ -195,14 +165,6 @@ const LoginModal = (props) => {
                     >
                       Login
                     </h4>
-                    {/* <h4
-                      className={`login-type ${
-                        loginType === "signup" && "login-type-active"
-                      }`}
-                      onClick={() => setLoginType("signup")}
-                    >
-                      Sign Up
-                    </h4> */}
                   </div>
                 )
               )}
@@ -236,18 +198,7 @@ const LoginModal = (props) => {
           )}
 
           <div className="mt-5 mb-0 pb-0 form-group">
-            <div onSubmit={``} className="col-12">
-              {/* {!forgotPasswordFlag && loginType === "signup" && (
-                <div className="comman-row-input persons-row">
-                  <input
-                    placeholder="Name"
-                    type="text"
-                    name="displayName"
-                    value={user.displayName}
-                    onChange={handleChange}
-                  />
-                </div>
-              )} */}
+            <div className="col-12">
               <div className="comman-row-input email-row">
                 <input
                   placeholder="Email"
@@ -269,30 +220,6 @@ const LoginModal = (props) => {
                   {errorMessage}
                 </div>
               )}
-
-              {/* {!forgotPasswordFlag && (
-                <div className="comman-row-input password-row">
-                  <input
-                    placeholder="Password"
-                    type="password"
-                    name="password"
-                    value={user.password}
-                    onChange={handleChange}
-                  />
-                </div>
-              )}
-              {errorFlg === "password" && (
-                <div
-                  style={{
-                    color: "red",
-                    marginTop: `-13px`,
-                    marginBottom: "15px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {errorMessage}
-                </div>
-              )} */}
             </div>
           </div>
         </Modal.Body>
@@ -322,12 +249,6 @@ const LoginModal = (props) => {
                 </div>
               )}
             </div>
-
-            {/* {!forgotPasswordFlag && (
-              <div className="mt-3" onClick={() => setForgotPasswordFlag(true)}>
-                <h5 className="forgot-password">Forgot Password?</h5>
-              </div>
-            )} */}
           </div>
         </Modal.Footer>
       </Modal>

@@ -24,67 +24,6 @@ const Header = () => {
   );
   const wallet = useSelector((state) => state.wallet);
   const token = useSelector((state) => state.auth.token);
-  // const wallet = useSelector(state => state.wallet);
-
-  // console.log({wallet})
-  // useEffect(() => {
-  //   if (wallet.wallet_connected) {
-  //     conn();
-  //   }
-  //   // eslint-disable-next-line
-  // }, []);
-
-  // const conn = async () => {
-  //   await Wallet.connect();
-  //   dispatch(connected({ address: Wallet.account }));
-  //   setWalletProvider(Wallet.ethersProvider);
-  // };
-
-  // const connectWallet = async () => {
-  //   // if (!token) {
-  //   //   history.push("/");
-  //   //   return;
-  //   // }
-  //   try {
-  //     if (!walletProvider) {
-  //       if (!Wallet.ethersProvider) {
-  //         await Wallet.connect();
-  //       }
-  //       dispatch(connected({ address: Wallet.account }));
-  //       setWalletProvider(Wallet.ethersProvider);
-  //       MySwal.fire({
-  //         title: (
-  //           <p style={{ color: "white" }}>Wallet connected successfully</p>
-  //         ),
-  //         icon: "success",
-  //         customClass: {
-  //           confirmButton: "btn-gradiant",
-  //         },
-  //         buttonsStyling: false,
-  //         background: "#303030",
-  //       });
-  //       // setTimeout(() => {
-  //       //     window.location.reload();
-  //       // },1500)
-  //     } else {
-  //       Wallet.disconnect(true);
-  //       dispatch(disconnect());
-  //       MySwal.fire({
-  //         title: <p style={{ color: "white" }}>Wallet disconnected</p>,
-  //         icon: "info",
-  //         customClass: {
-  //           confirmButton: "btn-gradiant",
-  //         },
-  //         buttonsStyling: false,
-  //         background: "#303030",
-  //       });
-  //       setWalletProvider(null);
-  //       history.push("/");
-  //     }
-  //   } catch (e) {
-  //     // console.log(e);
-  //   }
-  // };
 
   return (
     <div className="header-main">
@@ -102,9 +41,6 @@ const Header = () => {
       </div>
       <div className="left-col-main">{/* <Search /> */}</div>
       <div className="right-col-main">
-        {/* <button className="btn-gradiant mr-3" onClick={connectWallet}>
-          temp-connect
-        </button> */}
         <div className="notified-main">
           <Notification />
         </div>
