@@ -71,7 +71,7 @@ const Artist = () => {
       setconnectedwallet(false);
     }
     const init = async () => {
-      console.log({ provider });
+      // console.log({ provider });
       setLoading(true);
       const { data } = await Axios.post(
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
@@ -87,10 +87,10 @@ const Artist = () => {
           artist
         );
         setHistoricalData(res.data.priceHistory);
-        const tokenPrice = setInterval(() => {
-          fetchTokenPrice();
-        }, 10000);
         setLoading(false);
+        // const tokenPrice = setInterval(() => {
+        //   fetchTokenPrice();
+        // }, 10000);
         // return () => {
         //     clearInterval(tokenPrice);
         // };
@@ -99,7 +99,8 @@ const Artist = () => {
     if (id) {
       return init();
     }
-  }, [id, socialTokenAddress, walletProvider]);
+  }, [id, socialTokenAddress, provider]);
+
   useEffect(() => {
     !connectedwallet &&
       MySwal.fire({
@@ -237,9 +238,9 @@ const Artist = () => {
   // };
 
   const fetchTokenPrice = async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      "https://eth-rinkeby.alchemyapi.io/v2/Oq7yS7NdZbdW-beaojb1-8CuN_mjBpFc"
-    );
+    // const provider = new ethers.providers.JsonRpcProvider(
+    //   "https://eth-rinkeby.alchemyapi.io/v2/Oq7yS7NdZbdW-beaojb1-8CuN_mjBpFc"
+    // );
     try {
       if (provider) {
         const inflow = new Inflow(provider, 4);
@@ -252,7 +253,6 @@ const Artist = () => {
     } catch (err) {
       if (errcode === -32002) {
         errcode = "";
-        // window.location.reload();
         history.go(0);
       }
       errcode = err.code;
@@ -335,7 +335,7 @@ const Artist = () => {
 
         const usdcMinter = new Contract(RINKEBY_MOCKUSDC, MockUSDC.abi, signer);
         console.log({ usdcMinter });
-        console.log("HEERREE");
+
         // const usdcMinter = usdc.connect(signer);
         const inflow = new Inflow(provider, 4);
         setbuymodalloading(true);

@@ -16,6 +16,7 @@ export const walletSlice = createSlice({
     disconnect: (state) => {
       state.wallet_address = "";
       state.wallet_connected = false;
+      state.provider = {};
     },
     setProvider: (state, action) => {
       state.provider = action.payload;
