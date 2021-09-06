@@ -365,8 +365,8 @@ const Artist = () => {
             )
           ).wait();
           setLoading(false);
+          
           setsuccessmint((successmint) => !successmint);
-          // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress })
           setInterval(() => {
             // window.location.reload();
             history.go(0);
@@ -390,7 +390,7 @@ const Artist = () => {
 
         setbuymodalloading(false);
         setsuccessmint((successmint) => !successmint);
-        // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
+        await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
         // setInterval(() => {
         //     window.location.reload();
         // }, 2000)
@@ -1016,7 +1016,7 @@ const Artist = () => {
           )}
           {buymodalloading && buyflag ? (
             <div className="d-flex justify-content-center align-items-center flex-column">
-              Approve transaction on your wallet provider
+              Processing Transaction Please Wait
             </div>
           ) : null}
         </Modal.Body>
