@@ -77,8 +77,8 @@ const LoginModal = (props) => {
 
   const handleLoginWithMagic = async (e) => {
     try {
-      const { email, account_type } = user;
-      await dispatch(loginWithMagicLink({ email, account_type }));
+      const { email } = user;
+      await dispatch(loginWithMagicLink(email));
       setLogin((login) => !login);
       dispatch(setclienturl({ clienturl: "" }));
     } catch (e) {
@@ -436,7 +436,7 @@ const LoginModal = (props) => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {!forgotPasswordFlag && (
+          {/* {!forgotPasswordFlag && (
             <div className="login-type d-flex flex-row justify-content-center col-12">
               <button
                 id="user"
@@ -460,7 +460,7 @@ const LoginModal = (props) => {
               </button>
             </div>
           )}
-
+ */}
           <div className="mt-5 mb-0 pb-0 form-group">
             <div onSubmit={``} className="col-12">
               {/* {!forgotPasswordFlag && loginType === "signup" && (
