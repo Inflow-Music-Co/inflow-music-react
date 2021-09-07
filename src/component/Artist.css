@@ -132,6 +132,7 @@
 
 .artist-tag button {
   background-color: transparent;
+<<<<<<< HEAD
   border: solid 2px transparent;
   background-image: linear-gradient(
       rgba(255, 255, 255, 0),
@@ -142,6 +143,9 @@
   background-clip: content-box, border-box;
   box-shadow: 3px 1000px 1px #000 inset;
 
+=======
+  border: 1px solid #831df9;
+>>>>>>> main
   border-radius: 30px;
   padding: 10px 30px;
   color: #ffffff;

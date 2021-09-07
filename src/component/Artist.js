@@ -18,6 +18,7 @@ import { Contract, ethers } from "ethers";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
 import { useParams, useHistory } from "react-router-dom";
+import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
@@ -64,7 +65,8 @@ const Artist = () => {
   const [sellmodalloading, setsellmodalloading] = useState(false);
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
-  const [playlistID, setPlaylistID] = useState("522897111");
+  const [playlistID, setPlaylistID] = useState("529230339");
+  const [mintGateUrl, setMintGateUrl] = useState('')
 
   useEffect(() => {
     if (!wallet.wallet_connected) {
@@ -82,10 +84,7 @@ const Artist = () => {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
         fetchTokenPrice();
-        const res = await Axios.post(
-          `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
-          artist
-        );
+        const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist);
         setHistoricalData(res.data.priceHistory);
         setLoading(false);
         // const tokenPrice = setInterval(() => {
@@ -95,9 +94,19 @@ const Artist = () => {
         //     clearInterval(tokenPrice);
         // };
       }
+
+      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`, { id })
+      .then(response => {
+        setMintGateUrl(response.data.mintGatedUrls[0])
+        console.log('response', response)
+      })
     };
-    if (id) {
+    console.log('uid', uid);
+    if (uid) {
       return init();
+    } else {
+      console.log('NOT LOGGED IN');
+      setconnectedwallet(false);
     }
   }, [id, socialTokenAddress, provider]);
 
@@ -256,7 +265,6 @@ const Artist = () => {
         history.go(0);
       }
       errcode = err.code;
-      console.log(err);
     }
   };
 
@@ -387,6 +395,8 @@ const Artist = () => {
         ).wait();
         console.log("MINT SUCCESSFULL");
         console.log({ socialTokenAddress });
+
+        await updatePriceHistory();
 
         setbuymodalloading(false);
         setsuccessmint((successmint) => !successmint);
@@ -541,6 +551,7 @@ const Artist = () => {
         setsellmodalloading(false);
         setsuccessburn((successburn) => !successburn);
         setsell(false);
+        await updatePriceHistory();
         // getBalance();
       } catch (err) {
         setsellmodalloading(false);
@@ -641,8 +652,27 @@ const Artist = () => {
     }
   };
 
+  const redirectToTokenGate = async () => {
+      if(mintGateUrl !== ''){
+        window.location.assign(mintGateUrl);
+      }
+  }
+
   if (loading) {
     return <Loader />;
+  }
+
+  const updatePriceHistory = async () => {
+
+    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
+        mint_price_history : {
+            price: MintPrice, 
+            timestamp: Date.now()
+            }, 
+        socialTokenAddress, 
+        first_name : artist.first_name,
+        last_name : artist.last_name,
+        social_token_id: artist.social_token_id}); 
   }
 
   return (
@@ -651,10 +681,9 @@ const Artist = () => {
         <div className="background">
           <img
             alt=""
-            src={
-              artist.banner_image
+            src={artist.banner_image
                 ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}`
-                : assetsImages.artistbg
+                : null
             }
             className="background-blur"
           />
@@ -667,7 +696,7 @@ const Artist = () => {
                 src={
                   artist.profile_image
                     ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
-                    : assetsImages.artist
+                    : null
                 }
               />
             </div>
@@ -707,11 +736,7 @@ const Artist = () => {
             </div>
           </div>
           <div className="artist-tag">
-            <button className="tag-button">MERCH STORE</button>
-            <button className="tag-button">LIVE STREAMS</button>
-            <button className="tag-button">CONTENT</button>
-            <button className="tag-button">EXPERIENCE</button>
-            <button className="tag-button">VR ROOM</button>
+            <button className="tag-button" onClick={() => redirectToTokenGate()}> UNRELEASED MUSIC VIDEO </button>
           </div>
         </div>
       </div>
@@ -728,9 +753,6 @@ const Artist = () => {
               <div className="small-heading">--</div>
             </div>
             <div className="btn-filter mt-2">
-              <a href="#">
-                <img alt="" src={assetsImages.filter} />
-              </a>
             </div>
           </div>
           {/* <div className="total-balance-row">

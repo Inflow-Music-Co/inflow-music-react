@@ -152,6 +152,12 @@ const Sidebar = () => {
         >
           <img alt="" src={assetsImages.settings} />
         </div> */}
+        {/* <Link onClick={() => {window.location.assign('https://inflowmusic.io/')}}>
+        <img alt="" src={assetsImages.settings} />
+              <div className="d-flex justify-content-center align-items-center mt-2">
+                <span className="small-heading-sidebar">Account</span>
+              </div>
+        </Link> */}
       </div>
     </div>
   );
