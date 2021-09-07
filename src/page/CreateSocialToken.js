@@ -494,7 +494,7 @@ const CreateSocialToken = () => {
                                     </Button>{' '}
                                 </div>
                                 <br></br>
-                                <div className="save-changes-main">
+                                {/* <div className="save-changes-main">
                                     <Button
                                         variant="primary"
                                         size="lg"
@@ -502,8 +502,7 @@ const CreateSocialToken = () => {
                                         ONBOARD ARTIST
                                     </Button>{' '}
                                     <br></br>
-                                    
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <h2 className="p-3 my-3">
