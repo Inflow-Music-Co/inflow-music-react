@@ -36,13 +36,12 @@ const Header = () => {
       <div className="left-col-main">{/* <Search /> */}</div>
 
       <div className="right-col-main">
-        <Button
-          size="sm"
-          className="mr-2 wallet-button"
-          onClick={() => connectWallet()}
+        <button
+          className="btn-gradiant mr-4"
+          onClick={() => dispatch(logout())}
         >
-          {walletProvider ? "Disconnect" : "Connect"}
-        </Button>
+          Force Logout
+        </button>
         <div className="notified-main">
           <Notification />
         </div>
