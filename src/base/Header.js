@@ -36,12 +36,6 @@ const Header = () => {
       <div className="left-col-main">{/* <Search /> */}</div>
 
       <div className="right-col-main">
-        <button
-          className="btn-gradiant mr-4"
-          onClick={() => dispatch(logout())}
-        >
-          Force Logout
-        </button>
         <div className="notified-main">
           <Notification />
         </div>
