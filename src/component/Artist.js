@@ -1016,7 +1016,7 @@ const Artist = () => {
           )}
           {buymodalloading && buyflag ? (
             <div className="d-flex justify-content-center align-items-center flex-column">
-              Approve transaction on your wallet provider
+              Processing Transaction, Please Wait
             </div>
           ) : null}
         </Modal.Body>
