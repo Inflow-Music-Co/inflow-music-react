@@ -79,9 +79,19 @@ const Artistpic = () => {
     await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
   }
 
-  const saveMintgateLink = async (url) => {
-    console.log('saveMintgateLink!!!!', url)
-    await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { url } )
+  const saveMintgateLink = async (gatedUrl) => {
+    console.log('saveMintgateLink!!!!', gatedUrl)
+    await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { gatedUrl } );
+
+    //storing url to DB for test workaround
+    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/updateinflowgatedurls`, {
+      inflowgated_urls : { 
+        url, 
+        balance 
+      }
+    }).then((response) => {
+      console.log(response);
+    });
   }
 
   const changeOwner = async () => {
@@ -472,14 +482,11 @@ const Artistpic = () => {
             <button className="btn-gradiant" onClick={() => {
               navigator.clipboard.writeText(localStorage.getItem('link'));
               saveMintgateLink(localStorage.getItem('link'))
-              }}>Copy Link</button>
+              }}>Save Link</button>
           </div>
         </Modal.Body>
       </Modal>
-
     </div>
-
-    
   );
 };
 

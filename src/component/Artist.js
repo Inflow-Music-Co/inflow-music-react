@@ -67,6 +67,7 @@ const Artist = () => {
   const [historicalData, setHistoricalData] = useState([]);
   const [playlistID, setPlaylistID] = useState("529230339");
   const [mintGateUrl, setMintGateUrl] = useState('')
+  const [inflowGatedUrl, setInflowGatedUrl] = useState('')
 
   useEffect(() => {
     if (!wallet.wallet_connected) {
@@ -95,11 +96,17 @@ const Artist = () => {
         // };
       }
 
-      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`, { id })
+      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`, { id })
       .then(response => {
-        setMintGateUrl(response.data.mintGatedUrls[0])
-        console.log('response', response)
+        setMintGateUrl(response.data.mintGatedUrls[0]);
       })
+
+      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`, { id })
+      .then(response => {
+        setInflowGatedUrl(response.data.inflowGatedUrls[0]);
+        console.log(inflowGatedUrl)
+      })
+
     };
     console.log('uid', uid);
     if (uid) {
