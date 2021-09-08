@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Wallet from "../../utils/wallet";
 import axios from "axios";
 import { Magic } from "magic-sdk";
-import { disconnect } from "./walletSlice";
 import jwt_decode from "jwt-decode";
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY);
-
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
 
 export const authSlice = createSlice({
   name: "auth",
@@ -14,7 +13,7 @@ export const authSlice = createSlice({
     data: {},
     isAdmin: false,
     isArtist: false,
-    isFan: true,
+    isFan: true
   },
   reducers: {
     setUserData: (state, action) => {
@@ -27,7 +26,7 @@ export const authSlice = createSlice({
       state.isFan = user.account_type === "user";
     },
     _logout: (state, action) => {
-      // Wallet.disconnect(true);
+      Wallet.disconnect(true);
       localStorage.removeItem("persist:root");
       localStorage.removeItem("access_token");
       state.isLoggedIn = false;
@@ -35,6 +34,7 @@ export const authSlice = createSlice({
       state.data = {};
       state.isAdmin = false;
       state.isArtist = false;
+      state.isArtist = true;
     },
     setArtist: (state, action) => {
       state.isArtist = action.payload.isArtist;
@@ -64,7 +64,6 @@ export const logout = () => (dispatch) => {
   magic.user
     .logout()
     .then(() => {
-      dispatch(disconnect());
       dispatch(_logout());
     })
     .catch((e) => {
@@ -106,7 +105,8 @@ export const loginWithMagicLink =
         headers: {
           "Content-Type": "application/json",
           "x-access-token": "Bearer " + didToken,
-        }
+        },
+        data: { email }
       })
       const { access_token } = data
       localStorage.setItem("access_token", access_token);
