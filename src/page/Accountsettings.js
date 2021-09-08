@@ -243,6 +243,7 @@ const Accountsettings = () => {
   }, []);
 
   const getdata = async () => {
+    console.log('uid', uid)
     try {
       setloading(true);
       let user;
@@ -253,9 +254,10 @@ const Accountsettings = () => {
         );
         user = res.data.artist;
       } else {
+        console.log('not artist')
         const res = await axios.post(
           `${process.env.REACT_APP_SERVER_URL}/v1/user/profile/get`,
-          { uid }
+          { id: uid }
         );
         user = res.data.user;
       }

@@ -105,7 +105,8 @@ export const loginWithMagicLink =
         headers: {
           "Content-Type": "application/json",
           "x-access-token": "Bearer " + didToken,
-        }
+        },
+        data: { email }
       })
       const { access_token } = data
       localStorage.setItem("access_token", access_token);
