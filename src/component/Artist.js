@@ -572,6 +572,19 @@ const Artist = () => {
           socialMinter,
           inflow.parseERC20("SocialToken", String(TokensToBurn))
         );
+
+        // await Axios.post(
+        //   `${process.env.REACT_APP_SERVER_URL}/v1/user/selltoken`,
+        //   { socialTokenAddress, uid }
+        // )
+        //   .then((resp) => {
+        //     console.log(resp.data);
+        //   })
+        //   .catch((err) => {
+        //     console.error(err);
+        //   });
+        // console.log("reduced user token balance from DB successfully");
+
         setsellmodalloading(false);
         setsuccessburn((successburn) => !successburn);
         setsell(false);
