@@ -66,7 +66,7 @@ const Artist = () => {
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
   const [playlistID, setPlaylistID] = useState("529230339");
-  const [mintGateUrl, setMintGateUrl] = useState('')
+  const [mintGateUrl, setMintGateUrl] = useState("");
 
   useEffect(() => {
     if (!wallet.wallet_connected) {
@@ -84,7 +84,10 @@ const Artist = () => {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
         fetchTokenPrice();
-        const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist);
+        const res = await Axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
+          artist
+        );
         setHistoricalData(res.data.priceHistory);
         setLoading(false);
         // const tokenPrice = setInterval(() => {
@@ -95,17 +98,19 @@ const Artist = () => {
         // };
       }
 
-      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`, { id })
-      .then(response => {
-        setMintGateUrl(response.data.mintGatedUrls[0])
-        console.log('response', response)
-      })
+      Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`,
+        { id }
+      ).then((response) => {
+        setMintGateUrl(response.data.mintGatedUrls[0]);
+        console.log("response", response);
+      });
     };
-    console.log('uid', uid);
+    console.log("uid", uid);
     if (uid) {
       return init();
     } else {
-      console.log('NOT LOGGED IN');
+      console.log("NOT LOGGED IN");
       setconnectedwallet(false);
     }
   }, [id, socialTokenAddress, provider]);
@@ -374,7 +379,16 @@ const Artist = () => {
           ).wait();
           setLoading(false);
           setsuccessmint((successmint) => !successmint);
-          // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress })
+          await Axios.post(
+            `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
+            { socialTokenAddress, uid }
+          )
+            .then((resp) => {
+              console.log(resp.data);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
           setInterval(() => {
             // window.location.reload();
             history.go(0);
@@ -395,12 +409,22 @@ const Artist = () => {
         ).wait();
         console.log("MINT SUCCESSFULL");
         console.log({ socialTokenAddress });
+        await Axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
+          { socialTokenAddress, uid }
+        )
+          .then((resp) => {
+            console.log(resp.data);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+        console.log("added user token association to DB successfully");
 
         await updatePriceHistory();
 
         setbuymodalloading(false);
         setsuccessmint((successmint) => !successmint);
-        // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
         // setInterval(() => {
         //     window.location.reload();
         // }, 2000)
@@ -653,27 +677,27 @@ const Artist = () => {
   };
 
   const redirectToTokenGate = async () => {
-      if(mintGateUrl !== ''){
-        window.location.assign(mintGateUrl);
-      }
-  }
+    if (mintGateUrl !== "") {
+      window.location.assign(mintGateUrl);
+    }
+  };
 
   if (loading) {
     return <Loader />;
   }
 
   const updatePriceHistory = async () => {
-
-    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
-        mint_price_history : {
-            price: MintPrice, 
-            timestamp: Date.now()
-            }, 
-        socialTokenAddress, 
-        first_name : artist.first_name,
-        last_name : artist.last_name,
-        social_token_id: artist.social_token_id}); 
-  }
+    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, {
+      mint_price_history: {
+        price: MintPrice,
+        timestamp: Date.now(),
+      },
+      socialTokenAddress,
+      first_name: artist.first_name,
+      last_name: artist.last_name,
+      social_token_id: artist.social_token_id,
+    });
+  };
 
   return (
     <div className="artist-background">
@@ -681,7 +705,8 @@ const Artist = () => {
         <div className="background">
           <img
             alt=""
-            src={artist.banner_image
+            src={
+              artist.banner_image
                 ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}`
                 : null
             }
@@ -736,7 +761,13 @@ const Artist = () => {
             </div>
           </div>
           <div className="artist-tag">
-            <button className="tag-button" onClick={() => redirectToTokenGate()}> UNRELEASED MUSIC VIDEO </button>
+            <button
+              className="tag-button"
+              onClick={() => redirectToTokenGate()}
+            >
+              {" "}
+              UNRELEASED MUSIC VIDEO{" "}
+            </button>
           </div>
         </div>
       </div>
@@ -752,8 +783,7 @@ const Artist = () => {
               <div className="dollar-price">{displayTokenPrice()}</div>
               <div className="small-heading">--</div>
             </div>
-            <div className="btn-filter mt-2">
-            </div>
+            <div className="btn-filter mt-2"></div>
           </div>
           {/* <div className="total-balance-row">
             <div className="token-info">

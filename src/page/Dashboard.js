@@ -38,12 +38,6 @@ const Dashboard = () => {
   const [totalValues, setTotalValues] = useState([]);
   const [profileImages, setProfileImages] = useState([]);
 
-  let tempTokensBought = []; // user's owned token addresses
-  let tempTokenNames = []; // each owned token's artist name
-  let tempTokenBalances = []; // each owned token's balance
-  let tempTokenPrices = []; // each owned token's unit price
-  let tempTokenTotalValues = []; // each owned token's total value (amount * price)
-
   useEffect(() => {
     dispatch(updateActivePage("dashboard"));
   }, []);
@@ -51,9 +45,9 @@ const Dashboard = () => {
     if (!wallet.wallet_connected) {
       setConnectedWallet(false);
     } else {
-      getTokensOwnedByUser();
-      getTokensBalAndPrice();
-      getArtistInfoFromDB();
+      getTokensOwnedByUser(); // complete
+      getTokensBalAndPrice(); // complete
+      getArtistInfoFromDB(); // need to implement
     }
   }, [wallet]);
   useEffect(() => {
@@ -76,45 +70,33 @@ const Dashboard = () => {
   }, [connectedWallet]);
 
   const getTokensOwnedByUser = async () => {
-    console.log("need to implement fetching tokens with magic wallet");
-    // Should we check all tokens in user's wallet
-    // and cross reference with our DB of contracts?
-    // Yes this axios get request fetches all the addresses by user ID RM
-
     await axios
       .post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, {
         uid,
       })
       .then((resp) => {
-        console.log(resp.data);
+        setTokenNames(resp.data.tokenNames);
+        setTokensBought(resp.data.tokensBought);
       })
       .catch((err) => {
         console.error(err);
       });
-    tempTokensBought.push("0x7675a6189ccc1efd89e4239d30afdb2a8c763348"); // LTA
-    tempTokensBought.push("0x5Cfe6cEE86e3799B17746313160169782e7a41F2"); // HFT
   };
 
   const getTokensBalAndPrice = async () => {
-    if (tempTokensBought.length > 0) {
-      const tokenBalances = await Promise.all(
-        tempTokensBought.map(async (token) => {
+    if (tokensBought.length > 0) {
+      const tokenBals = await Promise.all(
+        tokensBought.map(async (token) => {
           const bal = await getTokenBalance(token);
-          // console.log({ token, bal });
 
           if (bal) {
             const tokenPrice = await getTokenPrice(token, bal);
-            tempTokenBalances.push(bal);
-            tempTokenPrices.push(tokenPrice);
-            tempTokenTotalValues.push(tokenPrice * bal);
+            setTokenBalances([...tokenBalances, bal]);
+            setTokenPrices([...tokenPrices, tokenPrice]);
+            setTotalValues([...totalValues, tokenPrice * bal]);
           }
         })
       );
-
-      setTokensBought(tempTokensBought);
-      setTokenBalances(tempTokenBalances);
-      setTotalValues(tempTokenTotalValues);
-      setTokenPrices(tempTokenPrices);
       setIsFetched(true);
     }
   };
@@ -152,20 +134,6 @@ const Dashboard = () => {
           token,
           inflow.parseERC20("SocialToken", "1")
         );
-        // console.log({ singleTokenPrice });
-
-        // const totalBalanceValue = await inflow.getMintPriceSocial(
-        //   token,
-        //   inflow.parseERC20("SocialToken", String(balance))
-        // );
-        // console.log({ totalBalanceValue });
-
-        // const data = {
-        //   singleval: singleTokenPrice[0],
-        //   totalval: totalBalanceValue[0],
-        // };
-        // return data;
-
         return singleTokenPrice[0];
       } catch (error) {
         console.log(error);
@@ -185,9 +153,6 @@ const Dashboard = () => {
           tokenaddress
         );
         return Number(balance[0]);
-        // console.log({ balance });
-        // console.log({ balance: balance[0] })
-        // // console.log(`BALANCE: ${balance[0]}`);
       } catch (err) {
         console.log(err);
       }

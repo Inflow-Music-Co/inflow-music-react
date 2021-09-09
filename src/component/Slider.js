@@ -15,6 +15,7 @@ const Slider = ({ tokenNames, tokenPrices, profileImages }) => {
               <div
                 className="item d-flex flex-column justify-content-center align-items-center w-100 carousel-artist"
                 style={{ height: "300px" }}
+                key={index}
               >
                 <div className="mb-5">
                   <img
