@@ -145,7 +145,7 @@ const LoginModal = (props) => {
           )}
  */}
           <div className="mt-5 mb-0 pb-0 form-group">
-            <div onSubmit={``} className="col-12">
+            <div className="col-12">
               {/* {!forgotPasswordFlag && loginType === "signup" && (
                 <div className="comman-row-input persons-row">
                   <input

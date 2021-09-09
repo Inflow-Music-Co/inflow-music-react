@@ -31,8 +31,8 @@ const Dashboard = () => {
   const walletProvider = useSelector((state) => state.wallet.provider);
   const [connectedWallet, setConnectedWallet] = useState(true);
   const [isFetched, setIsFetched] = useState(false);
-  const [tokensBought, setTokensBought] = useState([]);
-  const [tokenNames, setTokenNames] = useState([]);
+  const [tokenAddresses, setTokenAddresses] = useState([]);
+  const [tokenSymbols, setTokenSymbols] = useState([]);
   const [tokenBalances, setTokenBalances] = useState([]);
   const [tokenPrices, setTokenPrices] = useState([]);
   const [totalValues, setTotalValues] = useState([]);
@@ -46,10 +46,12 @@ const Dashboard = () => {
       setConnectedWallet(false);
     } else {
       getTokensOwnedByUser(); // complete
-      getTokensBalAndPrice(); // complete
-      getArtistInfoFromDB(); // need to implement
     }
   }, [wallet]);
+  useEffect(() => {
+    getTokensBalAndPrice(); // complete
+    getArtistInfoFromDB(); // need to implement
+  }, [tokenAddresses]);
   useEffect(() => {
     !connectedWallet &&
       MySwal.fire({
@@ -68,6 +70,9 @@ const Dashboard = () => {
         }
       });
   }, [connectedWallet]);
+  useEffect(() => {
+    console.log({ tokenBalances, tokenPrices, totalValues });
+  }, [totalValues]);
 
   const getTokensOwnedByUser = async () => {
     await axios
@@ -75,8 +80,10 @@ const Dashboard = () => {
         uid,
       })
       .then((resp) => {
-        setTokenNames(resp.data.tokenNames);
-        setTokensBought(resp.data.tokensBought);
+        console.log("token addresses", resp.data.tokensBought);
+        setTokenAddresses(resp.data.tokensBought);
+        console.log("token symbols", resp.data.tokenNames);
+        setTokenSymbols(resp.data.tokenNames);
       })
       .catch((err) => {
         console.error(err);
@@ -84,21 +91,27 @@ const Dashboard = () => {
   };
 
   const getTokensBalAndPrice = async () => {
-    if (tokensBought.length > 0) {
+    const tempBalances = [];
+    const tempPrices = [];
+    const tempValues = [];
+    setIsFetched(false);
+    if (tokenAddresses.length > 0) {
       const tokenBals = await Promise.all(
-        tokensBought.map(async (token) => {
+        tokenAddresses.map(async (token) => {
           const bal = await getTokenBalance(token);
-
           if (bal) {
             const tokenPrice = await getTokenPrice(token, bal);
-            setTokenBalances([...tokenBalances, bal]);
-            setTokenPrices([...tokenPrices, tokenPrice]);
-            setTotalValues([...totalValues, tokenPrice * bal]);
+            tempBalances.push(bal);
+            tempPrices.push(Number(tokenPrice));
+            tempValues.push(Number(tokenPrice) * bal);
           }
         })
       );
-      setIsFetched(true);
     }
+    setTokenBalances(tempBalances);
+    setTokenPrices(tempPrices);
+    setTotalValues(tempValues);
+    setIsFetched(true);
   };
 
   const getArtistInfoFromDB = () => {
@@ -107,11 +120,11 @@ const Dashboard = () => {
     //   `${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`,
     //   { uid }
     // );
-    // tempTokensBought = data.tokensBought;
-    // setTokenNames(data.tokenNames);
-    // console.log({ tempTokensBought });
+    // tempTokenAddresses = data.tokensBought;
+    // setTokenSymbols(data.tokenNames);
+    // console.log({ tempTokenAddresses });
     //set Profile Images
-    // let imageUrls = tempTokensBought.map((address) => {
+    // let imageUrls = tempTokenAddresses.map((address) => {
     //   if (address) {
     //     const result = address + "_profilePic.jpeg";
     //     return result;
@@ -202,7 +215,7 @@ const Dashboard = () => {
       }, 0);
       const amount = formatBalanceArray(totalValues);
       // console.log({ amount })
-      const names = formatBalanceArray(tokenNames);
+      const names = formatBalanceArray(tokenSymbols);
       // console.log({ names })
       return (
         <div className="common-div-for-pro">
@@ -245,7 +258,7 @@ const Dashboard = () => {
 
   const displayDoughnutChart = () => {
     if (isFetched) {
-      return <Doughnetchart balances={totalValues} tokenNames={tokenNames} />;
+      return <Doughnetchart balances={totalValues} tokenNames={tokenSymbols} />;
     } else {
       return (
         <div className="d-flex justify-content-center align-items-center">
@@ -269,7 +282,7 @@ const Dashboard = () => {
             </div>
             <Slider
               tokenPrices={tokenPrices}
-              tokenNames={tokenNames}
+              tokenNames={tokenSymbols}
               profileImages={profileImages}
             />
           </div>
