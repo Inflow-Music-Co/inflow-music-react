@@ -797,7 +797,6 @@ const Artist = () => {
               <div className="dollar-price">
                 <div className="dollar-price">{displayBalance()}</div>
               </div>
-              <div className="small-heading">Available Balance</div>
             </div>
           </div>
 
