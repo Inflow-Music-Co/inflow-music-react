@@ -318,8 +318,14 @@ const Artist = () => {
   };
 
   const displayBalance = () => {
+    let balanceInUSD = MintPrice * balance;
+    balanceInUSD = balanceInUSD.toFixed
       if (MintPrice && MintPrice !== '') {
-          return <div className="dollar-price">{balance ? `${balance} ${artist.social_token_symbol}` :`$0.0 ${artist.social_token_symbol}`}</div>;
+          return <div className="dollar-price">
+          {balance ? `${balance} ${artist.social_token_symbol}
+          \u00A0\u00A0\u00A0($${MintPrice})` 
+          :`0.0 ${artist.social_token_symbol}`}
+          </div>
       } else {
           return <SmallLoader />;
       }
