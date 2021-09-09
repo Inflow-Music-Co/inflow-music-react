@@ -76,20 +76,21 @@ const Dashboard = () => {
   }, [connectedWallet]);
 
   const getTokensOwnedByUser = async () => {
-
-
     console.log("need to implement fetching tokens with magic wallet");
     // Should we check all tokens in user's wallet
     // and cross reference with our DB of contracts?
     // Yes this axios get request fetches all the addresses by user ID RM
 
-    await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user//gettokensbought`, { uid })
-      .then(resp => {
+    await axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, {
+        uid,
+      })
+      .then((resp) => {
         console.log(resp.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-      })
+      });
     tempTokensBought.push("0x7675a6189ccc1efd89e4239d30afdb2a8c763348"); // LTA
     tempTokensBought.push("0x5Cfe6cEE86e3799B17746313160169782e7a41F2"); // HFT
   };
