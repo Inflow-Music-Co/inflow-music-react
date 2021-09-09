@@ -530,9 +530,10 @@ const Artistpic = () => {
   };
 
   const redirectToTokenGate = async () => {
-      if(mintGateUrl !== ''){
-        window.location.assign(mintGateUrl);
-      }
+      // if(mintGateUrl !== ''){
+      //   window.location.assign(mintGateUrl);
+      // }
+      window.location.assign('https://mgate.io/go/reHFhdDoZ5m_/');
   }
 
   if (loading) {
