@@ -48,7 +48,7 @@ const Artist = () => {
   // const [BurnPrice, setBurnPrice] = useState();
   const [TokensToMint, setTokensToMint] = useState(0);
   const [TokensToBurn, setTokensToBurn] = useState(0);
-  // const [Balance, setBalance] = useState();
+  const [balance, setBalance] = useState();
   const [loading, setLoading] = useState(false);
   const [successmint, setsuccessmint] = useState(false);
   const [successburn, setsuccessburn] = useState(false);
@@ -72,8 +72,9 @@ const Artist = () => {
     if (!wallet.wallet_connected) {
       setconnectedwallet(false);
     }
+
     const init = async () => {
-      // console.log({ provider });
+      console.log({ provider });
       setLoading(true);
       const { data } = await Axios.post(
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
@@ -89,6 +90,7 @@ const Artist = () => {
           artist
         );
         setHistoricalData(res.data.priceHistory);
+        getUserBalance();
         setLoading(false);
         // const tokenPrice = setInterval(() => {
         //   fetchTokenPrice();
@@ -106,7 +108,9 @@ const Artist = () => {
         console.log("response", response);
       });
     };
+    
     console.log("uid", uid);
+    
     if (uid) {
       return init();
     } else {
@@ -252,9 +256,6 @@ const Artist = () => {
   // };
 
   const fetchTokenPrice = async () => {
-    // const provider = new ethers.providers.JsonRpcProvider(
-    //   "https://eth-rinkeby.alchemyapi.io/v2/Oq7yS7NdZbdW-beaojb1-8CuN_mjBpFc"
-    // );
     try {
       if (provider) {
         const inflow = new Inflow(provider, 4);
@@ -310,13 +311,48 @@ const Artist = () => {
     }
   };
 
-  // const displayBalance = () => {
-  //     if (MintPrice && MintPrice !== '') {
-  //         return <div className="dollar-price">{Balance ? Balance : '0.0'}</div>;
-  //     } else {
-  //         return <SmallLoader />;
-  //     }
-  // };
+  const displayBalance = () => {
+      if (MintPrice && MintPrice !== '') {
+          return <div className="dollar-price">{balance ? `${balance} ${artist.social_token_symbol}` :`$0.0 ${artist.social_token_symbol}`}</div>;
+      } else {
+          return <SmallLoader />;
+      }
+  };
+
+  const getUserBalance = async () => {
+    
+    if (provider){
+      const provider = walletProvider;
+      const signer = provider.getSigner();
+
+      console.log('SIGNER', signer )
+
+      const inflow = new Inflow(provider, 4);
+      const signerAddress = await signer.getAddress();
+      const userBalance = await inflow.balanceOf(
+        "SocialToken",
+        signerAddress,
+        socialTokenAddress
+      );
+      
+      setBalance(userBalance[0]);
+
+      //if balance is zero, remove token address from user record in DB
+      if(balance === '0.0'){
+        await Axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/user/selltoken`,
+          { socialTokenAddress, uid }
+        )
+          .then((resp) => {
+            console.log(resp.data);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+        console.log("reduced user token balance from DB successfully");
+      }
+    } 
+  }
 
   // const mint = async (social, usdc, amount) => {
   //     const mintPrice = await social.getMintPrice(amount);
@@ -337,14 +373,12 @@ const Artist = () => {
     if (provider) {
       console.log("wallet provider is true");
       try {
-        // await requestAccount();
-        const signer = provider.getSigner();
-        console.log("bla bla bla <><><><><><><><", socialTokenAddress, signer);
-        const socialMinter = new Contract(
-          socialTokenAddress,
-          SocialToken.abi,
-          signer
-        );
+          const signer = provider.getSigner();
+          const socialMinter = new Contract(
+            socialTokenAddress,
+            SocialToken.abi,
+            signer
+          );
 
         const usdcMinter = new Contract(RINKEBY_MOCKUSDC, MockUSDC.abi, signer);
         console.log({ usdcMinter });
@@ -542,22 +576,16 @@ const Artist = () => {
     if (walletProvider) {
       try {
         setsellmodalloading(true);
-        // await requestAccount();
-        // const provider = new ethers.providers.Web3Provider(
-        //     window.ethereum
-        // );
+       
         const provider = walletProvider;
-        // const admin = new Wallet(
-        //     process.env.REACT_APP_ADMIN_PVT_KEY,
-        //     provider
-        // );
+        
         const signer = provider.getSigner();
         const socialMinter = new Contract(
           socialTokenAddress,
           SocialToken.abi,
           signer
         );
-        // const socialMinter = social.connect(signer);
+
         const inflow = new Inflow(provider, 4);
         const signerAddress = await signer.getAddress();
         const balance = await inflow.balanceOf(
@@ -565,6 +593,7 @@ const Artist = () => {
           signerAddress,
           socialTokenAddress
         );
+
         if (balance[0] < TokensToBurn) {
           setinsufficenttokens(true);
         }
@@ -573,17 +602,8 @@ const Artist = () => {
           inflow.parseERC20("SocialToken", String(TokensToBurn))
         );
 
-        // await Axios.post(
-        //   `${process.env.REACT_APP_SERVER_URL}/v1/user/selltoken`,
-        //   { socialTokenAddress, uid }
-        // )
-        //   .then((resp) => {
-        //     console.log(resp.data);
-        //   })
-        //   .catch((err) => {
-        //     console.error(err);
-        //   });
-        // console.log("reduced user token balance from DB successfully");
+        //check user balance, if zero, remove tokenAddress from DB 
+        getUserBalance();
 
         setsellmodalloading(false);
         setsuccessburn((successburn) => !successburn);
@@ -798,7 +818,7 @@ const Artist = () => {
             </div>
             <div className="btn-filter mt-2"></div>
           </div>
-          {/* <div className="total-balance-row">
+          <div className="total-balance-row">
             <div className="token-info">
               <div className="card-heading">Available Balance</div>
               <div className="dollar-price">
@@ -806,7 +826,7 @@ const Artist = () => {
               </div>
               <div className="small-heading">Available Balance</div>
             </div>
-          </div> */}
+          </div>
 
           <div className="total-bal-chart">
             <TokenChart artist={artist} historicalData={historicalData} />
@@ -1134,7 +1154,7 @@ const Artist = () => {
           )}
           {sellmodalloading && sellflag ? (
             <div className="d-flex justify-content-center align-items-center flex-column">
-              Approve transaction on your wallet provider
+              Processing Transaction Please Wait 
             </div>
           ) : null}
         </Modal.Body>
