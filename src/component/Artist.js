@@ -48,7 +48,7 @@ const Artist = () => {
   // const [BurnPrice, setBurnPrice] = useState();
   const [TokensToMint, setTokensToMint] = useState(0);
   const [TokensToBurn, setTokensToBurn] = useState(0);
-  const [balance, setBalance] = useState();
+  const [balance, setBalance] = useState('');
   const [loading, setLoading] = useState(false);
   const [successmint, setsuccessmint] = useState(false);
   const [successburn, setsuccessburn] = useState(false);
@@ -69,8 +69,14 @@ const Artist = () => {
   const [mintGateUrl, setMintGateUrl] = useState("");
 
   useEffect(() => {
+
     if (!wallet.wallet_connected) {
       setconnectedwallet(false);
+    }
+
+    if (balance !== ''){
+      console.log(balance);
+      getUserBalance();
     }
 
     const init = async () => {
@@ -320,12 +326,9 @@ const Artist = () => {
   };
 
   const getUserBalance = async () => {
-    
     if (provider){
       const provider = walletProvider;
       const signer = provider.getSigner();
-
-      console.log('SIGNER', signer )
 
       const inflow = new Inflow(provider, 4);
       const signerAddress = await signer.getAddress();
@@ -336,9 +339,10 @@ const Artist = () => {
       );
       
       setBalance(userBalance[0]);
+      console.log('BALANCE MFFF', balance)
 
       //if balance is zero, remove token address from user record in DB
-      if(balance === '0.0'){
+      if(balance === undefined || balance === '0.0'){
         await Axios.post(
           `${process.env.REACT_APP_SERVER_URL}/v1/user/selltoken`,
           { socialTokenAddress, uid }
@@ -602,6 +606,8 @@ const Artist = () => {
           inflow.parseERC20("SocialToken", String(TokensToBurn))
         );
 
+        setBalance(balance[0]);
+
         //check user balance, if zero, remove tokenAddress from DB 
         getUserBalance();
 
@@ -619,46 +625,7 @@ const Artist = () => {
     } else {
       setconnectedwallet(false);
     }
-    // if (
-    //     typeof window.ethereum !== 'undefined' &&
-    //     socialTokenAddress &&
-    //     socialTokenAddress !== ''
-    // ) {
-    //     // try {
-    //     //     setsellmodalloading(true);
-    //     //     await requestAccount();
-    //     //     const provider = new ethers.providers.Web3Provider(
-    //     //         window.ethereum
-    //     //     );
-    //     //     // const admin = new Wallet(
-    //     //     //     process.env.REACT_APP_ADMIN_PVT_KEY,
-    //     //     //     provider
-    //     //     // );
-    //     //     const signer = provider.getSigner();
-    //     //     const social = new Contract(
-    //     //         socialTokenAddress,
-    //     //         SocialToken.abi,
-    //     //         signer
-    //     //     );
-    //     //     const socialMinter = social.connect(signer);
-    //     //     const inflow = new Inflow(provider, 80001);
-    //     //     await burn(
-    //     //         socialMinter,
-    //     //         inflow.parseERC20('SocialToken', String(TokensToBurn))
-    //     //     );
-    //     //     setsellmodalloading(false);
-    //     //     setsuccessburn(successburn => !successburn)
-    //     //     setInterval(() => {
-    //     //         window.location.reload();
-    //     //     }, 2000)
-    //     //     // // console.log('BURN SUCCESSFULL');
-    //     //     // getBalance();
-    //     // } catch (err) {
-    //     //     setsellmodalloading(false);
-    //     //     setfailureburn(failureburn => !failureburn)
-    //     //     // // console.log(err);
-    //     // }
-    // }
+   
   };
 
   const fetchtotalburnprice = async () => {
