@@ -175,10 +175,10 @@
 }
 
 .token-chart {
-  margin-top: 100px;
+  margin-top: 15px;
   background: rgb(37, 37, 37);
-  border-radius: 8px;
-  padding: 30px;
+  border-radius: 10px;
+  padding: 10px;
 }
 
 .token-chart .chart-header-row {

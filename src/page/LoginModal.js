@@ -27,6 +27,7 @@ import { connected, setProvider } from "../store/reducers/walletSlice";
 // const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
 
 const LoginModal = (props) => {
+  
   const { login, setLogin } = props;
   WalletProviderContext;
   const MySwal = withReactContent(Swal);
