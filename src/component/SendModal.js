@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     }
 });
 
-const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => {
+const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTokensBalAndPrice }) => {
     
     const MySwal = withReactContent(Swal);
     const [tokenToSend, setTokenToSend] = useState('');
@@ -34,6 +34,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
     const [error, setError] = useState(false);
 
     useEffect(() => {
+      console.log({ tokenMappings })
         successTransfer &&
           MySwal.fire({
             title: <p style={{ color: "white" }}>Transaction Successfull</p>,
@@ -48,7 +49,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
           });
       }, [successTransfer]);
 
-    console.log({ tokenMappings })
     const classes = useStyles();
 
     const sendTransaction = async () => {
@@ -62,7 +62,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
                 tokenAddress = tokenAddress[0].address
                 console.log('tokenAddress', tokenAddress)
                 const signer = provider.getSigner();
-                const signerAddress = signer.getAddress();
                 const amount = ethers.utils.parseUnits(amountToSend);
                 const contract = new ethers.Contract(tokenAddress, SocialToken.abi, signer);
                 setLoading(true);
@@ -71,7 +70,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
                 console.log(transaction);
                 setLoading(false);
                 setSuccessTransfer(true);
-                getBalanceForDbUpdate(tokenAddress);
+                getTokensBalAndPrice();
             } catch (error) {
                 alert(error)
             }  
