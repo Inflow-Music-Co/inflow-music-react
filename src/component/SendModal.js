@@ -34,8 +34,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        successTransfer &&
-          MySwal.fire({
+        successTransfer && MySwal.fire({
             title: <p style={{ color: "white" }}>Transaction Successfull</p>,
             icon: "success",
             customClass: {
@@ -46,7 +45,18 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
           }).then(() => {
             setSuccessTransfer((successTransfer) => !successTransfer);
           });
-      }, [successTransfer]);
+          error && MySwal.fire({
+              title: <p style={{ color: "white" }}>Error Sending Transaction</p>,
+              icon: "error",
+              customClass: {
+                confirmButton: "btn-gradiant",
+              },
+              buttonsStyling: false,
+              background: "#303030",
+            }).then(() => {
+              setError((error) => !error);
+            });
+      }, [successTransfer, error]);
 
     console.log({ tokenMappings })
     const classes = useStyles();
@@ -74,6 +84,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
                 getBalanceForDbUpdate(tokenAddress);
             } catch (error) {
                 alert(error)
+                setError(true)
             }  
           }    
     }

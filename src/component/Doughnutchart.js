@@ -35,10 +35,10 @@ const Doughnutchart = ({ totalValues, tokenSymbols }) => {
         backgroundColor: bgcolor,
         borderColor: bgcolor,
         borderWidth: 0,
-      },
+      }
     ],
   };
-  console.log('DATA', data);
+
   return (
     <Doughnut data={data} />
   )

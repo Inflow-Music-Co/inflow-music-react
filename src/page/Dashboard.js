@@ -45,17 +45,19 @@ const Dashboard = () => {
     dispatch(updateActivePage("dashboard"));
     console.log({ walletProvider })
   }, []);
+  
   useEffect(async () => {
     if (!wallet.wallet_connected) {
       setConnectedWallet(false);
     } else {
-      await getTokensOwnedByUser();
-      createMappings(); 
+      await getTokensOwnedByUser(); 
     }
   }, [wallet]);
-  useEffect(() => {
-    getTokensBalAndPrice(); 
+  
+  useEffect(async () => {
+    await getTokensBalAndPrice(); 
     getArtistInfoFromDB(); // need to implement
+    createMappings();
   }, [tokenAddresses]);
   useEffect(() => {
     !connectedWallet &&
@@ -74,6 +76,7 @@ const Dashboard = () => {
           // setconnectedwallet((connectedwallet) => !connectedwallet);
         }
       });
+      
   }, [connectedWallet]);
   useEffect(() => {
     console.log({ tokenBalances, tokenPrices, totalValues });
@@ -225,6 +228,8 @@ const Dashboard = () => {
     }
     return finalArr;
   };
+
+  
 
   const displayPercentageBalances = () => {
     if (isFetched) {
@@ -450,13 +455,17 @@ const Dashboard = () => {
               </div>
         </div>
       </div>
-      {send ?  <SendModal 
+      {send ? <div> 
+                <SendModal 
                 send={send} 
                 setSend={setSend} 
                 tokenSymbols={tokenSymbols}
                 tokenMappings={tokenMappings}
                 provider={walletProvider}
-                /> : null}
+                /> 
+                <div className="card-heading">Processing Transaction Please Wait </div>
+                </div>
+                : null}
 
       {/* -----------My-NFTs----------------------- */}
       {/* <div className="mynfts-row-main">
