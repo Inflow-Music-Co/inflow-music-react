@@ -50,7 +50,6 @@ const Dashboard = () => {
       setConnectedWallet(false);
     } else {
       await getTokensOwnedByUser();
-      createMappings(); 
     }
   }, [wallet]);
   useEffect(() => {
@@ -103,9 +102,10 @@ const Dashboard = () => {
     let buffer = [];
     tokenAddresses.forEach((address, index) => buffer.push({ address, name : tokenSymbols[index]}));
     setTokenMappings(buffer);
+    console.log({ tokenMappings });
   }
 
-  console.log({ tokenMappings });
+  
 
   const getTokensBalAndPrice = async () => {
     const tempBalances = [];
@@ -124,11 +124,13 @@ const Dashboard = () => {
           }
         })
       );
+      setTokenBalances(tempBalances);
+      console.log({ tokenBalances })
+      setTokenPrices(tempPrices);
+      setTotalValues(tempValues);
+      setIsFetched(true);
+      createMappings(); 
     }
-    setTokenBalances(tempBalances);
-    setTokenPrices(tempPrices);
-    setTotalValues(tempValues);
-    setIsFetched(true);
   };
 
   const getArtistInfoFromDB = () => {
@@ -277,7 +279,7 @@ const Dashboard = () => {
   const displayDoughnutChart = () => {
     if (isFetched && totalValues.length !== 0) {
       console.log({ totalValues });
-      return <Doughnutchart totalValues={totalValues} tokenSymbols={tokenSymbols} />;
+      return <Doughnutchart totalValues={tokenBalances} tokenSymbols={tokenSymbols} />;
     } else {
       return (
         <div className="d-flex justify-content-center align-items-center">
