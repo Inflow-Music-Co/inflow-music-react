@@ -81,7 +81,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
                 console.log(transaction);
                 setLoading(false);
                 setSuccessTransfer(true);
-                getBalanceForDbUpdate(tokenAddress);
             } catch (error) {
                 alert(error)
                 setError(true)
