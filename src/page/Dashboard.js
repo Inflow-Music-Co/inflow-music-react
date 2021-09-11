@@ -36,22 +36,25 @@ const Dashboard = () => {
   const [tokenBalances, setTokenBalances] = useState([]);
   const [tokenPrices, setTokenPrices] = useState([]);
   const [totalValues, setTotalValues] = useState([]);
+  const [tokenMappings, setTokenMappings] = useState({});
   const [profileImages, setProfileImages] = useState([]);
   const [send, setSend] = useState(false);
 
   useEffect(() => {
     setSend(false);
     dispatch(updateActivePage("dashboard"));
+    console.log({ walletProvider })
   }, []);
-  useEffect(() => {
+  useEffect(async () => {
     if (!wallet.wallet_connected) {
       setConnectedWallet(false);
     } else {
-      getTokensOwnedByUser(); // complete
+      await getTokensOwnedByUser();
+      createMappings(); 
     }
   }, [wallet]);
   useEffect(() => {
-    getTokensBalAndPrice(); // complete
+    getTokensBalAndPrice(); 
     getArtistInfoFromDB(); // need to implement
   }, [tokenAddresses]);
   useEffect(() => {
@@ -74,6 +77,7 @@ const Dashboard = () => {
   }, [connectedWallet]);
   useEffect(() => {
     console.log({ tokenBalances, tokenPrices, totalValues });
+    console.log('tokenMappings',tokenMappings);
   }, [totalValues]);
 
   const getTokensOwnedByUser = async () => {
@@ -82,15 +86,25 @@ const Dashboard = () => {
         uid,
       })
       .then((resp) => {
+        console.log(resp.data)
         console.log("token addresses", resp.data.tokensBought);
         setTokenAddresses(resp.data.tokensBought);
         console.log("token symbols", resp.data.tokenNames);
-        setTokenSymbols(resp.data.tokenNames);
+        setTokenSymbols(resp.data.tokenNames);        
       })
       .catch((err) => {
         console.error(err);
       });
   };
+
+  //create mapping of addresses to Token names
+  const createMappings = () => {
+    let buffer = [];
+    tokenAddresses.forEach((address, index) => buffer.push({ address, name : tokenSymbols[index]}));
+    setTokenMappings(buffer);
+  }
+
+  console.log({ tokenMappings });
 
   const getTokensBalAndPrice = async () => {
     const tempBalances = [];
@@ -394,7 +408,6 @@ const Dashboard = () => {
               console.log(send);
               }}
             style={{margin : 10}}>
-            <div>{`${send}`}</div>
               Send Tokens & NFTs
           </Button>
           <Button variant="contained" size="medium" color="primary ">
@@ -435,7 +448,13 @@ const Dashboard = () => {
               </div>
         </div>
       </div>
-      {send ? <SendModal send={send} setSend={setSend} tokenSymbols={tokenSymbols}/> : null}
+      {send ?  <SendModal 
+                send={send} 
+                setSend={setSend} 
+                tokenSymbols={tokenSymbols}
+                tokenMappings={tokenMappings}
+                provider={walletProvider}
+                /> : null}
 
       {/* -----------My-NFTs----------------------- */}
       {/* <div className="mynfts-row-main">

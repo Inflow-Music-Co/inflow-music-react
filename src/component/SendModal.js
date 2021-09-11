@@ -1,9 +1,16 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { Modal } from "react-bootstrap";
 import Button from '@material-ui/core/Button'
 import Select from '@material-ui/core/Select'
+import SmallLoader from "./SmallLoader";
 import MenuItem from '@material-ui/core/MenuItem'
+import { Contract, ethers } from "ethers";
+import Loader from "./Loader";
+import { useSelector } from "react-redux";
+import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const useStyles = makeStyles({
     select: {
@@ -16,12 +23,62 @@ const useStyles = makeStyles({
     }
 });
 
-const SendModal = ({ tokenSymbols, send, setSend }) => {
+const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => {
+    
+    const MySwal = withReactContent(Swal);
+    const [tokenToSend, setTokenToSend] = useState('');
+    const [recipientAddress, setRecipientAddress] = useState('');
+    const [amountToSend, setAmountToSend] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [successTransfer, setSuccessTransfer] = useState(false);
 
+    useEffect(() => {
+        successTransfer &&
+          MySwal.fire({
+            title: <p style={{ color: "white" }}>Transaction Successfull</p>,
+            icon: "success",
+            customClass: {
+              confirmButton: "btn-gradiant",
+            },
+            buttonsStyling: false,
+            background: "#303030",
+          }).then(() => {
+            setSuccessTransfer((successTransfer) => !successTransfer);
+          });
+      }, [successTransfer]);
+
+    console.log({ tokenMappings })
     const classes = useStyles();
 
-    const handleChange = () => {
+    const sendTransaction = async () => {
+        if (!provider) {
+            alert("Please log in");
+            return;
+        } else {
+            try {
+                console.log({ tokenMappings })
+                let tokenAddress = tokenMappings.filter(key => key.name === tokenToSend)
+                tokenAddress = tokenAddress[0].address
+                console.log('tokenAddress', tokenAddress)
+                const signer = provider.getSigner();
+                const signerAddress = signer.getAddress();
+                const amount = ethers.utils.parseUnits(amountToSend);
+                const contract = new ethers.Contract(tokenAddress, SocialToken.abi, signer);
+                setLoading(true);
+                const transaction = await contract.transfer(signerAddress, amount);  
+                await transaction.wait();
+                console.log(transaction);
+                setLoading(false);
+                setSuccessTransfer(true);
+                getBalanceForDbUpdate(tokenAddress);
+            } catch (error) {
+                alert(error)
+            }  
+          }    
+    }
 
+    const getBalanceForDbUpdate = async (tokenAddress) => {
+      
     }
 
     return (
@@ -39,7 +96,7 @@ const SendModal = ({ tokenSymbols, send, setSend }) => {
                     label="social token"
                     labelId="simple-select-outlined-label"
                     id="simple-select-outlined"
-                    onChange={handleChange}
+                    onChange={(e) => setTokenToSend(e.target.value)}
                     style={{minWidth: 150}}
                     disableUnderline
                     variant="filled">
@@ -53,7 +110,8 @@ const SendModal = ({ tokenSymbols, send, setSend }) => {
                         <input
                           placeholder="address"
                           type="text"
-                          name="address"     
+                          name="address" 
+                          onChange={(e) => setRecipientAddress(e.target.value)}    
                         />
                       </div>
                     </div>
@@ -64,17 +122,25 @@ const SendModal = ({ tokenSymbols, send, setSend }) => {
                         <input
                           placeholder="amount"
                           type="number"
-                          name="address"     
+                          name="address"
+                          onChange={(e) => setAmountToSend(e.target.value)}     
                         />
                       </div>
                     </div>
                   </div>
                 </Modal.Body>
-        
                 <Modal.Footer>
-                  <Button variant="contained" color="secondary" size="large">
+                {loading ? 
+                    <div className="d-flex justify-content-center align-items-center flex-column">
+                    <SmallLoader />
+                    </div> : <Button 
+                    variant="contained" 
+                    color="secondary" 
+                    size="large"
+                    onClick={sendTransaction}>
                         Send Transaction
-                  </Button>
+                  </Button>}
+                  
                 </Modal.Footer>
               </Modal>
             </>

@@ -425,8 +425,11 @@ const Artist = () => {
           setsuccessmint((successmint) => !successmint);
           await Axios.post(
             `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
-            { socialTokenAddress, uid }
-          )
+            { 
+              socialTokenAddress,
+              symbol : artist.social_token_symbol ,
+              uid 
+            })
             .then((resp) => {
               console.log(resp.data);
             })
