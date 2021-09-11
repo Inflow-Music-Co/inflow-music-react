@@ -31,6 +31,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
     const [amountToSend, setAmountToSend] = useState('');
     const [loading, setLoading] = useState(false);
     const [successTransfer, setSuccessTransfer] = useState(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         successTransfer &&
@@ -65,7 +66,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
                 const amount = ethers.utils.parseUnits(amountToSend);
                 const contract = new ethers.Contract(tokenAddress, SocialToken.abi, signer);
                 setLoading(true);
-                const transaction = await contract.transfer(signerAddress, amount);  
+                const transaction = await contract.transfer(recipientAddress, amount);  
                 await transaction.wait();
                 console.log(transaction);
                 setLoading(false);
@@ -78,7 +79,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
     }
 
     const getBalanceForDbUpdate = async (tokenAddress) => {
-      
+      //TODO if balance on token is zero. removes token, should be able to reuse controller. 
     }
 
     return (

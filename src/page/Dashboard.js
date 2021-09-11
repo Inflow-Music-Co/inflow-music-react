@@ -99,6 +99,7 @@ const Dashboard = () => {
 
   //create mapping of addresses to Token names
   const createMappings = () => {
+    console.log('createMappings called')
     let buffer = [];
     tokenAddresses.forEach((address, index) => buffer.push({ address, name : tokenSymbols[index]}));
     setTokenMappings(buffer);
@@ -166,6 +167,7 @@ const Dashboard = () => {
         return singleTokenPrice[0];
       } catch (error) {
         console.log(error);
+        setError(true);
       }
     }
   };
