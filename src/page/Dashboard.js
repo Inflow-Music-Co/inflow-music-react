@@ -86,7 +86,7 @@ const Dashboard = () => {
   const getTokensOwnedByUser = async () => {
     await axios
       .post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, {
-        uid,
+        uid
       })
       .then((resp) => {
         console.log(resp.data)

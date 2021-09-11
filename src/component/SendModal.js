@@ -89,10 +89,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend }) => 
           }    
     }
 
-    const getBalanceForDbUpdate = async (tokenAddress) => {
-      //TODO if balance on token is zero. removes token, should be able to reuse controller. 
-    }
-
     return (
             <>
               <Modal
