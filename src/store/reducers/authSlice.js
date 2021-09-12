@@ -3,7 +3,7 @@ import Wallet from "../../utils/wallet";
 import axios from "axios";
 import { Magic } from "magic-sdk";
 import jwt_decode from "jwt-decode";
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY);
 
 export const authSlice = createSlice({
   name: "auth",

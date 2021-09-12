@@ -33,7 +33,7 @@ const Mydashboard = () => {
   const [totalValues, setTotalValues] = useState([]);
   const [profileImages, setProfileImages] = useState([]);
 
-  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
     network: "rinkeby",
   });
   const magicLinkProvider = new ethers.providers.Web3Provider(
