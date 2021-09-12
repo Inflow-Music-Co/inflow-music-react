@@ -93,7 +93,8 @@ const Dashboard = () => {
         console.log("token addresses", resp.data.tokensBought);
         setTokenAddresses(resp.data.tokensBought);
         console.log("token symbols", resp.data.tokenNames);
-        setTokenSymbols(resp.data.tokenNames);        
+        setTokenSymbols(resp.data.tokenNames);  
+        createMappings();      
       })
       .catch((err) => {
         console.error(err);
@@ -132,8 +133,7 @@ const Dashboard = () => {
       console.log({ tokenBalances })
       setTokenPrices(tempPrices);
       setTotalValues(tempValues);
-      setIsFetched(true);
-      createMappings(); 
+      setIsFetched(true); 
     }
   };
 
@@ -465,10 +465,15 @@ const Dashboard = () => {
                 tokenSymbols={tokenSymbols}
                 tokenMappings={tokenMappings}
                 provider={walletProvider}
+<<<<<<< HEAD
                 /> 
                 <div className="card-heading">Processing Transaction Please Wait </div>
                 </div>
                 : null}
+=======
+                getTokensBalAndPrice={getTokensBalAndPrice}
+                /> : null}
+>>>>>>> melkonian_dev
 
       {/* -----------My-NFTs----------------------- */}
       {/* <div className="mynfts-row-main">
