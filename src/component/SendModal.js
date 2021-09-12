@@ -34,8 +34,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        successTransfer && MySwal.fire({
-      console.log({ tokenMappings })
         successTransfer &&
           MySwal.fire({
             title: <p style={{ color: "white" }}>Transaction Successfull</p>,

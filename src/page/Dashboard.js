@@ -465,7 +465,6 @@ const Dashboard = () => {
                 tokenSymbols={tokenSymbols}
                 tokenMappings={tokenMappings}
                 provider={walletProvider}
-<<<<<<< HEAD
                 /> 
                 <div className="card-heading">Processing Transaction Please Wait </div>
                 </div>
