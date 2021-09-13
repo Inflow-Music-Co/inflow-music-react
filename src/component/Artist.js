@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import TokenChart from "./TokenChart";
 import Swal from "sweetalert2";
+import { Link } from 'react-router-dom';
 import withReactContent from "sweetalert2-react-content";
 
 // import { Link } from '@material-ui/core';
@@ -67,6 +68,8 @@ const Artist = () => {
   const [historicalData, setHistoricalData] = useState([]);
   const [playlistID, setPlaylistID] = useState("529230339");
   const [mintGateUrl, setMintGateUrl] = useState("");
+  const [inflowGatedUrl, setInflowGatedUrl] = useState('');
+  const [requiredBalance, setRequiredBalance] = useState('');
 
   useEffect(() => {
 
@@ -107,11 +110,14 @@ const Artist = () => {
       }
 
       Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`,
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,
         { id }
       ).then((response) => {
-        setMintGateUrl(response.data.mintGatedUrls[0]);
-        console.log("response", response);
+        console.log('INFLOW GATED RESPONSE', response);
+        setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
+        setRequiredBalance(response.data.inflowGatedUrls[0].balance)
+        console.log({ inflowGatedUrl })
+        console.log({ requiredBalance });
       });
     };
     
@@ -686,8 +692,7 @@ const Artist = () => {
   };
 
   const redirectToTokenGate = async () => {
-    if (mintGateUrl !== "") {
-      window.location.assign(mintGateUrl);
+    if (inflowGatedUrl !== "") {
     }
   };
 
@@ -770,13 +775,13 @@ const Artist = () => {
             </div>
           </div>
           <div className="artist-tag">
+            <Link to={`/${inflowGatedUrl}`}>
             <button
               className="tag-button"
-              onClick={() => redirectToTokenGate()}
             >
-              {" "}
               UNRELEASED MUSIC VIDEO{" "}
             </button>
+            </Link>
           </div>
         </div>
       </div>

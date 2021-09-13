@@ -19,9 +19,7 @@ const Inflowmusic = () => {
                 setloading(true)
                 const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
                 setArtists(data.artists)
-
                 setloading(false);
-
             } catch (e) {
                 setloading(false);
             }
@@ -35,7 +33,6 @@ const Inflowmusic = () => {
             return artists.map((artist, i) => {
                 return (<Link to={`/artist/${artist._id}`} key={i}>
                     <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name} ${artist.last_name}`} />
-                    <div></div>
                 </Link>)
             })
         }
@@ -52,27 +49,6 @@ const Inflowmusic = () => {
                 <div className="artist-heading">Featured Artists</div>
                 <div className="grid-for-artist">
                     {artists ? displayArtists() : null}
-                    {/* <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link>
-                    <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link>
-                    <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link>
-                    <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link>
-                    <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link>
-                    <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link>
-                    <Link to="/artist">
-                        <Artistpic imglink={assetsImages.artist} />
-                    </Link> */}
                 </div>
                 <div className="see-all-artist">
                     <a href="#">See All Artists</a>

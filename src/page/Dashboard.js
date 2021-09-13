@@ -465,14 +465,11 @@ const Dashboard = () => {
                 tokenSymbols={tokenSymbols}
                 tokenMappings={tokenMappings}
                 provider={walletProvider}
+                getTokensBalAndPrice={getTokensBalAndPrice}
                 /> 
                 <div className="card-heading">Processing Transaction Please Wait </div>
                 </div>
-                : null}
-=======
-                getTokensBalAndPrice={getTokensBalAndPrice}
-                /> : null}
->>>>>>> melkonian_dev
+                 : null}
 
       {/* -----------My-NFTs----------------------- */}
       {/* <div className="mynfts-row-main">
