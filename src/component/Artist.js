@@ -67,9 +67,9 @@ const Artist = () => {
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
   const [playlistID, setPlaylistID] = useState("529230339");
-  const [mintGateUrl, setMintGateUrl] = useState("");
   const [inflowGatedUrl, setInflowGatedUrl] = useState('');
-  const [requiredBalance, setRequiredBalance] = useState('');
+  const [requiredBalance, setRequiredBalance] = useState();
+  const [encodedUrl, setEncodedUrl] = useState('');
 
   useEffect(() => {
 
@@ -114,14 +114,12 @@ const Artist = () => {
         { id }
       ).then((response) => {
         console.log('INFLOW GATED RESPONSE', response);
+        console.log('encodedOriginalUrl', response.data.inflowGatedUrls[0].encodedOrignalUrl);
+        setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
         setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
-        setRequiredBalance(response.data.inflowGatedUrls[0].balance)
-        console.log({ inflowGatedUrl })
-        console.log({ requiredBalance });
+        setRequiredBalance(response.data.inflowGatedUrls[0].balance);
       });
     };
-    
-    console.log("uid", uid);
     
     if (uid) {
       return init();
@@ -241,32 +239,6 @@ const Artist = () => {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-  // const getBalance = async () => {
-  //     if (
-  //         typeof window.ethereum !== 'undefined' &&
-  //         socialTokenAddress &&
-  //         socialTokenAddress !== ''
-  //     ) {
-  //         try {
-  // const provider = new ethers.providers.Web3Provider(
-  //     window.ethereum
-  // );
-  // const signer = provider.getSigner();
-  // const signerAddress = await signer.getAddress();
-  // const inflow = new Inflow(provider, 80001);
-  // const balance = await inflow.balanceOf(
-  //     'SocialToken',
-  //     signerAddress,
-  //     socialTokenAddress
-  // );
-  // setBalance(balance[0]);
-  //             // // console.log(`BALANCE: ${balance[0]}`);
-  //         } catch (err) {
-  //             // // console.log(err);
-  //         }
-  //     }
-  // };
-
   const fetchTokenPrice = async () => {
     try {
       if (provider) {
@@ -285,30 +257,6 @@ const Artist = () => {
       errcode = err.code;
     }
   };
-
-  // const fetchBurnPrice = async () => {
-  //     if (
-  //         typeof window.ethereum !== 'undefined' &&
-  //         socialTokenAddress &&
-  //         socialTokenAddress !== ''
-  //     ) {
-  //         try {
-  //             // await requestAccount();
-  //             const provider = new ethers.providers.Web3Provider(
-  //                 window.ethereum
-  //             );
-  //             const inflow = new Inflow(provider, 80001);
-  //             const burnPrice = await inflow.getBurnPriceSocial(
-  //                 socialTokenAddress,
-  //                 inflow.parseERC20('SocialToken', '1')
-  //             );
-  //             setBurnPrice(burnPrice[0]);
-  //             // // console.log(`BURN PRICE: ${burnPrice[0]}`);
-  //         } catch (err) {
-  //             // // console.log(err);
-  //         }
-  //     }
-  // };
 
   const displayTokenPrice = () => {
     if (MintPrice && MintPrice !== "") {
@@ -369,14 +317,6 @@ const Artist = () => {
       }
     } 
   }
-
-  // const mint = async (social, usdc, amount) => {
-  //     const mintPrice = await social.getMintPrice(amount);
-  //     await (await usdc.mint(mintPrice)).wait(); // this line to be removed if the balance of usdc wallet issue is fixed
-  //     await (await usdc.approve(social.address, mintPrice)).wait();
-  //     await (await social.mint(amount)).wait();
-  //     return mintPrice;
-  // };
 
   const buyTokens = async () => {
     console.log(socialTokenAddress);
@@ -492,97 +432,6 @@ const Artist = () => {
     } else {
       setconnectedwallet(false);
     }
-    // if (
-    //     typeof window.ethereum !== 'undefined' &&
-    //     socialTokenAddress &&
-    //     socialTokenAddress !== ''
-    // ) {
-    //     // try {
-    //     //     // // console.log("HEERREE")
-    //     //     await requestAccount();
-    //     //     const provider = new ethers.providers.Web3Provider(
-    //     //         window.ethereum
-    //     //     );
-    //     //     // const admin = new Wallet(
-    //     //     //     process.env.REACT_APP_ADMIN_PVT_KEY,
-    //     //     //     provider
-    //     //     // );
-    //     //     const signer = provider.getSigner();
-    //     //     const social = new Contract(
-    //     //         socialTokenAddress,
-    //     //         SocialToken.abi,
-    //     //         signer
-    //     //     );
-    //     //     const socialMinter = social.connect(signer);
-    //     //     const usdc = new Contract(
-    //     //         MOCKUSDC,
-    //     //         MockUSDC.abi,
-    //     //         signer
-    //     //     );
-    //     //     const usdcMinter = usdc.connect(signer);
-    //     //     const inflow = new Inflow(provider, 80001);
-    //     //     setbuymodalloading(true);
-    //     //     const signerAddress = await signer.getAddress();
-    //     //     const usdcBalance = await inflow.balanceOf(
-    //     //         'USDC',
-    //     //         signerAddress
-    //     //     );
-    //     //     await fetchTokenPrice();
-    //     //     if (parseFloat(usdcBalance[0]) < parseFloat(totalmintprice)) {
-    //     //         // // console.log("HELLO")
-    //     //         setLoading(false)
-    //     //         setlessusdc((lessusdc) => !lessusdc);
-    //     //         return;
-    //     //     }
-    //     //     const allowance = await inflow.allowance(
-    //     //         'SocialToken',
-    //     //         socialTokenAddress,
-    //     //         signer.getAddress(),
-    //     //         socialTokenAddress
-    //     //     );
-    //     //     // // console.log({ allowance });
-    //     //     if (parseFloat(allowance) > parseFloat(totalmintprice)) {
-    //     //         // // console.log('ALLOWANCE GREATER SO MINTING DIRECTLY');
-    //     //         await (
-    //     //             await socialMinter.mint(
-    //     //                 inflow.parseERC20(
-    //     //                     'SocialToken',
-    //     //                     String(TokensToMint)
-    //     //                 )
-    //     //             )
-    //     //         ).wait();
-    //     //         setLoading(false)
-    //     //         setsuccessmint(successmint => !successmint)
-    //     //         setInterval(() => {
-    //     //             window.location.reload();
-    //     //         }, 2000)
-    //     //         return;
-    //     //     }
-    //     //     const mintPrice = await socialMinter.getMintPrice(
-    //     //         inflow.parseERC20('SocialToken', String(TokensToMint))
-    //     //     );
-    //     //     // // console.log('ALLOWANCE LESS SO GETTING APPROVAL');
-    //     //     await (
-    //     //         await usdcMinter.approve(socialMinter.address, mintPrice)
-    //     //     ).wait();
-    //     //     await (
-    //     //         await socialMinter.mint(
-    //     //             inflow.parseERC20('SocialToken', String(TokensToMint))
-    //     //         )
-    //     //     ).wait();
-    //     //     // // console.log('MINT SUCCESSFULL');
-    //     //     setbuymodalloading(false);
-    //     //     setsuccessmint(successmint => !successmint)
-    //     //     setInterval(() => {
-    //     //         window.location.reload();
-    //     //     }, 2000)
-    //     //     // getBalance();
-    //     // } catch (err) {
-    //     //     setbuymodalloading(false);
-    //     //     setfailuremint(failuremint => !failuremint)
-    //     //     // // console.log(err);
-    //     // }
-    // }
   };
 
   const burn = async (social, amount) => {
@@ -775,13 +624,21 @@ const Artist = () => {
             </div>
           </div>
           <div className="artist-tag">
-            <Link to={`/${inflowGatedUrl}`}>
+          {requiredBalance ?
+            <Link to={
+              {
+                pathname: `/${inflowGatedUrl}`,
+                requiredBalance : requiredBalance,
+                address : socialTokenAddress,
+                encodedUrl : encodedUrl 
+              }
+              }>
             <button
               className="tag-button"
             >
               UNRELEASED MUSIC VIDEO{" "}
             </button>
-            </Link>
+            </Link> : <SmallLoader> <div>loading</div> </SmallLoader>}
           </div>
         </div>
       </div>
