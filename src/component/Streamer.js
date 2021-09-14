@@ -6,30 +6,27 @@ const cryptr = new Cryptr(process.env.REACT_APP_CRYPTR_SECRET)
 
 const Streamer = ({ encodedUrl }) => {
 
-    let decodedUrl = '';
+    const [decodedOriginalUrl, setDecodedOriginalUrl] = useState('');
     const [view, setView] = useState(false);
 
     useEffect(() => {
-       decodedUrl = cryptr.decrypt(encodedUrl);
+        setDecodedOriginalUrl(cryptr.decrypt(encodedUrl));
     },[view])
 
     useEffect(() => {
-        if(decodedUrl !== ''){
+        console.log('decodedOriginalUrl', decodedOriginalUrl, 'view', view);
+        if(decodedOriginalUrl !== ''){
             setView(true);
-            
         }
     })
-    
-    decodedUrl = cryptr.encrypt(decodedUrl)
 
     return (
         <div className="dashboard-wrapper-main">
         {view ? <ReactPlayer 
-            url={`${decodedUrl}`}
-            controls="false"
+            url={`${decodedOriginalUrl}`}
             config={{
                 youtube: {
-                    playerVars: { disablekb: 0}
+                    playerVars: { showinfo: 0}
                 }
             }} /> : <div> please wait </div>}
         </div>
