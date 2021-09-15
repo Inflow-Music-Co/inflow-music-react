@@ -70,6 +70,7 @@ const Artist = () => {
   const [inflowGatedUrl, setInflowGatedUrl] = useState('');
   const [requiredBalance, setRequiredBalance] = useState();
   const [encodedUrl, setEncodedUrl] = useState('');
+  const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
 
   useEffect(() => {
 
@@ -93,6 +94,7 @@ const Artist = () => {
       if (data.artist) {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
+        setArtistTokenSymbol(data.artist.social_token_symbol);
         fetchTokenPrice();
         const res = await Axios.post(
           `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
@@ -113,11 +115,11 @@ const Artist = () => {
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,
         { id }
       ).then((response) => {
-        console.log('INFLOW GATED RESPONSE', response);
-        console.log('encodedOriginalUrl', response.data.inflowGatedUrls[0].encodedOrignalUrl);
-        setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
-        setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
-        setRequiredBalance(response.data.inflowGatedUrls[0].balance);
+        if(response.data.inflowGatedUrls[0]){
+          setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
+          setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
+          setRequiredBalance(response.data.inflowGatedUrls[0].balance);          
+        }
       });
     };
     
@@ -299,7 +301,6 @@ const Artist = () => {
       );
       
       setBalance(userBalance[0]);
-      console.log('BALANCE MFFF', balance)
 
       //if balance is zero, remove token address from user record in DB
       if(balance === undefined || balance === '0.0'){
@@ -373,8 +374,8 @@ const Artist = () => {
             `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
             { 
               socialTokenAddress,
-              symbol : artist.social_token_symbol ,
-              uid 
+              uid,
+              symbol : artistTokenSymbol 
             })
             .then((resp) => {
               console.log(resp.data);
@@ -401,10 +402,15 @@ const Artist = () => {
           )
         ).wait();
         console.log("MINT SUCCESSFULL");
-        console.log({ socialTokenAddress });
+        console.log('ARTIST SYMBOL', artist.social_token_symbol)
         await Axios.post(
           `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
-          { socialTokenAddress, uid }
+          { 
+            socialTokenAddress, 
+            uid,
+            symbol : artistTokenSymbol,
+            mintPrice :  MintPrice      
+           }
         )
           .then((resp) => {
             console.log(resp.data);

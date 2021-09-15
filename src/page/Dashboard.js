@@ -23,6 +23,7 @@ import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
 
 const Dashboard = () => {
+
   const dispatch = useDispatch();
   // const { walletProvider } = useContext(WalletProviderContext);
   const MySwal = withReactContent(Swal);
@@ -31,34 +32,30 @@ const Dashboard = () => {
   const walletProvider = useSelector((state) => state.wallet.provider);
   const [connectedWallet, setConnectedWallet] = useState(true);
   const [isFetched, setIsFetched] = useState(false);
-  const [tokenAddresses, setTokenAddresses] = useState([]);
-  const [tokenSymbols, setTokenSymbols] = useState([]);
   const [tokenBalances, setTokenBalances] = useState([]);
   const [tokenPrices, setTokenPrices] = useState([]);
+  const [tokenAddresses, setTokenAddresses] = useState([]);
   const [totalValues, setTotalValues] = useState([]);
+  const [tokenSymbols, setTokenSymbols] = useState([]);
   const [tokenMappings, setTokenMappings] = useState({});
   const [profileImages, setProfileImages] = useState([]);
   const [send, setSend] = useState(false);
 
-  useEffect(() => {
-    setSend(false);
-    dispatch(updateActivePage("dashboard"));
-    console.log({ walletProvider })
-  }, []);
-  
   useEffect(async () => {
     if (!wallet.wallet_connected) {
       setConnectedWallet(false);
     } else {
+      setSend(false);
+      dispatch(updateActivePage("dashboard"));
       await getTokensOwnedByUser();
     }
-  }, [wallet]);
-  
+  }, []);
+
   useEffect(async () => {
-    await getTokensBalAndPrice(); 
-    getArtistInfoFromDB(); // need to implement
-    createMappings();
-  }, [tokenAddresses]);
+      await getTokensBalAndPrice();
+      setIsFetched(true);
+  },[tokenAddresses])
+
   useEffect(() => {
     !connectedWallet &&
       MySwal.fire({
@@ -78,10 +75,6 @@ const Dashboard = () => {
       });
       
   }, [connectedWallet]);
-  useEffect(() => {
-    console.log({ tokenBalances, tokenPrices, totalValues });
-    console.log('tokenMappings',tokenMappings);
-  }, [totalValues]);
 
   const getTokensOwnedByUser = async () => {
     await axios
@@ -90,29 +83,37 @@ const Dashboard = () => {
       })
       .then((resp) => {
         console.log(resp.data)
-        console.log("token addresses", resp.data.tokensBought);
-        setTokenAddresses(resp.data.tokensBought);
-        console.log("token symbols", resp.data.tokenNames);
-        setTokenSymbols(resp.data.tokenNames);  
-        createMappings();      
+        mapAndFilter(resp.data.tokensBought)     
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
-  //create mapping of addresses to Token names
-  const createMappings = () => {
-    console.log('createMappings called')
-    let buffer = [];
-    tokenAddresses.forEach((address, index) => buffer.push({ address, name : tokenSymbols[index]}));
-    setTokenMappings(buffer);
-    console.log({ tokenMappings });
+  const mapAndFilter = (buys) => {
+    let tempAddresses = [];
+    let tempSymbols = [];
+    let filtered = [];
+    buys.forEach(buy => {
+      if(buy.address && buy.symbol){
+        tempAddresses.push(buy.address);
+        tempSymbols.push(buy.symbol)
+      }
+    });
+    const noDuplicateAddresses = tempAddresses.filter((value, index) => tempAddresses.indexOf(value) === index);
+    const noDuplicateSymbols = tempSymbols.filter((value, index) => tempSymbols.indexOf(value) === index)
+    noDuplicateAddresses.forEach((address, index) => {
+      filtered.push({ address, symbol : noDuplicateSymbols[index]})
+    })
+    console.log(filtered);
+    setTokenMappings(filtered);
+    setTokenSymbols(noDuplicateSymbols);
+    setTokenAddresses(noDuplicateAddresses);
   }
 
-  
-
   const getTokensBalAndPrice = async () => {
+    console.log('getTokensBalAndPrice fired')
+    console.log({ tokenAddresses });
     const tempBalances = [];
     const tempPrices = [];
     const tempValues = [];
@@ -130,9 +131,9 @@ const Dashboard = () => {
         })
       );
       setTokenBalances(tempBalances);
-      console.log({ tokenBalances })
       setTokenPrices(tempPrices);
       setTotalValues(tempValues);
+      console.log('totalValues', totalValues);
       setIsFetched(true); 
     }
   };
@@ -240,9 +241,7 @@ const Dashboard = () => {
         return a + b;
       }, 0);
       const amount = formatBalanceArray(totalValues);
-      // console.log({ amount })
       const names = formatBalanceArray(tokenSymbols);
-      // console.log({ names })
       return (
         <div className="common-div-for-pro">
           {amount.map((item, index) => {
@@ -283,8 +282,8 @@ const Dashboard = () => {
   };
 
   const displayDoughnutChart = () => {
+    console.log({ totalValues })
     if (isFetched && totalValues.length !== 0) {
-      console.log({ totalValues });
       return <Doughnutchart totalValues={tokenBalances} tokenSymbols={tokenSymbols} />;
     } else {
       return (
@@ -294,6 +293,9 @@ const Dashboard = () => {
       );
     }
   };
+
+  displayDoughnutChart();
+  displayTotalValue();
 
   return (
     <div className="dashboard-wrapper-main">
@@ -307,11 +309,11 @@ const Dashboard = () => {
                 <img alt="" src={assetsImages.filter} />
               </a>
             </div>
-            <Slider
+            {/* <Slider
               tokenPrices={tokenPrices}
-              tokenNames={tokenSymbols}
+              tokenNames={tokenData}
               profileImages={profileImages}
-            />
+            /> */}
           </div>
           <div className="below-row">
             <div className="date-row-main">
@@ -376,7 +378,9 @@ const Dashboard = () => {
           </div>
 
           <div className="artist-holdings">
-            <div className="chart-row">{displayDoughnutChart()}</div>
+            <div className="chart-row"></div>
+            {isFetched ?  <div className="chart-row">{displayDoughnutChart()}</div> : null}
+
             {/* <div className="chart-row">{displayPercentageBalances()}</div> */}
 
             <div className="artist-holdings-total m-auto col-12 d-flex align-items-center">
@@ -462,7 +466,6 @@ const Dashboard = () => {
                 <SendModal 
                 send={send} 
                 setSend={setSend} 
-                tokenSymbols={tokenSymbols}
                 tokenMappings={tokenMappings}
                 provider={walletProvider}
                 getTokensBalAndPrice={getTokensBalAndPrice}

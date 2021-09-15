@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTokensBalAndPrice }) => {
     
     const MySwal = withReactContent(Swal);
+    const [addresses, setAddresses] = useState([]);
     const [tokenToSend, setTokenToSend] = useState('');
     const [recipientAddress, setRecipientAddress] = useState('');
     const [amountToSend, setAmountToSend] = useState('');
@@ -65,13 +66,9 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
             return;
         } else {
             try {
-                console.log({ tokenMappings })
-                let tokenAddress = tokenMappings.filter(key => key.name === tokenToSend)
-                tokenAddress = tokenAddress[0].address
-                console.log('tokenAddress', tokenAddress)
                 const signer = provider.getSigner();
                 const amount = ethers.utils.parseUnits(amountToSend);
-                const contract = new ethers.Contract(tokenAddress, SocialToken.abi, signer);
+                const contract = new ethers.Contract(tokenToSend, SocialToken.abi, signer);
                 setLoading(true);
                 const transaction = await contract.transfer(recipientAddress, amount);  
                 await transaction.wait();
@@ -105,8 +102,8 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
                     style={{minWidth: 150}}
                     disableUnderline
                     variant="filled">
-                    {tokenSymbols.map((symbol, index) => {
-                        return <MenuItem value={symbol} key={index}>{symbol}</MenuItem>
+                    {tokenMappings.map((pair, index) => {
+                        return <MenuItem value={pair.address} key={index}>{pair.symbol}</MenuItem>
                     })}
                     </Select>
                   <div className="mt-5 mb-0 pb-0 form-group">
