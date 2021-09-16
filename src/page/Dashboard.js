@@ -209,7 +209,6 @@ const Dashboard = () => {
       try {
         const signer = walletProvider.getSigner();
         const signerAddress = await signer.getAddress();
-        setUserAddress(signerAddress);
         const inflow = new Inflow(walletProvider, 4);
         const balance = await inflow.balanceOf(
           "SocialToken",
@@ -311,13 +310,7 @@ const Dashboard = () => {
     console.log({ totalValues })
     if (isFetched && totalValues.length !== 0) {
       return <Doughnutchart totalValues={tokenBalances} tokenSymbols={tokenSymbols} />;
-    } else {
-      return (
-        <div className="d-flex justify-content-center align-items-center">
-          <SmallLoader />
-        </div>
-      );
-    }
+    } 
   };
 
   displayDoughnutChart();
@@ -417,7 +410,7 @@ const Dashboard = () => {
                 <span
                   className="d-flex flex-row"
                   style={{ fontSize: "1.1rem" }}
-                >
+              >
                   {wallet.wallet_address}
                 </span>
                 <span className="small-heading">Your Address</span>
@@ -459,13 +452,12 @@ const Dashboard = () => {
             <div className="dollar-price">
               <span>$</span> {displayTotalValue()}
             </div>
-            {userAddress? 
             <Button 
               style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
               variant="contained"
               onClick={launchTransak}>
               Buy USDC
-          </Button> : <div>loading ...</div>}
+          </Button> 
           </div>
          
           <div className="btn-filter">
