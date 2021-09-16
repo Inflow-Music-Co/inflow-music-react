@@ -1,7 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { encryptTransform } from 'redux-persist-transform-encrypt';
 
 import authReducer from "./authSlice";
 import walletSlice from "./walletSlice";
@@ -16,14 +15,6 @@ const rootReducer = combineReducers({
   auth: authReducer,
   wallet: walletSlice,
   app: appSlice,
-  transforms: [
-      encryptTransform({
-        secretKey: 'my-super-secret-key',
-        onError: function (error) {
-          // Handle the error.
-        },
-      }),
-    ],
 });
 
 export default persistReducer(persistConfig, rootReducer);

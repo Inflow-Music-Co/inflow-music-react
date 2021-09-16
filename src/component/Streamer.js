@@ -151,7 +151,7 @@ const format = (seconds) => {
 
 let count = 0;
 
-const Streamer = () => {
+const Streamer = (props) => {
   const classes = useStyles();
   const [showControls, setShowControls] = useState(false);
   // const [count, setCount] = useState(0);
@@ -335,7 +335,7 @@ const Streamer = () => {
             ref={playerRef}
             width="100%"
             height="100%"
-            url="https://player.vimeo.com/video/358950440?h=1f844363da"
+            url={`${props.location.encodedUrl}`}
             pip={pip}
             playing={playing}
             controls={false}
