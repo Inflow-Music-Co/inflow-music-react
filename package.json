@@ -21,6 +21,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@toruslabs/torus-embed": "^1.10.19",
+    "@transak/transak-sdk": "^1.0.30",
     "@typechain/ethers-v5": "^7.0.1",
     "@typechain/hardhat": "^2.1.0",
     "@types/chai": "^4.2.19",

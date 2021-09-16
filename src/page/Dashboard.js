@@ -21,6 +21,8 @@ import SendModal from "../component/SendModal"
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import transakSDK from '@transak/transak-sdk';
 
 const Dashboard = () => {
 
@@ -39,6 +41,7 @@ const Dashboard = () => {
   const [tokenSymbols, setTokenSymbols] = useState([]);
   const [tokenMappings, setTokenMappings] = useState({});
   const [profileImages, setProfileImages] = useState([]);
+  const [userAddress, setUserAddress] = useState();
   const [send, setSend] = useState(false);
 
   useEffect(async () => {
@@ -73,7 +76,6 @@ const Dashboard = () => {
           // setconnectedwallet((connectedwallet) => !connectedwallet);
         }
       });
-      
   }, [connectedWallet]);
 
   const getTokensOwnedByUser = async () => {
@@ -138,6 +140,29 @@ const Dashboard = () => {
     }
   };
 
+  const launchTransak = () => {
+
+      let transak = new transakSDK({
+        apiKey: 'ee41ed4b-c89a-42c0-9aab-d9d472916ac7',  // Your API Key
+        environment: 'PRODUCTION', // STAGING/PRODUCTION
+        defaultCryptoCurrency: 'ETH',
+        walletAddress: userAddress, // Your customer's wallet address
+        themeColor: '000000', // App theme color
+        fiatCurrency: 'USD', // INR/GBP
+        email: 'limited-game@dfjqlpa2.mailosaur.net', // Your customer's email address
+        redirectURL: '',
+        hostURL: window.location.origin,
+        widgetHeight: '550px',
+        widgetWidth: '450px'
+    });
+    transak.init();
+    transak.on(transak.ALL_EVENTS, (data) => {console.log(data)});
+    transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
+      console.log(orderData);
+      transak.close();
+    });
+  }
+
   const getArtistInfoFromDB = () => {
     // TODO: need to code logic to pull only artist images/names that user owns
     // const { data } = await axios.post(
@@ -184,6 +209,7 @@ const Dashboard = () => {
       try {
         const signer = walletProvider.getSigner();
         const signerAddress = await signer.getAddress();
+        setUserAddress(signerAddress);
         const inflow = new Inflow(walletProvider, 4);
         const balance = await inflow.balanceOf(
           "SocialToken",
@@ -311,7 +337,7 @@ const Dashboard = () => {
             </div>
             {/* <Slider
               tokenPrices={tokenPrices}
-              tokenNames={tokenData}
+              // tokenNames={tokenData}
               profileImages={profileImages}
             /> */}
           </div>
@@ -416,17 +442,14 @@ const Dashboard = () => {
             variant="contained" 
             size="medium" 
             color="secondary"
-            onClick={() => {
-              console.log('clicky click'); 
-              setSend(true)
-              console.log(send);
-              }}
+            onClick={() => setSend(true)}
             style={{margin : 10}}>
               Send Tokens & NFTs
           </Button>
-          <Button variant="contained" size="medium" color="primary ">
+          <Button variant="contained" size="medium" color="primary">
               Recieve Tokens & NFTs
           </Button>
+          
         </div>
       </div>
       <div className="token-chart">
@@ -436,8 +459,15 @@ const Dashboard = () => {
             <div className="dollar-price">
               <span>$</span> {displayTotalValue()}
             </div>
-            <div className="small-heading">+8 last week</div>
+            {userAddress? 
+            <Button 
+              style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
+              variant="contained"
+              onClick={launchTransak}>
+              Buy USDC
+          </Button> : <div>loading ...</div>}
           </div>
+         
           <div className="btn-filter">
             <a href="#">
               <img alt="" src={assetsImages.filter} />
