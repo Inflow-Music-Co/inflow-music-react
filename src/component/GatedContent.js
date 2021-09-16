@@ -28,7 +28,6 @@ const GatedContent = (props) => {
     },[])
 
     useEffect(() => {
-        if(viewable){
             insufficientBalance &&
             MySwal.fire({
                 title: <p style={{ color: "white" }}>You Need {`${requiredBalance}`} Artist Tokens To View This Content</p>,
@@ -40,8 +39,8 @@ const GatedContent = (props) => {
                 background: "#303030",
             }).then(() => {
                 setInsuffucientBalance((insufficenttokens) => !insufficenttokens);
+                window.location.href = "/";
             });
-        }   
     },[insufficientBalance])
 
     useEffect(() => {
@@ -91,14 +90,14 @@ const GatedContent = (props) => {
         };
 
         const hasEnoughTokens = () => {
-            console.log('hasEnoughTokens fired');
+            console.log(availableBalance, requiredBalance);
 
-            if(viewable === false && availableBalance >= requiredBalance){
-                console.log('availableBalance', availableBalance, 'requiredBalance', requiredBalance,
-                typeof availableBalance)
+            if(availableBalance >= requiredBalance){
+                console.log('has enough balance');
                 setSufficientBalance(true);
-            } else if(viewable === false && availableBalance < requiredBalance) {
+            } else {
                 setInsuffucientBalance(true);
+                console.log('not enough balance')
             }
         }
                 
@@ -107,7 +106,9 @@ const GatedContent = (props) => {
             {viewable ? <Streamer encodedUrl={props.location.encodedUrl}/> 
             : <div className="card-heading">
             <SmallLoader />
-            <div>checking your balance </div>
+            <div className="dashboard-wrapper-main">
+            <div>checking your balance</div>
+            </div>
             </div>}
         </div>
     )
