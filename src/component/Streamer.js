@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { findDOMNode } from "react-dom";
+import Cryptr from 'cryptr';
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -19,6 +20,8 @@ import FullScreen from "@material-ui/icons/Fullscreen";
 import Popover from "@material-ui/core/Popover";
 import screenful from "screenfull";
 import Controls from "./Controls";
+
+const cryptr = new Cryptr(process.env.REACT_APP_CRYPTR_SECRET)
 
 const useStyles = makeStyles((theme) => ({
   playerWrapper: {
@@ -151,13 +154,16 @@ const format = (seconds) => {
 
 let count = 0;
 
-const Streamer = (props) => {
+const Streamer = ({ encodedUrl }) => {
   const classes = useStyles();
   const [showControls, setShowControls] = useState(false);
   // const [count, setCount] = useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [timeDisplayFormat, setTimeDisplayFormat] = React.useState("normal");
   const [bookmarks, setBookmarks] = useState([]);
+  const [decodedUrl, setDecodedlUrl] = useState('');
+  const [view, setView] = useState(false);
+  
   const [state, setState] = useState({
     pip: false,
     playing: true,
@@ -190,6 +196,17 @@ const Streamer = (props) => {
     seeking,
     volume,
   } = state;
+
+  useEffect(() => {
+    setDecodedlUrl(cryptr.decrypt(encodedUrl));
+  },[]);
+
+  useEffect(() => {
+    console.log('decodedUrl', decodedUrl, 'view', view);
+    if(decodedUrl !== ''){
+        setView(true);
+    }
+  })
 
   const handlePlayPause = () => {
     setState({ ...state, playing: !state.playing });
@@ -335,7 +352,7 @@ const Streamer = (props) => {
             ref={playerRef}
             width="100%"
             height="100%"
-            url={`${props.location.encodedUrl}`}
+            url={`${decodedUrl}`}
             pip={pip}
             playing={playing}
             controls={false}
