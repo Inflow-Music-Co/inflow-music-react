@@ -6,24 +6,24 @@ import { encryptTransform } from 'redux-persist-transform-encrypt';
 import authReducer from "./authSlice";
 import walletSlice from "./walletSlice";
 import appSlice from "./appSlice";
+import { createTransform } from 'redux-persist';
+import JSOG from 'jsog'
+
+export const JSOGTransform = createTransform(
+  (inboundState, key) => JSOG.encode(inboundState),
+  (outboundState, key) => JSOG.decode(outboundState),
+)
 
 const persistConfig = {
   key: "root",
   storage,
+  transforms: [JSOGTransform]
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
   wallet: walletSlice,
   app: appSlice,
-  transforms: [
-      encryptTransform({
-        secretKey: 'my-super-secret-key',
-        onError: function (error) {
-          // Handle the error.
-        },
-      }),
-    ],
 });
 
 export default persistReducer(persistConfig, rootReducer);
