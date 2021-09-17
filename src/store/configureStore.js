@@ -9,7 +9,6 @@ import JSOGTransform from './reducers/rootReducer'
 const persistConfig = {
   key: "root",
   storage,
-  transforms: [JSOGTransform]
 };
 
 let middleware = [thunk];

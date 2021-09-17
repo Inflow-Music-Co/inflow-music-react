@@ -17,7 +17,6 @@ export const JSOGTransform = createTransform(
 const persistConfig = {
   key: "root",
   storage,
-  transforms: [JSOGTransform]
 };
 
 const rootReducer = combineReducers({
