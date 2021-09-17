@@ -1,7 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { encryptTransform } from 'redux-persist-transform-encrypt';
 
 import authReducer from "./authSlice";
 import walletSlice from "./walletSlice";

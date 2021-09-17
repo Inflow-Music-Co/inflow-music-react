@@ -70,6 +70,7 @@ const Artist = () => {
   const [inflowGatedUrl, setInflowGatedUrl] = useState('');
   const [requiredBalance, setRequiredBalance] = useState();
   const [encodedUrl, setEncodedUrl] = useState('');
+  const [notMinted, setNotMinted] = useState(false);
   const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
 
   useEffect(() => {
@@ -84,14 +85,17 @@ const Artist = () => {
     }
 
     const init = async () => {
-      console.log({ provider });
+
       setLoading(true);
+      
       const { data } = await Axios.post(
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
         { id }
       );
 
-      if (data.artist) {
+      if(data.artist.social_token_id === null){
+        setNotMinted(true);
+      } else if (data.artist) {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
         setArtistTokenSymbol(data.artist.social_token_symbol);
@@ -115,6 +119,7 @@ const Artist = () => {
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,
         { id }
       ).then((response) => {
+        
         if(response.data.inflowGatedUrls[0]){
           setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
           setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
@@ -130,6 +135,26 @@ const Artist = () => {
       setconnectedwallet(false);
     }
   }, [id, socialTokenAddress, provider]);
+
+  console.log('ENCODED URL', encodedUrl);
+
+  useEffect(() => {
+    notMinted &&
+    MySwal.fire({
+      title: <p style={{ color: "white" }}>Artist Social Token Is Being Minted</p>,
+      icon: "info",
+      html: <span style={{ color: "white" }}>please come back later</span>,
+      customClass: {
+        confirmButton: "btn-gradiant",
+      },
+      buttonsStyling: false,
+      background: "#303030",
+    }).then(() => {
+      setNotMinted((notMinted) => !notMinted);
+      window.location.href = "/";
+    });
+
+  },[notMinted]);
 
   useEffect(() => {
     !connectedwallet &&
@@ -149,6 +174,7 @@ const Artist = () => {
         }
       });
   }, [connectedwallet]);
+
   useEffect(() => {
     lessusdc &&
       MySwal.fire({

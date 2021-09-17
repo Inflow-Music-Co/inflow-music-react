@@ -71,6 +71,7 @@ const LoginModal = (props) => {
       dispatch(connected({ address: address }));
       dispatch(setProvider(provider));
       setWalletProvider(provider);
+      localStorage.setItem("provider", provider)
     } catch (e) {
       console.log("handleLoginWithMagic", e);
     }
