@@ -6,13 +6,6 @@ import { encryptTransform } from 'redux-persist-transform-encrypt';
 import authReducer from "./authSlice";
 import walletSlice from "./walletSlice";
 import appSlice from "./appSlice";
-import { createTransform } from 'redux-persist';
-import JSOG from 'jsog'
-
-export const JSOGTransform = createTransform(
-  (inboundState, key) => JSOG.encode(inboundState),
-  (outboundState, key) => JSOG.decode(outboundState),
-)
 
 const persistConfig = {
   key: "root",
