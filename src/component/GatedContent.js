@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from "react-redux";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import { Contract, ethers } from 'ethers'
@@ -18,7 +18,9 @@ const GatedContent = (props) => {
     const [sufficientBalance, setSufficientBalance] = useState(false);
     const [insufficientBalance, setInsuffucientBalance] = useState(false);
     const [viewable, setViewable] = useState(false);
-    const renderCount = useRef(0);
+
+    console.log(props.location.address, props.location.requiredBalance, viewable,
+        props.location.encodedUrl);
 
     useEffect(() => {
         setSocialTokenAddress(props.location.address);
@@ -26,31 +28,7 @@ const GatedContent = (props) => {
     },[])
 
     useEffect(() => {
-        renderCount.current = renderCount.current + 1;
-    })
-
-    console.log(renderCount.current);
-    console.log({ sufficientBalance });
-    console.log({ insufficientBalance });
-
-    useEffect(() => {
-        sufficientBalance &&
-          MySwal.fire({
-            title: <p style={{ color: "white" }}>Access Granted!</p>,
-            icon: "success",
-            customClass: {
-              confirmButton: "btn-gradiant",
-            },
-            buttonsStyling: false,
-            background: "#303030",
-          }).then(() => {
-            setViewable(true);
-            setSufficientBalance(sufficientBalance => !sufficientBalance)
-          });           
-    }, [sufficientBalance])
-
-    useEffect(() => {
-        insufficientBalance && 
+            insufficientBalance &&
             MySwal.fire({
                 title: <p style={{ color: "white" }}>You Need {`${requiredBalance}`} Artist Tokens To View This Content</p>,
                 icon: "error",
@@ -60,12 +38,28 @@ const GatedContent = (props) => {
                 buttonsStyling: false,
                 background: "#303030",
             }).then(() => {
-                setInsuffucientBalance(insufficientBalance => !insufficientBalance)
+                setInsuffucientBalance((insufficenttokens) => !insufficenttokens);
                 window.location.href = "/";
-            }); 
-    }, [insufficientBalance])
-    
+            });
+    },[insufficientBalance])
 
+    useEffect(() => {
+        if(!viewable){
+            sufficientBalance &&
+          MySwal.fire({
+            title: <p style={{ color: "white" }}>Access Granted!</p>,
+            icon: "success",
+            customClass: {
+              confirmButton: "btn-gradiant",
+            },
+            buttonsStyling: false,
+            background: "#303030",
+          }).then(() => {
+            setSufficientBalance((sufficientBalance) => !sufficientBalance);
+            setViewable(true);
+          });
+        } 
+    },[sufficientBalance])
 
     useEffect(async () => {
         if(requiredBalance && viewable === false){
@@ -73,12 +67,9 @@ const GatedContent = (props) => {
         } 
     });
 
-    useEffect(async () => {
-            hasEnoughTokens(); 
-    },[availableBalance])
-
       const getTokenBalance = async () => {
-        if (provider) {
+          console.log('getTokenBalance fired');
+        if (provider && viewable === false) {
             try {
                 const signer = provider.getSigner();
                 const inflow = new Inflow(provider, 4);
@@ -91,6 +82,7 @@ const GatedContent = (props) => {
                 userBalance = parseFloat(userBalance[0]);
                 setAvailableBalance(userBalance);
                 console.log({ availableBalance }); 
+                hasEnoughTokens(); 
             } catch (err) {
                 console.log(err);
                 }
@@ -98,12 +90,14 @@ const GatedContent = (props) => {
         };
 
         const hasEnoughTokens = () => {
-            console.log('hasEnoughTokens fired');
+            console.log(availableBalance, requiredBalance);
 
-            if(availableBalance !== null && availableBalance >= requiredBalance){
+            if(availableBalance >= requiredBalance){
+                console.log('has enough balance');
                 setSufficientBalance(true);
-            } else if (availableBalance !== null && availableBalance < requiredBalance) {
+            } else {
                 setInsuffucientBalance(true);
+                console.log('not enough balance')
             }
         }
                 

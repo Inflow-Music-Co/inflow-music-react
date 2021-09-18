@@ -136,8 +136,6 @@ const Artist = () => {
     }
   }, [id, socialTokenAddress, provider]);
 
-  console.log('ENCODED URL', encodedUrl);
-
   useEffect(() => {
     notMinted &&
     MySwal.fire({
