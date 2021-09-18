@@ -106,6 +106,7 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
         "Content-Type": "application/json",
         "x-access-token": "Bearer " + didToken,
       },
+      data : { email }
     });
     
     const { access_token } = data;

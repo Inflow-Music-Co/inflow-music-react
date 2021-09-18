@@ -8,15 +8,9 @@ import appSlice from "./appSlice";
 import { createTransform } from 'redux-persist';
 import JSOG from 'jsog'
 
-export const JSOGTransform = createTransform(
-  (inboundState, key) => JSOG.encode(inboundState),
-  (outboundState, key) => JSOG.decode(outboundState),
-)
-
 const persistConfig = {
   key: "root",
   storage,
-  transforms: [JSOGTransform]
 };
 
 const rootReducer = combineReducers({
