@@ -16,7 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import SmallLoader from "../component/SmallLoader";
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import "../component/Artist.css";
 import SendSocialToken from "../component/SendSocialToken"
 import SendModal from "../component/SendModal"
@@ -52,6 +53,7 @@ const Dashboard = () => {
   const [userAddress, setUserAddress] = useState();
   const [send, setSend] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [usdcBalance, setUsdcBalance] = useState();
   const [formattedAddress, setFormattedAddress] = useState();
 
   useEffect(async () => {
@@ -71,6 +73,7 @@ const Dashboard = () => {
       setSend(false);
       dispatch(updateActivePage("dashboard"));
       await getTokensOwnedByUser();
+      await displayTotalUSDC();
     } else {
       setConnectedWallet(false);
     }
@@ -278,6 +281,18 @@ const Dashboard = () => {
     }
   };
 
+  const displayTotalUSDC = async () => {
+    if(walletProvider){
+      const inflow = new Inflow(walletProvider, 4);
+      const signer = walletProvider.getSigner();
+      const signerAddress = await signer.getAddress();
+      const usdcBalance = await inflow.balanceOf("USDC", signerAddress);
+      let formattedBalance = parseInt(usdcBalance[0]).toFixed(2);
+      setUsdcBalance(formattedBalance);
+      console.log('usdc Balance', formattedBalance);
+    } 
+  }
+
   const formatBalanceArray = (arr) => {
     let index = 0;
     let temp = [];
@@ -304,7 +319,6 @@ const Dashboard = () => {
       let formatted = userAddress.substring(0, 20);
       formatted += ' ...';
       setFormattedAddress(formatted);
-      console.log({ formattedAddress });
     }
   }
 
@@ -445,7 +459,7 @@ const Dashboard = () => {
           </div>
 
           <div className="artist-holdings">
-            <div className="chart-row"></div>
+            {/* {usdcBalance ? <div className="chart-row">usdc balance here</div> : null} */}
             {isFetched ?  <div className="chart-row">{displayDoughnutChart()}</div> : null}
 
             {/* <div className="chart-row">{displayPercentageBalances()}</div> */}
@@ -473,7 +487,7 @@ const Dashboard = () => {
                 className="artist-holdings-inner d-flex flex-column"
                 // style={{ borderRight: "2px solid black" }}
               >
-                <span className="d-flex flex-row">$ {displayTotalValue()}</span>
+                <span className="d-flex flex-row"></span>
                 <span className="small-heading">Total Wallet Balance</span>
               </div>
             </div>
@@ -498,24 +512,22 @@ const Dashboard = () => {
       </div>
       <div className="token-chart">
         <div className="chart-header-row">
+        <Grid container direction="row">
+          <Grid item xs={6}>
           <div className="token-info">
-            <div className="card-heading">total wallet performance</div>
+            <div className="card-heading">total usdc balance</div>
             <div className="dollar-price">
-              <span>$</span> {displayTotalValue()}
+              {usdcBalance? <span>${`${usdcBalance}`}</span> : null}
             </div>
             <Button 
               style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
               variant="contained"
               onClick={launchTransak}>
               Buy USDC
-          </Button> 
+          </Button>
           </div>
-         
-          <div className="btn-filter">
-            <a href="#">
-              <img alt="" src={assetsImages.filter} />
-            </a>
-          </div>
+          </Grid>
+          </Grid>
         </div>
         <div className="total-bal-chart">{/* <Totalbalancechart /> */}</div>
         <div className="deposite-earning-row">
