@@ -102,25 +102,6 @@ const Dashboard = () => {
 
   }, [copied])
 
-  useEffect(() => {
-    !connectedWallet &&
-      MySwal.fire({
-        title: <p style={{ color: "white" }}>Please Login</p>,
-        icon: "warning",
-        confirmButtonText: "Login",
-        customClass: {
-          confirmButton: "btn-gradiant",
-        },
-        buttonsStyling: false,
-        background: "#303030",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          console.log("need to implement direct magiclink login button here");
-          // setconnectedwallet((connectedwallet) => !connectedwallet);
-        }
-      });
-  }, [connectedWallet]);
-
   const getTokensOwnedByUser = async () => {
     await axios
       .post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, {
