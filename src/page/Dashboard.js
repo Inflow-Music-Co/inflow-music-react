@@ -73,13 +73,12 @@ const Dashboard = () => {
       setSend(false);
       dispatch(updateActivePage("dashboard"));
       await getTokensOwnedByUser();
-      await displayTotalUSDC();
     } else {
       setConnectedWallet(false);
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     formatAddress();
   },[userAddress])
 
@@ -282,6 +281,7 @@ const Dashboard = () => {
   };
 
   const displayTotalUSDC = async () => {
+    console.log('displayTotalUSD fired');
     if(walletProvider){
       const inflow = new Inflow(walletProvider, 4);
       const signer = walletProvider.getSigner();
@@ -374,6 +374,7 @@ const Dashboard = () => {
     } 
   };
 
+  displayTotalUSDC();
   displayDoughnutChart();
   displayTotalValue();
 
@@ -517,7 +518,7 @@ const Dashboard = () => {
           <div className="token-info">
             <div className="card-heading">total usdc balance</div>
             <div className="dollar-price">
-              {usdcBalance? <span>${`${usdcBalance}`}</span> : null}
+               {usdcBalance? <span>${`${usdcBalance}`}</span> : <span>loading ... </span>}
             </div>
             <Button 
               style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
