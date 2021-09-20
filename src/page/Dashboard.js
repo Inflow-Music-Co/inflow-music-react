@@ -49,10 +49,12 @@ const Dashboard = () => {
   const [profileImages, setProfileImages] = useState([]);
   const [userAddress, setUserAddress] = useState();
   const [send, setSend] = useState(false);
+  const [formattedAddress, setFormattedAddress] = useState();
 
   useEffect(async () => {
     
     const isLoggedIn = await magic.user.isLoggedIn();
+    console.log('isLoggedIn', isLoggedIn)
    
     if(isLoggedIn) {
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
@@ -65,6 +67,7 @@ const Dashboard = () => {
       setConnectedWallet(true);
       setSend(false);
       dispatch(updateActivePage("dashboard"));
+      formatAddress();
       await getTokensOwnedByUser();
     } else {
       setConnectedWallet(false);
@@ -275,7 +278,13 @@ const Dashboard = () => {
     return finalArr;
   };
 
-  
+  const formatAddress = () => {
+    if(userAddress) {
+      let formatted = userAddress.substring(0, 20);
+      formatted += '...';
+      setFormattedAddress(formatted);
+    }
+  }
 
   const displayPercentageBalances = () => {
     if (isFetched) {
@@ -428,9 +437,9 @@ const Dashboard = () => {
                   className="d-flex flex-row"
                   style={{ fontSize: "1.1rem" }}
               >
-                  {userAddress}
+            {formattedAddress ? <div>{formattedAddress} </div> : null}
                 </span>
-                <span className="small-heading">Your Address</span>
+                <span className="small-heading">your address</span>
               </div>
             </div>
 
