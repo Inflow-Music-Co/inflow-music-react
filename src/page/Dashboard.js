@@ -67,12 +67,15 @@ const Dashboard = () => {
       setConnectedWallet(true);
       setSend(false);
       dispatch(updateActivePage("dashboard"));
-      formatAddress();
       await getTokensOwnedByUser();
     } else {
       setConnectedWallet(false);
     }
   }, []);
+
+  useEffect(() => {
+    formatAddress();
+  },[userAddress])
 
   useEffect(async () => {
       await getTokensBalAndPrice();
@@ -283,6 +286,7 @@ const Dashboard = () => {
       let formatted = userAddress.substring(0, 20);
       formatted += '...';
       setFormattedAddress(formatted);
+      console.log({ formattedAddress });
     }
   }
 
@@ -437,7 +441,7 @@ const Dashboard = () => {
                   className="d-flex flex-row"
                   style={{ fontSize: "1.1rem" }}
               >
-            {formattedAddress ? <div>{formattedAddress} </div> : null}
+            {formattedAddress ? <div>{formattedAddress} </div> : <div>loading address ... </div>}
                 </span>
                 <span className="small-heading">your address</span>
               </div>
