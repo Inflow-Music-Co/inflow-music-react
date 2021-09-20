@@ -7,6 +7,12 @@ import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import Loader from '../component/Loader';
 import { assetsImages } from "../constants/images";
+import { Magic } from "magic-sdk";
+
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+    network: "rinkeby",
+  });
 
 const Inflowmusic = () => {
     const [artists, setArtists] = useState();
