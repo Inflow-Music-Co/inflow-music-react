@@ -25,6 +25,8 @@ import { Magic } from "magic-sdk";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import FileCopy from "@material-ui/icons/FileCopy";
 import transakSDK from '@transak/transak-sdk';
 
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
@@ -49,6 +51,7 @@ const Dashboard = () => {
   const [profileImages, setProfileImages] = useState([]);
   const [userAddress, setUserAddress] = useState();
   const [send, setSend] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [formattedAddress, setFormattedAddress] = useState();
 
   useEffect(async () => {
@@ -81,6 +84,21 @@ const Dashboard = () => {
       await getTokensBalAndPrice();
       setIsFetched(true);
   },[tokenAddresses])
+
+  useEffect(() => {
+    copied &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>copied address to clipboard</p>,
+        icon: "success",
+        background: "#303030",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log("need to implement direct magiclink login button here");
+          setCopied((copied) => !copied);
+        }
+      });
+
+  }, [copied])
 
   useEffect(() => {
     !connectedWallet &&
@@ -284,7 +302,7 @@ const Dashboard = () => {
   const formatAddress = () => {
     if(userAddress) {
       let formatted = userAddress.substring(0, 20);
-      formatted += '...';
+      formatted += ' ...';
       setFormattedAddress(formatted);
       console.log({ formattedAddress });
     }
@@ -337,7 +355,6 @@ const Dashboard = () => {
   };
 
   const displayDoughnutChart = () => {
-    console.log({ totalValues })
     if (isFetched && totalValues.length !== 0) {
       return <Doughnutchart totalValues={tokenBalances} tokenSymbols={tokenSymbols} />;
     } 
@@ -442,6 +459,9 @@ const Dashboard = () => {
                   style={{ fontSize: "1.1rem" }}
               >
             {formattedAddress ? <div>{formattedAddress} </div> : <div>loading address ... </div>}
+                <IconButton onClick={() => {navigator.clipboard.writeText(userAddress); setCopied(true)}} style={{paddingTop: 0}}>
+                    <FileCopy fontSize="small"/>
+                </IconButton>
                 </span>
                 <span className="small-heading">your address</span>
               </div>
