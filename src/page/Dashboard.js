@@ -55,6 +55,7 @@ const Dashboard = () => {
   const [copied, setCopied] = useState(false);
   const [usdcBalance, setUsdcBalance] = useState();
   const [formattedAddress, setFormattedAddress] = useState();
+  const [recieve, setRecieve] = useState(false);
 
   useEffect(async () => {
     
@@ -99,8 +100,20 @@ const Dashboard = () => {
           setCopied((copied) => !copied);
         }
       });
-
   }, [copied])
+
+  useEffect(() => {
+    recieve &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>copy your address to recieve tokens in your wallet address : {`${userAddress}`}</p>,
+        icon: "info",
+        background: "#303030",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setCopied((recieve) => !recieve);
+        }
+      });
+  }, [recieve])
 
   const getTokensOwnedByUser = async () => {
     await axios
@@ -478,18 +491,21 @@ const Dashboard = () => {
       </div>
       <div className="token-chart">
         <div className="card-heading">
-          <Button 
+          {walletProvider? <Button 
             variant="contained" 
             size="medium" 
             color="secondary"
             onClick={() => setSend(true)}
             style={{margin : 10}}>
               Send Tokens & NFTs
-          </Button>
-          <Button variant="contained" size="medium" color="primary">
+          </Button> : <div> connecting wallet ... </div>}
+          <Button 
+            onClick={() => setRecieve(true)}
+            variant="contained" 
+            size="medium" 
+            color="primary">
               Recieve Tokens & NFTs
           </Button>
-          
         </div>
       </div>
       <div className="token-chart">
@@ -499,7 +515,7 @@ const Dashboard = () => {
           <div className="token-info">
             <div className="card-heading">total usdc balance</div>
             <div className="dollar-price">
-               {usdcBalance? <span>${`${usdcBalance}`}</span> : <span>loading ... </span>}
+               {tokenSymbols.length > 0 ? <span>${`${usdcBalance}`}</span> : <span>loading ... </span>}
             </div>
             <Button 
               style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
