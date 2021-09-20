@@ -14,18 +14,19 @@ const Inflowmusic = () => {
     const [imagesUrl, setImagesUrl] = useState();
 
     useEffect(() => {
-        const getArtists = async () => {
-            try {
-                setloading(true)
-                const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
-                setArtists(data.artists)
-                setloading(false);
-            } catch (e) {
-                setloading(false);
-            }
-        }
         getArtists();
     }, [])
+
+    const getArtists = async () => {
+        try {
+            setloading(true)
+            const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getall`)
+            setArtists(data.artists)
+            setloading(false);
+        } catch (e) {
+            setloading(false);
+        }
+    }
 
 
     const displayArtists = () => {

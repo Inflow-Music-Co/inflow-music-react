@@ -8,6 +8,8 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Doughnutchart from "../component/Doughnutchart";
 import MyBalanceChart from "../component/MyBalanceChart";
+import { ethers } from 'ethers'
+import { connected, setProvider } from "../store/reducers/walletSlice";
 // import Mynftdropdown from '../component/Mynftdropdown';
 // import Song from '../component/Song';
 import { useDispatch, useSelector } from "react-redux";
@@ -19,10 +21,15 @@ import "../component/Artist.css";
 import SendSocialToken from "../component/SendSocialToken"
 import SendModal from "../component/SendModal"
 import Swal from "sweetalert2";
+import { Magic } from "magic-sdk";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import transakSDK from '@transak/transak-sdk';
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+  network: "rinkeby",
+});
 
 const Dashboard = () => {
 
@@ -30,8 +37,7 @@ const Dashboard = () => {
   // const { walletProvider } = useContext(WalletProviderContext);
   const MySwal = withReactContent(Swal);
   const uid = useSelector((state) => state.auth.data._id);
-  const wallet = useSelector((state) => state.wallet);
-  const walletProvider = useSelector((state) => state.wallet.provider);
+  const [walletProvider, setWalletProvider] = useState();
   const [connectedWallet, setConnectedWallet] = useState(true);
   const [isFetched, setIsFetched] = useState(false);
   const [tokenBalances, setTokenBalances] = useState([]);
@@ -45,12 +51,23 @@ const Dashboard = () => {
   const [send, setSend] = useState(false);
 
   useEffect(async () => {
-    if (!wallet.wallet_connected) {
-      setConnectedWallet(false);
-    } else {
+    
+    const isLoggedIn = await magic.user.isLoggedIn();
+   
+    if(isLoggedIn) {
+      const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      setUserAddress(address);
+      dispatch(connected({ address: address }));
+      setWalletProvider(provider);
+      dispatch(setProvider(provider));
+      setConnectedWallet(true);
       setSend(false);
       dispatch(updateActivePage("dashboard"));
       await getTokensOwnedByUser();
+    } else {
+      setConnectedWallet(false);
     }
   }, []);
 
@@ -411,7 +428,7 @@ const Dashboard = () => {
                   className="d-flex flex-row"
                   style={{ fontSize: "1.1rem" }}
               >
-                  {wallet.wallet_address}
+                  {userAddress}
                 </span>
                 <span className="small-heading">Your Address</span>
               </div>

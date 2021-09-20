@@ -24,7 +24,6 @@ import { WalletProviderContext } from "../contexts/walletProviderContext";
 import { Magic } from "magic-sdk";
 import { ethers } from "ethers";
 import { connected, setProvider } from "../store/reducers/walletSlice";
-// const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY);
 
 const LoginModal = (props) => {
   

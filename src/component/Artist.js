@@ -313,9 +313,7 @@ const Artist = () => {
 
   const getUserBalance = async () => {
     if (provider){
-      const provider = walletProvider;
       const signer = provider.getSigner();
-
       const inflow = new Inflow(provider, 4);
       const signerAddress = await signer.getAddress();
       const userBalance = await inflow.balanceOf(
@@ -668,7 +666,7 @@ const Artist = () => {
             >
               UNRELEASED MUSIC VIDEO{" "}
             </button>
-            </Link> : <SmallLoader> <div>loading</div> </SmallLoader>}
+            </Link> : null}
           </div>
         </div>
       </div>
@@ -880,7 +878,6 @@ const Artist = () => {
                         </a>
                     </div>
                 </div>
-
                 <div className="songs-grid-main">
                     <Song />
                     <Song />
