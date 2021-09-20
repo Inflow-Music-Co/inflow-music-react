@@ -375,11 +375,12 @@ const Dashboard = () => {
                 <img alt="" src={assetsImages.filter} />
               </a>
             </div>
-            {/* <Slider
+            <Slider
               tokenPrices={tokenPrices}
-              // tokenNames={tokenData}
+              tokenSymbols={tokenSymbols}
+              tokenAddresses={tokenAddresses}
               profileImages={profileImages}
-            /> */}
+            />
           </div>
           <div className="below-row">
             <div className="date-row-main">

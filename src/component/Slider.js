@@ -1,15 +1,19 @@
-import React from "react";
+import { useEffect } from 'react';
 import "./component.css";
 import { assetsImages } from "../constants/images";
 import { Carousel } from "react-bootstrap";
 import SmallLoader from "./SmallLoader";
 
-const Slider = ({ tokenNames, tokenPrices, profileImages }) => {
-  // console.log({ profileImages })
+const Slider = ({ tokenAddresses, tokenSymbols, tokenPrices, profileImages }) => { 
+
+  useEffect(() => {
+    tokenAddresses.map(tokenAddress => console.log('slider, token Addresses', tokenAddress));
+  },[])
+  
   return (
     <div>
       <Carousel>
-        {tokenNames.map((tokenName, index) => {
+        {tokenSymbols.map((tokenSymbol, index) => {
           return (
             <Carousel.Item key={index}>
               <div
@@ -18,11 +22,7 @@ const Slider = ({ tokenNames, tokenPrices, profileImages }) => {
               >
                 <div className="mb-5">
                   <img
-                    src={
-                      profileImages[index]
-                        ? `${process.env.REACT_APP_SERVER_URL}/${profileImages[index]}`
-                        : assetsImages.artist
-                    }
+                    src={`${process.env.REACT_APP_SERVER_URL}/${tokenAddresses[index]}_profilePic.jpeg`}
                     height="150"
                     width="150"
                     style={{ borderRadius: "50%" }}
@@ -31,8 +31,7 @@ const Slider = ({ tokenNames, tokenPrices, profileImages }) => {
                 </div>
                 <div className="information-row d-flex justify-content-around align-items-center w-100">
                   <div className="name-person">
-                    {tokenName ? tokenName : <SmallLoader />}
-                    <span className="categories">Rap</span>
+                    {tokenSymbol ? tokenSymbol : <SmallLoader />}
                   </div>
                   <div className="name-person">
                     {tokenPrices[index] ? (
@@ -47,27 +46,6 @@ const Slider = ({ tokenNames, tokenPrices, profileImages }) => {
             </Carousel.Item>
           );
         })}
-        {/* 
-                <Carousel.Item>
-                    <div className="item d-flex flex-column justify-content-center align-items-center w-100 carousel-artist" style={{ height: "300px" }}>
-                        <div className="mb-5">
-                            <img src={assetsImages.person} height="100" width="100" style={{ borderRadius: "50%" }} alt="artistimage" />
-                        </div>
-
-                        <div className="information-row d-flex justify-content-around align-items-center w-100">
-                            <div className="name-person">
-                                Drake
-                                <span className="categories">Rap</span>
-                            </div>
-                            <div className="name-person">
-                                $ 107.88
-                                <span className="up-down">+5.7%</span>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </Carousel.Item> */}
       </Carousel>
     </div>
   );
