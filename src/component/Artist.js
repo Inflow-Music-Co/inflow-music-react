@@ -20,24 +20,23 @@ import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
 import { useParams, useHistory } from "react-router-dom";
 import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
+import { Magic } from "magic-sdk";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
-import { WalletProviderContext } from "../contexts/walletProviderContext";
 import TokenChart from "./TokenChart";
 import Swal from "sweetalert2";
 import { Link } from 'react-router-dom';
 import withReactContent from "sweetalert2-react-content";
 
-// import { Link } from '@material-ui/core';
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+  network: "rinkeby",
+});
 
 let errcode = "";
 
 const Artist = () => {
   const history = useHistory();
   const MySwal = withReactContent(Swal);
-  const { walletProvider } = useContext(WalletProviderContext);
-  const wallet = useSelector((state) => state.wallet);
-  const provider = useSelector((state) => state.wallet.provider);
   const token = useSelector((state) => state.auth.token);
   const uid = useSelector((state) => state.auth.data._id);
   const { id } = useParams();
@@ -46,7 +45,7 @@ const Artist = () => {
   const [sell, setsell] = useState(false);
   const [buy, setbuy] = useState(false);
   const [MintPrice, setMintPrice] = useState("");
-  // const [BurnPrice, setBurnPrice] = useState();
+  const [provider, setProvider] = useState();
   const [TokensToMint, setTokensToMint] = useState(0);
   const [TokensToBurn, setTokensToBurn] = useState(0);
   const [balance, setBalance] = useState('');
@@ -71,9 +70,15 @@ const Artist = () => {
   const [requiredBalance, setRequiredBalance] = useState();
   const [encodedUrl, setEncodedUrl] = useState('');
   const [notMinted, setNotMinted] = useState(false);
+  const [connectedWallet, setConnectedWallet] = useState();
   const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
 
-  useEffect(() => {
+  useEffect(async () => {
+
+    const { data } = await Axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+      { id }
+    );
 
     if (balance !== ''){
       console.log(balance);
@@ -82,12 +87,16 @@ const Artist = () => {
 
     const init = async () => {
 
-      setLoading(true);
+      if(!connectedWallet){
+        const isLoggedIn = await magic.user.isLoggedIn();
+        console.log('isLoggedIn', isLoggedIn);
+        const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        setProvider(provider);
+        setConnectedWallet(true); 
+      } 
       
-      const { data } = await Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
-        { id }
-      );
 
       if(data.artist.social_token_id === null){
         setNotMinted(true);
@@ -115,7 +124,6 @@ const Artist = () => {
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,
         { id }
       ).then((response) => {
-        
         if(response.data.inflowGatedUrls[0]){
           setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
           setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
@@ -126,11 +134,12 @@ const Artist = () => {
     
     if (uid) {
       return init();
+      displayTokenPrice();
     } else {
       console.log("NOT LOGGED IN");
       setconnectedwallet(false);
     }
-  }, [id, socialTokenAddress, provider]);
+  }, [socialTokenAddress]);
 
   useEffect(() => {
     notMinted &&
@@ -263,7 +272,7 @@ const Artist = () => {
 
   const fetchTokenPrice = async () => {
     try {
-      if (provider) {
+      if (connectedWallet) {
         const inflow = new Inflow(provider, 4);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
@@ -308,7 +317,7 @@ const Artist = () => {
   };
 
   const getUserBalance = async () => {
-    if (provider){
+    if (connectedWallet){
       const signer = provider.getSigner();
       const inflow = new Inflow(provider, 4);
       const signerAddress = await signer.getAddress();
@@ -340,12 +349,12 @@ const Artist = () => {
   const buyTokens = async () => {
     console.log(socialTokenAddress);
     console.log("MAGIC PROVIDER ____", provider);
-    if (!provider) {
+    if (!connectedWallet) {
       alert("Please log in");
       return;
     }
 
-    if (provider) {
+    if (connectedWallet) {
       console.log("wallet provider is true");
       try {
           const signer = provider.getSigner();
@@ -465,11 +474,9 @@ const Artist = () => {
   };
 
   const sellTokens = async () => {
-    if (walletProvider) {
+    if (provider) {
       try {
         setsellmodalloading(true);
-       
-        const provider = walletProvider;
         
         const signer = provider.getSigner();
         const socialMinter = new Contract(
@@ -517,14 +524,13 @@ const Artist = () => {
   };
 
   const fetchtotalburnprice = async () => {
-    if (walletProvider) {
+    if (provider) {
       try {
         setsellmodalloading(true);
         // await requestAccount();
         // const provider = new ethers.providers.Web3Provider(
         //     window.ethereum
         // );
-        const provider = walletProvider;
         const inflow = new Inflow(provider, 4);
         const burnPrice = await inflow.getBurnPriceSocial(
           socialTokenAddress,
@@ -542,12 +548,11 @@ const Artist = () => {
   };
 
   const fetchtotalmintprice = async () => {
-    if (walletProvider) {
+    if (provider) {
       try {
         setbuymodalloading(true);
         // // console.log({ socialTokenAddress })
         // await requestAccount();
-        const provider = walletProvider;
         const inflow = new Inflow(provider, 4);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
@@ -708,7 +713,7 @@ const Artist = () => {
                 >
                   Sell
                 </button>
-              ) : walletProvider ? (
+              ) : provider ? (
                 <button
                   className="buy-button"
                   type="button"
@@ -739,7 +744,7 @@ const Artist = () => {
                 >
                   Buy
                 </button>
-              ) : walletProvider ? (
+              ) : provider ? (
                 <button
                   className="sell-button"
                   type="button"
