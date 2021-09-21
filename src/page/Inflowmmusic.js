@@ -9,6 +9,7 @@ import Loader from '../component/Loader';
 import { assetsImages } from "../constants/images";
 import { Magic } from "magic-sdk";
 
+
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
     network: "rinkeby",
   });
@@ -59,17 +60,17 @@ const Inflowmusic = () => {
                 <div className="see-all-artist">
                     <a href="#">See All Artists</a>
                 </div>
-                {/* <div className="artist-heading">NFT Drops</div>
+                <div className="artist-heading">NFT Drops</div>
                 <div className="songs-grid-main">
                     <Song />
                     <Song />
                     <Song />
                     <Song />
                     <Song />
-                </div> */}
-                {/* <div className="see-all-artist see-all-nft">
+                </div>
+                <div className="see-all-artist see-all-nft">
                     <a href="#">See All NFTs</a>
-                </div> */}
+                </div>
             </div>
         </div>
     );

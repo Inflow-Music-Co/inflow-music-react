@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Swal from "sweetalert2";
-import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import withReactContent from "sweetalert2-react-content";
 
 const useStyles = makeStyles({
@@ -22,7 +21,7 @@ const useStyles = makeStyles({
     }
 });
 
-const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTokensBalAndPrice, addedUsdc, setAddedUsdc }) => {
+const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTokensBalAndPrice }) => {
     
     const MySwal = withReactContent(Swal);
     const [addresses, setAddresses] = useState([]);
@@ -32,14 +31,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
     const [loading, setLoading] = useState(false);
     const [successTransfer, setSuccessTransfer] = useState(false);
     const [error, setError] = useState(false);
-
-    const classes = useStyles();
-
-    useEffect(() => {
-      addUsdc();
-      console.log('render');
-      console.log(tokenMappings);
-    },[])
 
     useEffect(() => {
         successTransfer &&
@@ -67,13 +58,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
             });
       }, [successTransfer, error]);
 
-      const addUsdc = () => {
-        if(!addedUsdc){
-          tokenMappings.push({ address : RINKEBY_MOCKUSDC, symbol : 'USDC'})
-          tokenMappings.forEach(mapping => console.log(mapping));
-          setAddedUsdc(true);
-        }
-      }
+    const classes = useStyles();
 
     const sendTransaction = async () => {
         if (!provider) {
