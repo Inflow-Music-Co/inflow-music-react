@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { setUserData } from '../store/reducers/authSlice';
-import localStorageService from '../utils/localstorage'
 import Axios from 'axios'
 
 const VerifyEmail = () => {
@@ -15,7 +14,6 @@ const VerifyEmail = () => {
         .then((res) => {
             setStateMsg("Your email has been verified! You can now sign in with your new account ")
             const { userData, access_token, refresh_token, } = res.data
-            localStorageService.setToken({ access_token, refresh_token });
             // Set current user
             dispatch(setUserData({ userData, access_token, isLoggedIn: true }));
             window.location.href = "/"
@@ -32,4 +30,4 @@ const VerifyEmail = () => {
     )
 }
 
-export default VerifyEmail
+export default VerifyEmail;

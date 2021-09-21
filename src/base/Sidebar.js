@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./base.css";
 import { Link } from "react-router-dom";
 // import settings from '../assets/images/settings.svg';
 import { assetsImages } from "../constants/images";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateActivePage } from "../store/reducers/appSlice";
 
 const Sidebar = () => {
-  const [activePage, updateActivePage] = useState("");
+  const dispatch = useDispatch();
+  const activePage = useSelector((state) => state.app.activePage);
   const token = useSelector((state) => state.auth.token);
   const isArtist = useSelector((state) => state.auth.isArtist);
   const isAdmin = useSelector((state) => state.auth.isAdmin);
+  const userData = useSelector((state) => state.auth.data);
+
+  const updatePage = (page) => {
+    dispatch(updateActivePage(page));
+  };
 
   return (
     <div className="side-bar-main">
@@ -17,11 +24,9 @@ const Sidebar = () => {
         <Link to={"/"}>
           <div
             className={
-              activePage === "inflowmusic"
-                ? "nav-link-main active"
-                : "nav-link-main"
+              activePage === "artist" ? "nav-link-main active" : "nav-link-main"
             }
-            onClick={() => updateActivePage("inflowmusic")}
+            onClick={() => updatePage("artist")}
           >
             <img alt="" src={assetsImages.home} />
             <div className="d-flex justify-content-center align-items-center mt-2">
@@ -35,7 +40,7 @@ const Sidebar = () => {
             className={
               activePage === "labels" ? "nav-link-main active" : "nav-link-main"
             }
-            onClick={() => updateActivePage("labels")}
+            onClick={() => updatePage("labels")}
           >
             <img alt="" src={assetsImages.inventory} />
             <div className="d-flex justify-content-center align-items-center mt-2">
@@ -44,7 +49,7 @@ const Sidebar = () => {
           </div>
         </Link>
 
-        {token !== "" && (
+        {token && (
           <Link to={"/dashboard"}>
             <div
               className={
@@ -52,7 +57,7 @@ const Sidebar = () => {
                   ? "nav-link-main active"
                   : "nav-link-main"
               }
-              onClick={() => updateActivePage("dashboard")}
+              onClick={() => updatePage("dashboard")}
             >
               <img alt="" src={assetsImages.dashboard} />
               <div className="d-flex justify-content-center align-items-center mt-2">
@@ -62,15 +67,15 @@ const Sidebar = () => {
           </Link>
         )}
 
-        {isArtist && token && (
+        {isArtist && token && userData.status === "active" && (
           <Link to={"/artistmanage"}>
             <div
               className={
-                activePage === "demo7"
+                activePage === "artistmanage"
                   ? "nav-link-main active"
                   : "nav-link-main"
               }
-              onClick={() => updateActivePage("demo7")}
+              onClick={() => updatePage("artistmanage")}
             >
               <img alt="" src={assetsImages.calendar} />
               <div className="d-flex justify-content-center align-items-center mt-2">
@@ -84,11 +89,11 @@ const Sidebar = () => {
           <Link to={"/adminpanel"}>
             <div
               className={
-                activePage === "demo5"
+                activePage === "adminpanel"
                   ? "nav-link-main active"
                   : "nav-link-main"
               }
-              onClick={() => updateActivePage("demo5")}
+              onClick={() => updatePage("adminpanel")}
             >
               <img alt="" src={assetsImages.orders} />
               <div className="d-flex justify-content-center align-items-center mt-2">
@@ -102,11 +107,11 @@ const Sidebar = () => {
           <Link to={"/accountsettings"}>
             <div
               className={
-                activePage === "demo3"
+                activePage === "account"
                   ? "nav-link-main active"
                   : "nav-link-main"
               }
-              onClick={() => updateActivePage("demo3")}
+              onClick={() => updatePage("account")}
             >
               <img alt="" src={assetsImages.settings} />
               <div className="d-flex justify-content-center align-items-center mt-2">

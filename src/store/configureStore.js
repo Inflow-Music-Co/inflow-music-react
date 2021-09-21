@@ -1,16 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
 import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
 import storage from "redux-persist/lib/storage";
-import { persistReducer} from "redux-persist";
+import { persistReducer } from "redux-persist";
 import reducer from "./reducers/rootReducer";
 
 const persistConfig = {
   key: "root",
-  storage
+  storage,
 };
 
-let middleware = [thunk]
+let middleware = [thunk];
 if (process.env.NODE_ENV === "development") {
   const logger = createLogger({
     level: "info",
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "development") {
 
 const persistedReducer = persistReducer(persistConfig, reducer);
 
-export default  configureStore({
+export default configureStore({
   reducer: persistedReducer,
   middleware,
 });

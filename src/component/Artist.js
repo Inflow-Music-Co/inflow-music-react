@@ -17,21 +17,27 @@ import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import { Contract, ethers } from "ethers";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
+import { useParams, useHistory } from "react-router-dom";
 import SweetAlert from "react-bootstrap-sweetalert";
-import { useParams, Redirect } from "react-router-dom";
 import Axios from "axios";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import TokenChart from "./TokenChart";
+import Swal from "sweetalert2";
+import { Link } from 'react-router-dom';
+import withReactContent from "sweetalert2-react-content";
 
 // import { Link } from '@material-ui/core';
 
 let errcode = "";
 
-const Artistpic = () => {
+const Artist = () => {
+  const history = useHistory();
+  const MySwal = withReactContent(Swal);
   const { walletProvider } = useContext(WalletProviderContext);
   const wallet = useSelector((state) => state.wallet);
+  const provider = useSelector((state) => state.wallet.provider);
   const token = useSelector((state) => state.auth.token);
   const uid = useSelector((state) => state.auth.data._id);
   const { id } = useParams();
@@ -39,17 +45,17 @@ const Artistpic = () => {
   const [profileModel, setprofileModel] = useState(false);
   const [sell, setsell] = useState(false);
   const [buy, setbuy] = useState(false);
-  const [lessusdc, setlessusdc] = useState(false);
   const [MintPrice, setMintPrice] = useState("");
   // const [BurnPrice, setBurnPrice] = useState();
   const [TokensToMint, setTokensToMint] = useState(0);
   const [TokensToBurn, setTokensToBurn] = useState(0);
-  // const [Balance, setBalance] = useState();
+  const [balance, setBalance] = useState('');
   const [loading, setLoading] = useState(false);
   const [successmint, setsuccessmint] = useState(false);
-  const [failuremint, setfailuremint] = useState(false);
   const [successburn, setsuccessburn] = useState(false);
+  const [failuremint, setfailuremint] = useState(false);
   const [failureburn, setfailureburn] = useState(false);
+  const [lessusdc, setlessusdc] = useState(false);
   const [connectedwallet, setconnectedwallet] = useState(true);
   const [socialTokenAddress, setSocialTokenAddress] = useState("");
   const [sellflag, setsellflag] = useState(false);
@@ -61,81 +67,208 @@ const Artistpic = () => {
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
   const [playlistID, setPlaylistID] = useState("529230339");
-  const [mintGateUrl, setMintGateUrl] = useState('')
+  const [inflowGatedUrl, setInflowGatedUrl] = useState('');
+  const [requiredBalance, setRequiredBalance] = useState();
+  const [encodedUrl, setEncodedUrl] = useState('');
+  const [notMinted, setNotMinted] = useState(false);
+  const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
 
   useEffect(() => {
+
     if (!wallet.wallet_connected) {
       setconnectedwallet(false);
     }
+
+    if (balance !== ''){
+      console.log(balance);
+      getUserBalance();
+    }
+
     const init = async () => {
-      setconnectedwallet(true);
-      console.log({ uid });
+
       setLoading(true);
-      const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,{ id } );
-      if (data.artist) {
+      
+      const { data } = await Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+        { id }
+      );
+
+      if(data.artist.social_token_id === null){
+        setNotMinted(true);
+      } else if (data.artist) {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
+        setArtistTokenSymbol(data.artist.social_token_symbol);
         fetchTokenPrice();
-        const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`, artist);
+        const res = await Axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
+          artist
+        );
         setHistoricalData(res.data.priceHistory);
+        getUserBalance();
         setLoading(false);
+        // const tokenPrice = setInterval(() => {
+        //   fetchTokenPrice();
+        // }, 10000);
         // return () => {
         //     clearInterval(tokenPrice);
         // };
       }
 
-      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getmintgateurlsbyid`, { id })
-      .then(response => {
-        setMintGateUrl(response.data.mintGatedUrls[0])
-        console.log('response', response)
-      })
+      Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,
+        { id }
+      ).then((response) => {
+        
+        if(response.data.inflowGatedUrls[0]){
+          setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
+          setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
+          setRequiredBalance(response.data.inflowGatedUrls[0].balance);          
+        }
+      });
     };
-    console.log('uid', uid);
+    
     if (uid) {
       return init();
     } else {
-      console.log('NOT LOGGED IN');
+      console.log("NOT LOGGED IN");
       setconnectedwallet(false);
     }
-  }, [id, socialTokenAddress, walletProvider]);
+  }, [id, socialTokenAddress, provider]);
+
+  useEffect(() => {
+    notMinted &&
+    MySwal.fire({
+      title: <p style={{ color: "white" }}>Artist Social Token Is Being Minted</p>,
+      icon: "info",
+      html: <span style={{ color: "white" }}>please come back later</span>,
+      customClass: {
+        confirmButton: "btn-gradiant",
+      },
+      buttonsStyling: false,
+      background: "#303030",
+    }).then(() => {
+      setNotMinted((notMinted) => !notMinted);
+      window.location.href = "/";
+    });
+
+  },[notMinted]);
+
+  useEffect(() => {
+    !connectedwallet &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Please Login</p>,
+        icon: "warning",
+        confirmButtonText: "Login",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log("need to implement magiclink login");
+          // setconnectedwallet((connectedwallet) => !connectedwallet);
+        }
+      });
+  }, [connectedwallet]);
+
+  useEffect(() => {
+    lessusdc &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Denied</p>,
+        icon: "error",
+        html: <span style={{ color: "white" }}>Insufficient USDC Balance</span>,
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setlessusdc((lessusdc) => !lessusdc);
+      });
+  }, [lessusdc]);
+  useEffect(() => {
+    insufficenttokens &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Insufficient Tokens To Sell</p>,
+        icon: "error",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setinsufficenttokens((insufficenttokens) => !insufficenttokens);
+      });
+  }, [insufficenttokens]);
+  useEffect(() => {
+    failureburn &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Denied</p>,
+        icon: "error",
+        html: <span style={{ color: "white" }}>Error selling tokens</span>,
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setfailureburn((failureburn) => !failureburn);
+      });
+  }, [failureburn]);
+  useEffect(() => {
+    successburn &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Successfull</p>,
+        icon: "success",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setsuccessburn((successburn) => !successburn);
+      });
+  }, [successburn]);
+  useEffect(() => {
+    failuremint &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Denied</p>,
+        icon: "error",
+        html: <span style={{ color: "white" }}>Error buying tokens</span>,
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setfailuremint((failuremint) => !failuremint);
+      });
+  }, [failuremint]);
+  useEffect(() => {
+    successmint &&
+      MySwal.fire({
+        title: <p style={{ color: "white" }}>Transaction Successful</p>,
+        icon: "success",
+        customClass: {
+          confirmButton: "btn-gradiant",
+        },
+        buttonsStyling: false,
+        background: "#303030",
+      }).then(() => {
+        setsuccessmint((successmint) => !successmint);
+      });
+  }, [successmint]);
 
   async function requestAccount() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
-  // const getBalance = async () => {
-  //     if (
-  //         typeof window.ethereum !== 'undefined' &&
-  //         socialTokenAddress &&
-  //         socialTokenAddress !== ''
-  //     ) {
-  //         try {
-  // const provider = new ethers.providers.Web3Provider(
-  //     window.ethereum
-  // );
-  // const signer = provider.getSigner();
-  // const signerAddress = await signer.getAddress();
-  // const inflow = new Inflow(provider, 80001);
-  // const balance = await inflow.balanceOf(
-  //     'SocialToken',
-  //     signerAddress,
-  //     socialTokenAddress
-  // );
-  // setBalance(balance[0]);
-  //             // // console.log(`BALANCE: ${balance[0]}`);
-  //         } catch (err) {
-  //             // // console.log(err);
-  //         }
-  //     }
-  // };
-
   const fetchTokenPrice = async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      "https://eth-rinkeby.alchemyapi.io/v2/Oq7yS7NdZbdW-beaojb1-8CuN_mjBpFc"
-    );
     try {
-      if (walletProvider) {
-        const inflow = new Inflow(walletProvider, 4);
+      if (provider) {
+        const inflow = new Inflow(provider, 4);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
           inflow.parseERC20("SocialToken", "1")
@@ -145,35 +278,11 @@ const Artistpic = () => {
     } catch (err) {
       if (errcode === -32002) {
         errcode = "";
-        window.location.reload();
+        history.go(0);
       }
       errcode = err.code;
     }
   };
-
-  // const fetchBurnPrice = async () => {
-  //     if (
-  //         typeof window.ethereum !== 'undefined' &&
-  //         socialTokenAddress &&
-  //         socialTokenAddress !== ''
-  //     ) {
-  //         try {
-  //             // await requestAccount();
-  //             const provider = new ethers.providers.Web3Provider(
-  //                 window.ethereum
-  //             );
-  //             const inflow = new Inflow(provider, 80001);
-  //             const burnPrice = await inflow.getBurnPriceSocial(
-  //                 socialTokenAddress,
-  //                 inflow.parseERC20('SocialToken', '1')
-  //             );
-  //             setBurnPrice(burnPrice[0]);
-  //             // // console.log(`BURN PRICE: ${burnPrice[0]}`);
-  //         } catch (err) {
-  //             // // console.log(err);
-  //         }
-  //     }
-  // };
 
   const displayTokenPrice = () => {
     if (MintPrice && MintPrice !== "") {
@@ -188,43 +297,71 @@ const Artistpic = () => {
     }
   };
 
-  // const displayBalance = () => {
-  //     if (MintPrice && MintPrice !== '') {
-  //         return <div className="dollar-price">{Balance ? Balance : '0.0'}</div>;
-  //     } else {
-  //         return <SmallLoader />;
-  //     }
-  // };
+  const displayBalance = () => {
+    let balanceInUSD = MintPrice * balance;
+    balanceInUSD = balanceInUSD.toFixed(2)
+      if (MintPrice && MintPrice !== '') {
+          return <div className="dollar-price">
+          {balance ? `${balance} ${artist.social_token_symbol}
+          \u00A0\u00A0\u00A0($${balanceInUSD})` 
+          :`0.0 ${artist.social_token_symbol}`}
+          </div>
+      } else {
+          return <SmallLoader />;
+      }
+  };
 
-  // const mint = async (social, usdc, amount) => {
-  //     const mintPrice = await social.getMintPrice(amount);
-  //     await (await usdc.mint(mintPrice)).wait(); // this line to be removed if the balance of usdc wallet issue is fixed
-  //     await (await usdc.approve(social.address, mintPrice)).wait();
-  //     await (await social.mint(amount)).wait();
-  //     return mintPrice;
-  // };
+  const getUserBalance = async () => {
+    if (provider){
+      const signer = provider.getSigner();
+      const inflow = new Inflow(provider, 4);
+      const signerAddress = await signer.getAddress();
+      const userBalance = await inflow.balanceOf(
+        "SocialToken",
+        signerAddress,
+        socialTokenAddress
+      );
+      
+      setBalance(userBalance[0]);
+
+      //if balance is zero, remove token address from user record in DB
+      if(balance === undefined || balance === '0.0'){
+        await Axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/user/selltoken`,
+          { socialTokenAddress, uid }
+        )
+          .then((resp) => {
+            console.log(resp.data);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+        console.log("reduced user token balance from DB successfully");
+      }
+    } 
+  }
 
   const buyTokens = async () => {
     console.log(socialTokenAddress);
-    console.log("WALLER PROVIDER ____", walletProvider);
+    console.log("MAGIC PROVIDER ____", provider);
+    if (!provider) {
+      alert("Please log in");
+      return;
+    }
 
-    if (walletProvider) {
+    if (provider) {
       console.log("wallet provider is true");
       try {
-        await requestAccount();
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-        const signer = provider.getSigner();
-        console.log("bla bla bla <><><><><><><><", socialTokenAddress, signer);
-        const socialMinter = new Contract(
-          socialTokenAddress,
-          SocialToken.abi,
-          signer
-        );
+          const signer = provider.getSigner();
+          const socialMinter = new Contract(
+            socialTokenAddress,
+            SocialToken.abi,
+            signer
+          );
 
         const usdcMinter = new Contract(RINKEBY_MOCKUSDC, MockUSDC.abi, signer);
         console.log({ usdcMinter });
-        console.log("HEERREE");
+
         // const usdcMinter = usdc.connect(signer);
         const inflow = new Inflow(provider, 4);
         setbuymodalloading(true);
@@ -255,7 +392,23 @@ const Artistpic = () => {
           ).wait();
           setLoading(false);
           setsuccessmint((successmint) => !successmint);
-          // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress })
+          await Axios.post(
+            `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
+            { 
+              socialTokenAddress,
+              uid,
+              symbol : artistTokenSymbol 
+            })
+            .then((resp) => {
+              console.log(resp.data);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+          setInterval(() => {
+            // window.location.reload();
+            history.go(0);
+          }, 2000);
           return;
         }
         const mintPrice = await socialMinter.getMintPrice(
@@ -271,13 +424,28 @@ const Artistpic = () => {
           )
         ).wait();
         console.log("MINT SUCCESSFULL");
-        console.log({ socialTokenAddress });
+        console.log('ARTIST SYMBOL', artist.social_token_symbol)
+        await Axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
+          { 
+            socialTokenAddress, 
+            uid,
+            symbol : artistTokenSymbol,
+            mintPrice :  MintPrice      
+           }
+        )
+          .then((resp) => {
+            console.log(resp.data);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+        console.log("added user token association to DB successfully");
 
         await updatePriceHistory();
 
         setbuymodalloading(false);
         setsuccessmint((successmint) => !successmint);
-        // await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { socialTokenAddress, uid })
         // setInterval(() => {
         //     window.location.reload();
         // }, 2000)
@@ -292,97 +460,6 @@ const Artistpic = () => {
     } else {
       setconnectedwallet(false);
     }
-    // if (
-    //     typeof window.ethereum !== 'undefined' &&
-    //     socialTokenAddress &&
-    //     socialTokenAddress !== ''
-    // ) {
-    //     // try {
-    //     //     // // console.log("HEERREE")
-    //     //     await requestAccount();
-    //     //     const provider = new ethers.providers.Web3Provider(
-    //     //         window.ethereum
-    //     //     );
-    //     //     // const admin = new Wallet(
-    //     //     //     process.env.REACT_APP_ADMIN_PVT_KEY,
-    //     //     //     provider
-    //     //     // );
-    //     //     const signer = provider.getSigner();
-    //     //     const social = new Contract(
-    //     //         socialTokenAddress,
-    //     //         SocialToken.abi,
-    //     //         signer
-    //     //     );
-    //     //     const socialMinter = social.connect(signer);
-    //     //     const usdc = new Contract(
-    //     //         MOCKUSDC,
-    //     //         MockUSDC.abi,
-    //     //         signer
-    //     //     );
-    //     //     const usdcMinter = usdc.connect(signer);
-    //     //     const inflow = new Inflow(provider, 80001);
-    //     //     setbuymodalloading(true);
-    //     //     const signerAddress = await signer.getAddress();
-    //     //     const usdcBalance = await inflow.balanceOf(
-    //     //         'USDC',
-    //     //         signerAddress
-    //     //     );
-    //     //     await fetchTokenPrice();
-    //     //     if (parseFloat(usdcBalance[0]) < parseFloat(totalmintprice)) {
-    //     //         // // console.log("HELLO")
-    //     //         setLoading(false)
-    //     //         setlessusdc((lessusdc) => !lessusdc);
-    //     //         return;
-    //     //     }
-    //     //     const allowance = await inflow.allowance(
-    //     //         'SocialToken',
-    //     //         socialTokenAddress,
-    //     //         signer.getAddress(),
-    //     //         socialTokenAddress
-    //     //     );
-    //     //     // // console.log({ allowance });
-    //     //     if (parseFloat(allowance) > parseFloat(totalmintprice)) {
-    //     //         // // console.log('ALLOWANCE GREATER SO MINTING DIRECTLY');
-    //     //         await (
-    //     //             await socialMinter.mint(
-    //     //                 inflow.parseERC20(
-    //     //                     'SocialToken',
-    //     //                     String(TokensToMint)
-    //     //                 )
-    //     //             )
-    //     //         ).wait();
-    //     //         setLoading(false)
-    //     //         setsuccessmint(successmint => !successmint)
-    //     //         setInterval(() => {
-    //     //             window.location.reload();
-    //     //         }, 2000)
-    //     //         return;
-    //     //     }
-    //     //     const mintPrice = await socialMinter.getMintPrice(
-    //     //         inflow.parseERC20('SocialToken', String(TokensToMint))
-    //     //     );
-    //     //     // // console.log('ALLOWANCE LESS SO GETTING APPROVAL');
-    //     //     await (
-    //     //         await usdcMinter.approve(socialMinter.address, mintPrice)
-    //     //     ).wait();
-    //     //     await (
-    //     //         await socialMinter.mint(
-    //     //             inflow.parseERC20('SocialToken', String(TokensToMint))
-    //     //         )
-    //     //     ).wait();
-    //     //     // // console.log('MINT SUCCESSFULL');
-    //     //     setbuymodalloading(false);
-    //     //     setsuccessmint(successmint => !successmint)
-    //     //     setInterval(() => {
-    //     //         window.location.reload();
-    //     //     }, 2000)
-    //     //     // getBalance();
-    //     // } catch (err) {
-    //     //     setbuymodalloading(false);
-    //     //     setfailuremint(failuremint => !failuremint)
-    //     //     // // console.log(err);
-    //     // }
-    // }
   };
 
   const burn = async (social, amount) => {
@@ -395,22 +472,16 @@ const Artistpic = () => {
     if (walletProvider) {
       try {
         setsellmodalloading(true);
-        // await requestAccount();
-        // const provider = new ethers.providers.Web3Provider(
-        //     window.ethereum
-        // );
+       
         const provider = walletProvider;
-        // const admin = new Wallet(
-        //     process.env.REACT_APP_ADMIN_PVT_KEY,
-        //     provider
-        // );
+        
         const signer = provider.getSigner();
         const socialMinter = new Contract(
           socialTokenAddress,
           SocialToken.abi,
           signer
         );
-        // const socialMinter = social.connect(signer);
+
         const inflow = new Inflow(provider, 4);
         const signerAddress = await signer.getAddress();
         const balance = await inflow.balanceOf(
@@ -418,6 +489,7 @@ const Artistpic = () => {
           signerAddress,
           socialTokenAddress
         );
+
         if (balance[0] < TokensToBurn) {
           setinsufficenttokens(true);
         }
@@ -425,6 +497,12 @@ const Artistpic = () => {
           socialMinter,
           inflow.parseERC20("SocialToken", String(TokensToBurn))
         );
+
+        setBalance(balance[0]);
+
+        //check user balance, if zero, remove tokenAddress from DB 
+        getUserBalance();
+
         setsellmodalloading(false);
         setsuccessburn((successburn) => !successburn);
         setsell(false);
@@ -439,46 +517,7 @@ const Artistpic = () => {
     } else {
       setconnectedwallet(false);
     }
-    // if (
-    //     typeof window.ethereum !== 'undefined' &&
-    //     socialTokenAddress &&
-    //     socialTokenAddress !== ''
-    // ) {
-    //     // try {
-    //     //     setsellmodalloading(true);
-    //     //     await requestAccount();
-    //     //     const provider = new ethers.providers.Web3Provider(
-    //     //         window.ethereum
-    //     //     );
-    //     //     // const admin = new Wallet(
-    //     //     //     process.env.REACT_APP_ADMIN_PVT_KEY,
-    //     //     //     provider
-    //     //     // );
-    //     //     const signer = provider.getSigner();
-    //     //     const social = new Contract(
-    //     //         socialTokenAddress,
-    //     //         SocialToken.abi,
-    //     //         signer
-    //     //     );
-    //     //     const socialMinter = social.connect(signer);
-    //     //     const inflow = new Inflow(provider, 80001);
-    //     //     await burn(
-    //     //         socialMinter,
-    //     //         inflow.parseERC20('SocialToken', String(TokensToBurn))
-    //     //     );
-    //     //     setsellmodalloading(false);
-    //     //     setsuccessburn(successburn => !successburn)
-    //     //     setInterval(() => {
-    //     //         window.location.reload();
-    //     //     }, 2000)
-    //     //     // // console.log('BURN SUCCESSFULL');
-    //     //     // getBalance();
-    //     // } catch (err) {
-    //     //     setsellmodalloading(false);
-    //     //     setfailureburn(failureburn => !failureburn)
-    //     //     // // console.log(err);
-    //     // }
-    // }
+   
   };
 
   const fetchtotalburnprice = async () => {
@@ -530,28 +569,26 @@ const Artistpic = () => {
   };
 
   const redirectToTokenGate = async () => {
-      // if(mintGateUrl !== ''){
-      //   window.location.assign(mintGateUrl);
-      // }
-      window.location.assign('https://mgate.io/go/reHFhdDoZ5m_/');
-  }
+    if (inflowGatedUrl !== "") {
+    }
+  };
 
   if (loading) {
     return <Loader />;
   }
 
   const updatePriceHistory = async () => {
-
-    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, { 
-        mint_price_history : {
-            price: MintPrice, 
-            timestamp: Date.now()
-            }, 
-        socialTokenAddress, 
-        first_name : artist.first_name,
-        last_name : artist.last_name,
-        social_token_id: artist.social_token_id}); 
-  }
+    await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, {
+      mint_price_history: {
+        price: MintPrice,
+        timestamp: Date.now(),
+      },
+      socialTokenAddress,
+      first_name: artist.first_name,
+      last_name: artist.last_name,
+      social_token_id: artist.social_token_id,
+    });
+  };
 
   return (
     <div className="artist-background">
@@ -559,7 +596,8 @@ const Artistpic = () => {
         <div className="background">
           <img
             alt=""
-            src={artist.banner_image
+            src={
+              artist.banner_image
                 ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}`
                 : null
             }
@@ -614,7 +652,21 @@ const Artistpic = () => {
             </div>
           </div>
           <div className="artist-tag">
-            <button className="tag-button" onClick={() => redirectToTokenGate()}> UNRELEASED MUSIC VIDEO </button>
+          {requiredBalance ?
+            <Link to={
+              {
+                pathname: `/${inflowGatedUrl}`,
+                requiredBalance : requiredBalance,
+                address : socialTokenAddress,
+                encodedUrl : encodedUrl 
+              }
+              }>
+            <button
+              className="tag-button"
+            >
+              UNRELEASED MUSIC VIDEO{" "}
+            </button>
+            </Link> : null}
           </div>
         </div>
       </div>
@@ -630,18 +682,16 @@ const Artistpic = () => {
               <div className="dollar-price">{displayTokenPrice()}</div>
               <div className="small-heading">--</div>
             </div>
-            <div className="btn-filter mt-2">
-            </div>
+            <div className="btn-filter mt-2"></div>
           </div>
-          {/* <div className="total-balance-row">
+          <div className="total-balance-row">
             <div className="token-info">
               <div className="card-heading">Available Balance</div>
               <div className="dollar-price">
                 <div className="dollar-price">{displayBalance()}</div>
               </div>
-              <div className="small-heading">Available Balance</div>
             </div>
-          </div> */}
+          </div>
 
           <div className="total-bal-chart">
             <TokenChart artist={artist} historicalData={historicalData} />
@@ -656,7 +706,8 @@ const Artistpic = () => {
                   className="buy-button"
                   type="button"
                   onClick={() => {
-                    window.location.href = "/login";
+                    // window.location.href = "/login";
+                    history.push("/");
                   }}
                 >
                   Sell
@@ -686,7 +737,8 @@ const Artistpic = () => {
                   className="sell-button"
                   type="button"
                   onClick={() => {
-                    window.location.href = "/login";
+                    // window.location.href = "/login";
+                    history.push("/");
                   }}
                 >
                   Buy
@@ -722,7 +774,7 @@ const Artistpic = () => {
                   width="100%"
                   height="100%"
                   scrolling="no"
-                  frameborder="no"
+                  frameBorder="no"
                   allow="autoplay"
                   src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/${playlistID}&color=%237d2add&auto_play=false&visual=true`}
                 ></iframe>
@@ -826,7 +878,6 @@ const Artistpic = () => {
                         </a>
                     </div>
                 </div>
-
                 <div className="songs-grid-main">
                     <Song />
                     <Song />
@@ -907,13 +958,14 @@ const Artistpic = () => {
               </div>
 
               <div className="sell-total-amount">
-                Amount you'll spend: ${totalmintprice}
+                {/* Amount you'll spend: ${totalmintprice} */}
+                Amount you'll spend: ${MintPrice * TokensToMint}
               </div>
             </>
           )}
           {buymodalloading && buyflag ? (
             <div className="d-flex justify-content-center align-items-center flex-column">
-              Approve transaction on your wallet provider
+              Processing Transaction, Please Wait
             </div>
           ) : null}
         </Modal.Body>
@@ -966,7 +1018,7 @@ const Artistpic = () => {
           )}
           {sellmodalloading && sellflag ? (
             <div className="d-flex justify-content-center align-items-center flex-column">
-              Approve transaction on your wallet provider
+              Processing Transaction Please Wait 
             </div>
           ) : null}
         </Modal.Body>
@@ -981,100 +1033,8 @@ const Artistpic = () => {
           </button>
         </Modal.Footer>
       </Modal>
-
-      <SweetAlert
-        danger
-        show={lessusdc}
-        title="Transaction Denied"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setlessusdc((lessusdc) => !lessusdc);
-        }}
-        onCancel={() => {
-          setlessusdc((lessusdc) => !lessusdc);
-        }}
-      >
-        Insufficient USDC Balance
-      </SweetAlert>
-      <SweetAlert
-        success
-        show={successmint}
-        title="Transaction Successfull"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setsuccessmint((successmint) => !successmint);
-        }}
-        onCancel={() => {
-          setsuccessmint((successmint) => !successmint);
-        }}
-      />
-      <SweetAlert
-        danger
-        show={failuremint}
-        title="Transaction Denied"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setfailuremint((failuremint) => !failuremint);
-        }}
-        onCancel={() => {
-          setfailuremint((failuremint) => !failuremint);
-        }}
-      >
-        Error buying tokens
-      </SweetAlert>
-      <SweetAlert
-        success
-        show={successburn}
-        title="Transaction Successfull"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setsuccessburn((successburn) => !successburn);
-        }}
-        onCancel={() => {
-          setsuccessburn((successburn) => !successburn);
-        }}
-      />
-      <SweetAlert
-        danger
-        show={failureburn}
-        title="Transaction Denied"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setfailureburn((failureburn) => !failureburn);
-        }}
-        onCancel={() => {
-          setfailureburn((failureburn) => !failureburn);
-        }}
-      >
-        Error selling tokens
-      </SweetAlert>
-      <SweetAlert
-        danger
-        show={!connectedwallet}
-        title="Please Connect Wallet and Login"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-          window.location.href = '/';
-        }}
-        onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-      ></SweetAlert>
-      <SweetAlert
-        danger
-        show={insufficenttokens}
-        title="Insufficient Tokens To Sell"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-        onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-      ></SweetAlert>
     </div>
   );
 };
 
-export default Artistpic;
+export default Artist;

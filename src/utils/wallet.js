@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
+import { useHistory } from "react-router-dom";
 // import WalletConnectProvider from '@walletconnect/web3-provider';
 // import { INFURA_ID, FORTMATIC_KEY, PORTIS_ID } from "./constants";
 // import Portis from "@portis/web3";
@@ -143,18 +144,21 @@ class Wallet {
 
     provider.on("accountsChanged", async (accounts) => {
       await this.connect();
-      window.location.reload();
+      // window.location.reload();
+      useHistory().go(0);
     });
 
     provider.on("chainChanged", async (chainId) => {
       await this.connect();
-      window.location.reload();
+      // window.location.reload();
+      useHistory().go(0);
     });
 
     provider.on("networkChanged", async () => {
       if (this.ethersProvider !== null) {
         await this.connect();
-        window.location.reload();
+        // window.location.reload();
+        useHistory().go(0);
       }
     });
   }

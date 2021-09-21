@@ -1,31 +1,28 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Route, Redirect } from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 import Header from "../base/Header";
 import Sidebar from "../base/Sidebar";
 
 function ArtistRoute(props) {
-	
-	const token = useSelector((state) => state.auth.token);
-	const isArtist = useSelector((state) => state.auth.isArtist);
+  const token = useSelector((state) => state.auth.token);
+  const isArtist = useSelector((state) => state.auth.isArtist);
+  const history = useHistory();
 
-	console.log({ isArtist })
+  if (!token || !isArtist) {
+    history.push("/");
+    return;
+  }
 
-	if (!token) {
-		return <Redirect to="/login" />;
-	}
-	if (!isArtist) {
-		return <Redirect to="/" />;
-	}
-	return (
-		<>
-			<Header />
-			<Sidebar />
-			<div className="main-comman-wrapping">
-				<Route {...props} />
-			</div>
-		</>
-	);
+  return (
+    <>
+      <Header />
+      <Sidebar />
+      <div className="main-comman-wrapping">
+        <Route {...props} />
+      </div>
+    </>
+  );
 }
 
 export default ArtistRoute;

@@ -1,12 +1,14 @@
 import axios from "axios";
-import localStorageService from "./localstorage";
+import { Magic } from "magic-sdk";
+import jwt_decode from "jwt-decode";
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY);
 
 // Add a request interceptor
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorageService.getAccessToken();
+    const token = localStorage.getItem('access_token');
     if (token) {
-      //   config.headers["Authorization"] = "Bearer " + token;
       config.headers["x-access-token"] = token;
     }
     // config.headers['Content-Type'] = 'application/json';
@@ -23,19 +25,31 @@ axios.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
-
-    if (originalConfig.url !== `${process.env.REACT_APP_SERVER_URL}/v1/user/login` && err.response && err.response !== 403) {
+    if (
+      originalConfig.url !==
+        `${process.env.REACT_APP_SERVER_URL}/v1/user/login` &&
+      err.response &&
+      err.response !== 403
+    ) {
       // Access Token was expired
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
 
         try {
-          const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/refreshtoken`, {
-            refreshToken: localStorageService.getRefreshToken()
+          const { id, account_type } = jwt_decode(localStorage.getItem('access_token'))
+          //if magic session is expired, it will fail. it is 7days as default
+          const didToken = await magic.user.generateIdToken({
+            lifespan: 60 * 60 * 25,
           });
 
-          const { accessToken } = res.data;
-          localStorageService.setToken(accessToken);
+          // get new access_token based on new didToken
+          const { data } = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/refreshtoken`, {
+            didToken,
+            account_type,
+            id
+          });
+
+          localStorage.setItem("access_token", data.access_token);
           return axios(originalConfig);
         } catch (_error) {
           return Promise.reject(_error);
@@ -81,4 +95,3 @@ axios.interceptors.response.use(
 //     return Promise.reject(error);
 //   }
 // );
-

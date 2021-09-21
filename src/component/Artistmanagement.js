@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { CreateMintgateLink } from "../hooks/createMintGate";
+import Button from '@material-ui/core/Button'
 
 // const GET_TOKEN_FEES = gql`
 //   query {
@@ -51,20 +52,18 @@ const Artistpic = () => {
   const uid = useSelector((state) => state.auth.data._id);
   const [socialTokenAddress, setSocialTokenAddress] = useState('');
   const [artist, setArtist] = useState('');
-  const [activated, setActivated] = useState(false);
+  const [hasActivated, setHasActivated] = useState();
 
   //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
   const [tokenfees, settokenfees] = useState(0.0);
 
   useEffect(async () => {
-    if (!wallet.wallet_connected) {
-      setconnectedwallet(false);
-    } else {
         const id = uid;
         const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
+        console.log(data.artist.has_activated);
+        setHasActivated(data.artist.has_activated);
         setSocialTokenAddress(data.artist.social_token_id);
-        setLoading(false);
-    }     
+        setLoading(false);   
   }, [])
 
   const formatAndSetTokenFees = async (value) => {
@@ -76,16 +75,16 @@ const Artistpic = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
+    // await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
   }
 
-  const saveMintgateLink = async (url) => {
-    console.log('saveMintgateLink!!!!', url)
-    await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { url } )
+  const saveInflowGatedLink = async (url) => {
+    console.log('savedLink!!!!', url)
+    // await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { url } )
+    await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updateinflowgatedurls`,  { inflowGatedUrl: url, balance } )
   }
 
   const changeOwner = async () => {
-    console.log('click')
     const provider = walletProvider;
     const signer = provider.getSigner();
     const socialToken = new Contract(
@@ -95,12 +94,11 @@ const Artistpic = () => {
     );
     try {
       await socialToken.transferOwnership('0x76aB04F8Adb222C7Bbc27991A82498906954dEae');
-      setActivated(true);
     } catch (error) {
       console.log(error);
     }
-    
-
+    const id = uid;
+    Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, { id });
   };
 
   return (
@@ -129,10 +127,10 @@ const Artistpic = () => {
             <div className="first-row-main-dash">
               <div className="left-col"> 
                 <div className="below-row">
-                {activated ? <button className="btn-gradiant" onClick={changeOwner}>
+                {hasActivated ? <Button variant="disabled" style={{height : '100px', width: '100px'}}>
                   ACTIVATED
-                  </button> 
-                  : <button className="btn-gradiant">
+                  </Button> 
+                  : <button className="btn-gradiant" onClick={changeOwner}>
                   ACTIVATE
                   </button>}
                 </div>
@@ -471,7 +469,8 @@ const Artistpic = () => {
             
             <button className="btn-gradiant" onClick={() => {
               navigator.clipboard.writeText(localStorage.getItem('link'));
-              saveMintgateLink(localStorage.getItem('link'))
+              // saveMintgateLink(localStorage.getItem('link'))
+              saveInflowGatedLink(url, balance);
               }}>Copy Link</button>
           </div>
         </Modal.Body>

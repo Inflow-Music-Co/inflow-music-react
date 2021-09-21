@@ -1,14 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Route, Redirect } from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 import Header from "../base/Header";
 import Sidebar from "../base/Sidebar";
 
 function PrivateRoute(props) {
-  
   const token = useSelector((state) => state.auth.token);
+  const history = useHistory();
+
   if (!token) {
-    return <Redirect to="/login" />;
+    history.push("/");
   }
   return (
     <>

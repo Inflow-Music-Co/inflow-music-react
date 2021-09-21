@@ -1,14 +1,24 @@
 /* eslint-disable */
+/* exported global_var */
 import React, { useState } from "react";
 import { AppRoutes } from "./route/AppRoutes";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./utils/axios";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
 // const { store, persistor } = configureStore();
 import Header from "../src/base/Header";
 import Sidebar from "../src/base/Sidebar";
 import { WalletProviderContext } from "./contexts/walletProviderContext";
+
+const theme = createTheme({
+  palette: {
+    secondary: {
+      main: '#863ee3'
+    }
+  }
+});
 
 function App() {
   const [walletProvider, setWalletProvider] = useState(null);
@@ -23,19 +33,16 @@ function App() {
   });
 
   return (
-    <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
-      <ApolloProvider client={client}>
-        <Router>
-          <AppRoutes />
-          {/* <Login />
-          <Header />
-          <Sidebar /> */}
-          {/* <div className="main-comman-wrapping">
+    <MuiThemeProvider theme={theme}>
+      <WalletProviderContext.Provider
+        value={{ walletProvider, setWalletProvider }}>
+        <ApolloProvider client={client}>
+          <Router>
             <AppRoutes />
-          </div> */}
-        </Router>
-      </ApolloProvider>
-    </WalletProviderContext.Provider>
+          </Router>
+        </ApolloProvider>
+      </WalletProviderContext.Provider>
+    </MuiThemeProvider>
   );
 }
 

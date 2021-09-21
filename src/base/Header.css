@@ -377,3 +377,10 @@
   margin-top: 15px;
   padding-top: 15px;
 }
+
+@media (max-width: 991px) {
+  .Dropdown-main-header .dropdown .btn::after {
+    width: 10px;
+    height: 10px;
+  }
+}
