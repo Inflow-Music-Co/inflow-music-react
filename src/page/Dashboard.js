@@ -48,7 +48,7 @@ const Dashboard = () => {
   const [tokenAddresses, setTokenAddresses] = useState([]);
   const [totalValues, setTotalValues] = useState([]);
   const [tokenSymbols, setTokenSymbols] = useState([]);
-  const [tokenMappings, setTokenMappings] = useState({});
+  const [tokenMappings, setTokenMappings] = useState();
   const [profileImages, setProfileImages] = useState([]);
   const [userAddress, setUserAddress] = useState();
   const [send, setSend] = useState(false);
@@ -56,6 +56,7 @@ const Dashboard = () => {
   const [usdcBalance, setUsdcBalance] = useState();
   const [formattedAddress, setFormattedAddress] = useState();
   const [recieve, setRecieve] = useState(false);
+  const [addedUsdc, setAddedUsdc] = useState(false);
 
   useEffect(async () => {
     
@@ -74,6 +75,7 @@ const Dashboard = () => {
       setSend(false);
       dispatch(updateActivePage("dashboard"));
       await getTokensOwnedByUser();
+      
     } else {
       setConnectedWallet(false);
     }
@@ -150,9 +152,10 @@ const Dashboard = () => {
     setTokenAddresses(noDuplicateAddresses);
   }
 
+  
+
   const getTokensBalAndPrice = async () => {
-    console.log('getTokensBalAndPrice fired')
-    console.log({ tokenAddresses });
+    
     const tempBalances = [];
     const tempPrices = [];
     const tempValues = [];
@@ -491,7 +494,7 @@ const Dashboard = () => {
       </div>
       <div className="token-chart">
         <div className="card-heading">
-          {walletProvider? <Button 
+          {walletProvider ? <Button 
             variant="contained" 
             size="medium" 
             color="secondary"
@@ -552,6 +555,8 @@ const Dashboard = () => {
                 tokenMappings={tokenMappings}
                 provider={walletProvider}
                 getTokensBalAndPrice={getTokensBalAndPrice}
+                addedUsdc={addedUsdc}
+                setAddedUsdc={setAddedUsdc}
                 /> 
                 <div className="card-heading">Processing Transaction Please Wait </div>
                 </div>
