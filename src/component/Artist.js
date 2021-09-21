@@ -75,10 +75,6 @@ const Artist = () => {
 
   useEffect(() => {
 
-    if (!wallet.wallet_connected) {
-      setconnectedwallet(false);
-    }
-
     if (balance !== ''){
       console.log(balance);
       getUserBalance();

@@ -28,7 +28,6 @@ const Inflowmusic = () => {
         }
     }
 
-
     const displayArtists = () => {
         if (artists && artists.length > 0) {
             return artists.map((artist, i) => {
