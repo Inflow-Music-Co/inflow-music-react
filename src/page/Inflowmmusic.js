@@ -53,7 +53,7 @@ const Inflowmusic = () => {
                 <div className="see-all-artist">
                     <a href="#">See All Artists</a>
                 </div>
-                <div className="artist-heading">NFT Drops</div>
+                {/* <div className="artist-heading">NFT Drops</div>
                 <div className="songs-grid-main">
                     <Song />
                     <Song />
@@ -63,7 +63,7 @@ const Inflowmusic = () => {
                 </div>
                 <div className="see-all-artist see-all-nft">
                     <a href="#">See All NFTs</a>
-                </div>
+                </div> */}
             </div>
         </div>
     );
