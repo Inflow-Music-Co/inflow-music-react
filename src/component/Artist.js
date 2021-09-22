@@ -16,10 +16,9 @@ import { Magic } from "magic-sdk";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
 import ArtistTransact from './ArtistTransact';
+import ArtistHeader from './AritstHeader';
 import Swal from "sweetalert2";
-import { Link } from 'react-router-dom';
 import withReactContent from "sweetalert2-react-content";
-import Button from '@material-ui/core/Button'
 
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
   network: "rinkeby",
@@ -534,15 +533,6 @@ const Artist = () => {
     }
   };
 
-  const redirectToTokenGate = async () => {
-    if (inflowGatedUrl !== "") {
-    }
-  };
-
-  if (loading) {
-    return <Loader />;
-  }
-
   const updatePriceHistory = async () => {
     await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, {
       mint_price_history: {
@@ -558,78 +548,13 @@ const Artist = () => {
 
   return (
     <div className="artist-background">
-      <div className="artist-main">
-        <div className="background">
-          <img
-            alt=""
-            src={
-              artist.banner_image
-                ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}`
-                : null
-            }
-            className="background-blur"
-          />
-        </div>
-        <div className="artist-details">
-          <div className="artist-main-details">
-            <div className="artis-img mb-0">
-              <img
-                alt=""
-                src={
-                  artist.profile_image
-                    ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
-                    : null
-                }
-              />
-            </div>
-            <div className="artist-content">
-              <div className="artist-content-details">
-                <div className="artist-name">{`${
-                  artist.first_name ? artist.first_name : ""
-                } ${artist.last_name ? artist.last_name : ""}`}</div>
-                {/* <div className="album-name">--</div> */}
-                <ul>
-                  <li>
-                    <div className="song-total">325</div>
-                    <div className="song-folder">Superfans</div>
-                  </li>
-                  <li>
-                    <div className="song-total">28</div>
-                    <div className="song-folder">NFTs</div>
-                  </li>
-                </ul>
-              </div>
-              <div className="">
-                <Button 
-                  variant="contained" 
-                  color="secondary" 
-                  size="large" 
-                  style={{borderRadius: 30, boxShadow: '40px'}}>
-                SUBSCRIBE
-                </Button>
-              </div>
-            </div>
-          </div>
-          <div className="artist-tag">
-          {requiredBalance ?
-            <Link to={
-              {
-                pathname: `/${inflowGatedUrl}`,
-                requiredBalance : requiredBalance,
-                address : socialTokenAddress,
-                encodedUrl : encodedUrl 
-              }
-              }>
-            <button
-              className="tag-button"
-            >
-              UNRELEASED MUSIC VIDEO{" "}
-            </button>
-            </Link> : null}
-          </div>
-        </div>
-      </div>
-
+      <ArtistHeader 
+            artist={artist} 
+            requiredBalance={requiredBalance}
+            inflowGatedUrl={inflowGatedUrl}
+            socialTokenAddress={socialTokenAddress}
+            encodedUrl={encodedUrl}  
+            />
       <div className="dashboard-wrapper-main artist-main-wrapper">
         <ArtistTransact 
           artist={artist} 
