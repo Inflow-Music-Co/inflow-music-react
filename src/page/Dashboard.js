@@ -489,22 +489,17 @@ const Dashboard = () => {
       </div>
       <div className="token-chart">
         <div className="chart-header-row">
-        <Grid container direction="row" alignItems="center" justify="center">
-          <Grid item container xs={12} direction="row" alignItems="flex-end" justify="center">
-          <div className="token-info">
-            <div className="card-heading">total usdc balance</div>
-            <div className="dollar-price">
-               {tokenSymbols.length > 0 ? <span>${`${usdcBalance}`}</span> : <span>loading ... </span>}
-            </div>
+        <Grid container direction="column" alignItems="center" justify="center">
+          <Grid item style={{paddingBottom: 10}}>
+               {tokenSymbols.length > 0 ? <div className="right-side-value">total usdc : ${usdcBalance}</div> : <span>loading ... </span>}
+          </Grid>
             <Button 
               style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
               variant="contained"
               onClick={launchTransak}
               size="large">
               Buy USDC
-          </Button>
-          </div>
-          </Grid>
+          </Button>          
           </Grid>
         </div>
         <div className="total-bal-chart">{/* <Totalbalancechart /> */}</div>
