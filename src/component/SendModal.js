@@ -37,8 +37,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
 
     useEffect(() => {
       addUsdc();
-      console.log('render');
-      console.log(tokenMappings);
     },[])
 
     useEffect(() => {
@@ -70,7 +68,6 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
       const addUsdc = () => {
         if(!addedUsdc){
           tokenMappings.push({ address : RINKEBY_MOCKUSDC, symbol : 'USDC'})
-          tokenMappings.forEach(mapping => console.log(mapping));
           setAddedUsdc(true);
         }
       }
