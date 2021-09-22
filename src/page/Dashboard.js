@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { assetsImages } from "../constants/images";
 import Slider from "../component/Slider";
-import Customdropdown from '../component/Customdropdown';
 // import Performbar from '../component/Performbar';
 import ProgressBar from "react-bootstrap/ProgressBar";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -19,13 +18,11 @@ import SmallLoader from "../component/SmallLoader";
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import "../component/Artist.css";
-import SendSocialToken from "../component/SendSocialToken"
 import SendModal from "../component/SendModal"
 import Swal from "sweetalert2";
 import { Magic } from "magic-sdk";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopy from "@material-ui/icons/FileCopy";
 import transakSDK from '@transak/transak-sdk';
@@ -203,29 +200,6 @@ const Dashboard = () => {
     });
   }
 
-  const getArtistInfoFromDB = () => {
-    // TODO: need to code logic to pull only artist images/names that user owns
-    // const { data } = await axios.post(
-    //   `${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`,
-    //   { uid }
-    // );
-    // tempTokenAddresses = data.tokensBought;
-    // setTokenSymbols(data.tokenNames);
-    // console.log({ tempTokenAddresses });
-    //set Profile Images
-    // let imageUrls = tempTokenAddresses.map((address) => {
-    //   if (address) {
-    //     const result = address + "_profilePic.jpeg";
-    //     return result;
-    //   }
-    // });
-    // imageUrls = imageUrls.filter((url) => {
-    //   if (url) return url;
-    // });
-    // setProfileImages(imageUrls);
-    // console.log({ imageUrls });
-  };
-
   const getTokenPrice = async (token, balance) => {
     if (walletProvider) {
       try {
@@ -398,7 +372,6 @@ const Dashboard = () => {
             <div className="date-row-main">
               <div className="left-pricing">
                 <div className="price-tag">
-                  {" "}
                   <span>$</span> {displayTotalValue()}
                 </div>
                 <div className="short-des">--</div>
@@ -457,21 +430,17 @@ const Dashboard = () => {
           </div>
 
           <div className="artist-holdings">
-            {/* {usdcBalance ? <div className="chart-row">usdc balance here</div> : null} */}
             {isFetched ?  <div className="chart-row">{displayDoughnutChart()}</div> : null}
-
-            {/* <div className="chart-row">{displayPercentageBalances()}</div> */}
-
+            <div className="chart-row">{displayPercentageBalances()}</div>
             <div className="artist-holdings-total m-auto col-12 d-flex align-items-center">
               <div
                 className="artist-holdings-inner d-flex flex-column"
-                // style={{ borderRight: "2px solid black" }}
               >
                 <span
                   className="d-flex flex-row"
                   style={{ fontSize: "1.1rem" }}
               >
-            {formattedAddress ? <div>{formattedAddress} </div> : <div>loading address ... </div>}
+                {formattedAddress ? <div>{formattedAddress} </div> : <div>loading address ... </div>}
                 <IconButton onClick={() => {navigator.clipboard.writeText(userAddress); setCopied(true)}} style={{paddingTop: 0}}>
                     <FileCopy fontSize="small"/>
                 </IconButton>
@@ -483,7 +452,6 @@ const Dashboard = () => {
             <div className="artist-holdings-total mr-auto mt-3 ml-auto col-12 d-flex align-items-center">
               <div
                 className="artist-holdings-inner d-flex flex-column"
-                // style={{ borderRight: "2px solid black" }}
               >
                 <span className="d-flex flex-row"></span>
                 <span className="small-heading">Total Wallet Balance</span>
@@ -494,27 +462,35 @@ const Dashboard = () => {
       </div>
       <div className="token-chart">
         <div className="card-heading">
-          {walletProvider ? <Button 
+        <Grid container direction="row">
+          {walletProvider ? 
+          <Grid item container xs={9} direction="row" alignItems="flex-end" justify="flex-end">
+          <Button 
             variant="contained" 
             size="medium" 
             color="secondary"
             onClick={() => setSend(true)}
             style={{margin : 10}}>
               Send Tokens & NFTs
-          </Button> : <div> connecting wallet ... </div>}
+          </Button>
+          </Grid> : <div> connecting wallet ... </div>}
+          <Grid Grid item container xs={3} direction="row" alignItems="flex-end" justify="flex-end">
           <Button 
             onClick={() => setRecieve(true)}
             variant="contained" 
             size="medium" 
-            color="primary">
+            color="primary"
+            style={{margin : 10}}>
               Recieve Tokens & NFTs
           </Button>
+          </Grid>
+          </Grid>
         </div>
       </div>
       <div className="token-chart">
         <div className="chart-header-row">
-        <Grid container direction="row">
-          <Grid item xs={6}>
+        <Grid container direction="row" alignItems="center" justify="center">
+          <Grid item container xs={12} direction="row" alignItems="flex-end" justify="center">
           <div className="token-info">
             <div className="card-heading">total usdc balance</div>
             <div className="dollar-price">
@@ -523,7 +499,8 @@ const Dashboard = () => {
             <Button 
               style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
               variant="contained"
-              onClick={launchTransak}>
+              onClick={launchTransak}
+              size="large">
               Buy USDC
           </Button>
           </div>
