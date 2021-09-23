@@ -31,7 +31,6 @@ const GatedContent = (props) => {
 
         const isLoggedIn = await magic.user.isLoggedIn();
         console.log('isLoggedIn', isLoggedIn)
-   
         if(isLoggedIn) {
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
             setProvider(provider);
