@@ -1,17 +1,14 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
-// import Tabs from 'react-bootstrap/Tabs'
-// import Dropdown from 'react-bootstrap/Dropdown';
-// import TabContainer from 'react-bootstrap/TabContainer'
 import axios from "axios";
 import Loader from "../component/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { assetsImages } from "../constants/images";
 import Axios from "axios";
-import { Modal } from "react-bootstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
+import { Magic } from "magic-sdk";
 
 let country_list = [
   "Afghanistan",
@@ -237,19 +234,38 @@ const Accountsettings = () => {
   const [pincode, setpincode] = useState("");
   const [address, setaddress] = useState("");
   const [loading, setloading] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
   const [profileimg, setprofileimg] = useState("");
+  const [tokenName, setTokenName] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState("");
   const [uprofileimage, setuprofileimage] = useState();
   const [ubannerimage, setubannerimage] = useState();
   const [resetpasswordemailsent, setresetpasswordemailsent] = useState(false);
   const [convertProfile, setConvertProfile] = useState(false);
 
-  useEffect(() => {
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+    network: "rinkeby",
+  });
+
+  useEffect(async () => {
+
+    const isLoggedIn = await magic.user.isLoggedIn();
+    console.log('isLoggedIn', isLoggedIn)
+   
+    if(isLoggedIn) {
+      const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      setWalletAddress(address);
+    } 
     
     getdata();
   }, []);
+
   useEffect(() => {
     dispatch(updateActivePage("account"));
   });
+
   useEffect(() => {
     resetpasswordemailsent &&
       MySwal.fire({
@@ -315,6 +331,10 @@ const Accountsettings = () => {
       data.append("country", country ? country : "");
       data.append("pin_code", pincode ? pincode : "");
       data.append("address", address ? address : "");
+      data.append("social_token_name", tokenName? tokenName : "");
+      data.append("social_token_symbol", tokenSymbol? tokenSymbol : "");
+      data.append("wallet_id", walletAddress? walletAddress : "");
+      
       if (uprofileimage) {
         data.append("profile", uprofileimage);
       }
@@ -498,7 +518,7 @@ const Accountsettings = () => {
                             );
                           }}
                         >
-                          Apply as Artist
+                          create artist account
                         </button>
                       )}
                     </div>
@@ -657,6 +677,38 @@ const Accountsettings = () => {
                         }
                       />
                     </div>
+                    <div className="comman-grids">
+                      <input
+                        placeholder="Token Name"
+                        value={
+                          tokenName ? tokenName["tokenName"] : null
+                        }
+                        onChange={(e) =>
+                          setTokenName((tokenName) => {
+                            return {
+                              ...tokenName,
+                              tokenName: e.target.value,
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="comman-grids">
+                      <input
+                        placeholder="Token Name"
+                        value={
+                          tokenSymbol ? tokenSymbol["tokenSymbol"] : null
+                        }
+                        onChange={(e) =>
+                          setTokenSymbol((tokenSymbol) => {
+                            return {
+                              ...tokenSymbol,
+                              tokenSymbol: e.target.value,
+                            };
+                          })
+                        }
+                      />
+                    </div>
                   </>
                 )}
               </div>
@@ -680,185 +732,9 @@ const Accountsettings = () => {
               </div>
             </div>
           </div>
-          <>
-            {/* <div
-            className="tab-pane fade"
-            id="nav-profile"
-            role="tabpanel"
-            aria-labelledby="nav-profile-tab"
-          >
-            Et et consectetur ipsum labore excepteur est proident excepteur ad
-            velit occaecat qui minim occaecat veniam. Fugiat veniam incididunt
-            anim aliqua enim pariatur veniam sunt est aute sit dolor anim. Velit
-            non irure adipisicing aliqua ullamco irure incididunt irure non esse
-            consectetur nostrud minim non minim occaecat. Amet duis do nisi duis
-            veniam non est eiusmod tempor incididunt tempor dolor ipsum in qui
-            sit. Exercitation mollit sit culpa nisi culpa non adipisicing
-            reprehenderit do dolore. Duis reprehenderit occaecat anim ullamco ad
-            duis occaecat ex.
           </div>
-          <div
-            className="tab-pane fade"
-            id="nav-contact"
-            role="tabpanel"
-            aria-labelledby="nav-contact-tab"
-          >
-            Et et consectetur ipsum labore excepteur est proident excepteur ad
-            velit occaecat qui minim occaecat veniam. Fugiat veniam incididunt
-            anim aliqua enim pariatur veniam sunt est aute sit dolor anim. Velit
-            non irure adipisicing aliqua ullamco irure incididunt irure non esse
-            consectetur nostrud minim non minim occaecat. Amet duis do nisi duis
-            veniam non est eiusmod tempor incididunt tempor dolor ipsum in qui
-            sit. Exercitation mollit sit culpa nisi culpa non adipisicing
-            reprehenderit do dolore. Duis reprehenderit occaecat anim ullamco ad
-            duis occaecat ex.
-          </div>
-          <div
-            className="tab-pane fade"
-            id="nav-about"
-            role="tabpanel"
-            aria-labelledby="nav-about-tab"
-          >
-            Et et consectetur ipsum labore excepteur est proident excepteur ad
-            velit occaecat qui minim occaecat veniam. Fugiat veniam incididunt
-            anim aliqua enim pariatur veniam sunt est aute sit dolor anim. Velit
-            non irure adipisicing aliqua ullamco irure incididunt irure non esse
-            consectetur nostrud minim non minim occaecat. Amet duis do nisi duis
-            veniam non est eiusmod tempor incididunt tempor dolor ipsum in qui
-            sit. Exercitation mollit sit culpa nisi culpa non adipisicing
-            reprehenderit do dolore. Duis reprehenderit occaecat anim ullamco ad
-            duis occaecat ex.
-          </div> */}
-          </>
         </div>
       </div>
-
-      <>
-        {/* <Modal
-          // show={convertProfile}
-          className="edit-profile-modal"
-          onHide={() => {
-            setConvertProfile((convertProfile) => !convertProfile);
-          }}
-          dialogClassName="convertProfileModal"
-        >
-          <Modal.Header>
-            <div className="d-flex flex-row justify-content-around col-12">
-              <h4 className="login-type">Artist Application</h4>
-            </div>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="account-setting-form">
-              <div className="d-flex w-100 justify-content-center align-items-center">
-                <img
-                  style={{
-                    borderRadius: "50%",
-                    height: "200px",
-                    width: "200px",
-                  }}
-                  src={
-                    profileimg !== ""
-                      ? `${process.env.REACT_APP_SERVER_URL}/${profileimg}`
-                      : assetsImages.person
-                  }
-                  alt=""
-                />
-              </div>
-              <div className="grids-main-inputs">
-                <div className="comman-grids">
-                  <input
-                    placeholder="First Name"
-                    value={firstname}
-                    onChange={(e) => setfirstname(e.target.value)}
-                  />
-                </div>
-                <div className="comman-grids">
-                  <input
-                    placeholder="Last Name"
-                    value={lastname}
-                    onChange={(e) => setlastname(e.target.value)}
-                  />
-                </div>
-                <div className="comman-grids Address-main">
-                  <input
-                    placeholder="Address"
-                    value={address}
-                    onChange={(e) => setaddress(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="grids-main-inputs three-inputs pt-0 pb-0">
-                <div className="comman-grids">
-                  <input
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => setcity(e.target.value)}
-                  />
-                </div>
-                <div className="comman-grids">
-                  <input
-                    placeholder="Postcode/ZIP"
-                    value={pincode}
-                    onChange={(e) => setpincode(e.target.value)}
-                  />
-                </div>
-                <div className="comman-grids">
-                  <select
-                    name="countries"
-                    id="countries"
-                    form="carform"
-                    className="common-grids-select"
-                    value={country}
-                    onChange={(e) => setcountry(e.target.value)}
-                  >
-                    <option value="Country" active>
-                      Country
-                    </option>
-                    {country_list.map((country, i) => (
-                      <option key={i} value={country}>
-                        {country}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grids-main-inputs">
-                <div className="comman-grids">
-                  Profile Image:
-                  <input
-                    onChange={(e) => setuprofileimage(e.target.files[0])}
-                    placeholder="Profile Image"
-                    id="profileimage"
-                    type="file"
-                  />
-                </div>
-
-                {!isArtist && (
-                  <div className="comman-grids">
-                    Banner Image:
-                    <input
-                      onChange={(e) => setubannerimage(e.target.files[0])}
-                      placeholder="Banner Image"
-                      id="bannerimage"
-                      type="file"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <div className="d-flex flex-column flex-wrap justify-content-center align-items-center col-12">
-              <button className="btn-gradiant" onClick={handleConvertProfile}>
-                Apply
-              </button>
-            </div>
-          </Modal.Footer>
-        </Modal> */}
-      </>
-    </div>
   );
 };
 

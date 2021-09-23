@@ -46,7 +46,6 @@ const Dashboard = () => {
   const [totalValues, setTotalValues] = useState([]);
   const [tokenSymbols, setTokenSymbols] = useState([]);
   const [tokenMappings, setTokenMappings] = useState();
-  const [profileImages, setProfileImages] = useState([]);
   const [userAddress, setUserAddress] = useState();
   const [send, setSend] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -365,7 +364,6 @@ const Dashboard = () => {
               tokenPrices={tokenPrices}
               tokenSymbols={tokenSymbols}
               tokenAddresses={tokenAddresses}
-              profileImages={profileImages}
             />
           </div>
           <div className="below-row">
