@@ -1,23 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { findDOMNode } from "react-dom";
 import Cryptr from 'cryptr';
-
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import ReactPlayer from "react-player";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-
 import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import VolumeUp from "@material-ui/icons/VolumeUp";
-import VolumeDown from "@material-ui/icons/VolumeDown";
-import VolumeMute from "@material-ui/icons/VolumeOff";
-import FullScreen from "@material-ui/icons/Fullscreen";
-import Popover from "@material-ui/core/Popover";
 import screenful from "screenfull";
 import Controls from "./Controls";
 

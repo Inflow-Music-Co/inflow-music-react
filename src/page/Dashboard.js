@@ -7,6 +7,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Doughnutchart from "../component/Doughnutchart";
 import MyBalanceChart from "../component/MyBalanceChart";
+import CreateArtistModal from "../component/CreateArtistModal";
 import { ethers } from 'ethers'
 import { connected, setProvider } from "../store/reducers/walletSlice";
 // import Mynftdropdown from '../component/Mynftdropdown';
@@ -53,6 +54,7 @@ const Dashboard = () => {
   const [formattedAddress, setFormattedAddress] = useState();
   const [recieve, setRecieve] = useState(false);
   const [addedUsdc, setAddedUsdc] = useState(false);
+  const [createArtistAccount, setCreateArtistAccount] = useState(false);
 
   useEffect(async () => {
     
@@ -344,13 +346,33 @@ const Dashboard = () => {
     } 
   };
 
+  const onCreate = () => {
+    setCreateArtistAccount((createArtistAccount) => !createArtistAccount)
+  }
+
   displayTotalUSDC();
   displayDoughnutChart();
   displayTotalValue();
 
   return (
     <div className="dashboard-wrapper-main">
+      <Grid container direction="row">
+        <Grid item xs={9}>
       <div className="heading">my dashboard</div>
+        </Grid>
+        <Grid item xs={3}>
+      <Button 
+        variant="contained" 
+        style={{borderRadius: 40}}
+        onClick={onCreate}>Create Artist Account</Button>
+        </Grid>
+      </Grid>
+      {createArtistAccount ? 
+        <CreateArtistModal 
+          createArtistAccount={createArtistAccount} 
+          setCreateArtistAccount={setCreateArtistAccount}/> 
+          : null}
+
       <div className="first-row-main-dash">
         <div className="left-col">
           <div className="above-row">
