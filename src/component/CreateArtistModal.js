@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Modal } from "react-bootstrap";
 import Swal from "sweetalert2";
 import '../page/LoginModal.css'
@@ -6,6 +7,24 @@ import Grid from '@material-ui/core/Grid'
 import TwitterIcon from '@mui/icons-material/Twitter';
 
 const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount }) => {
+
+    const [artistData, setArtistData] = useState({
+        socialTokenName: "",
+        artistName: "",
+        symbol: ""
+    });
+
+    const handleSocialTokenName = (e) => {
+
+    }
+
+    const handleArtistName = (e) => {
+
+    }
+
+    const handleSymbol = (e) => {
+        
+    }
 
     return (
         <div>
@@ -37,16 +56,18 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount }) => {
                     <div className="col-12">
                     <div className="comman-row-input">
                         <input
-                        placeholder="your social token name"
+                        placeholder="artist name"
                         type="text"
-                        name="social token name"
+                        name="artist name"
+                        onChange={handleArtistName}
                         />
                     </div>
                     <div className="comman-row-input">
                         <input
-                        placeholder="artist name"
+                        placeholder="your social token name"
                         type="text"
-                        name="artist name"
+                        name="social token name"
+                        onChange={handleSocialTokenName}
                         />
                     </div>
                     </div>
@@ -56,6 +77,7 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount }) => {
                         placeholder="your social symbol"
                         type="text"
                         name="social token name"
+                        onChange={handleSymbol}
                         />
                     </div>
                     </div>
