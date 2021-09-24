@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   playerWrapper: {
     width: "100%",
 
-    position: "relative",
+    height: 600
     // "&:hover": {
     //   "& $controlsWrapper": {
     //     visibility: "visible",
@@ -335,19 +335,12 @@ const Streamer = ({ encodedUrl }) => {
 
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography>React Video Player</Typography>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
-      <Container maxWidth="md">
+      <Container maxWidth="xl" disableGutters="true">
         <div
           onMouseMove={handleMouseMove}
           onMouseLeave={hanldeMouseLeave}
           ref={playerContainerRef}
-          className={classes.playerWrapper}
-        >
+          className={classes.playerWrapper}>
           <ReactPlayer
             ref={playerRef}
             width="100%"
@@ -370,7 +363,6 @@ const Streamer = ({ encodedUrl }) => {
               },
             }}
           />
-
           <Controls
             ref={controlsRef}
             onSeek={handleSeekChange}
@@ -396,29 +388,6 @@ const Streamer = ({ encodedUrl }) => {
             onBookmark={addBookmark}
           />
         </div>
-
-        <Grid container style={{ marginTop: 20 }} spacing={3}>
-          {bookmarks.map((bookmark, index) => (
-            <Grid key={index} item>
-              <Paper
-                onClick={() => {
-                  playerRef.current.seekTo(bookmark.time);
-                  controlsRef.current.style.visibility = "visible";
-
-                  setTimeout(() => {
-                    controlsRef.current.style.visibility = "hidden";
-                  }, 1000);
-                }}
-                elevation={3}
-              >
-                <img crossOrigin="anonymous" src={bookmark.image} />
-                <Typography variant="body2" align="center">
-                  bookmark at {bookmark.display}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
         <canvas ref={canvasRef} />
       </Container>
     </>
