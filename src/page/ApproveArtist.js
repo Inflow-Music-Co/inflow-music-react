@@ -26,7 +26,6 @@ const AllArtists = () => {
 	const [mprofileimage, setmprofileimage] = useState();
 	const [mbannerimage, setmbannerimage] = useState();
 
-
 	useEffect(() => {
 		getArtists();
 	}, [])
@@ -47,8 +46,7 @@ const AllArtists = () => {
             await Axios.patch(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activate`, { id: e.target.id })
         } catch(e) {
 
-        }
-        
+        }  
 	}
 
 	const displayArtists = () => {
@@ -64,7 +62,6 @@ const AllArtists = () => {
 			)
 		})
 	}
-
 
 	if (loading) {
 		return <Loader />

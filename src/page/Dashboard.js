@@ -54,19 +54,20 @@ const Dashboard = () => {
   const [formattedAddress, setFormattedAddress] = useState();
   const [recieve, setRecieve] = useState(false);
   const [addedUsdc, setAddedUsdc] = useState(false);
+  const [userEmail, setUserEmail] = useState();
   const [createArtistAccount, setCreateArtistAccount] = useState(false);
 
   useEffect(async () => {
     
     const isLoggedIn = await magic.user.isLoggedIn();
-    console.log('isLoggedIn', isLoggedIn)
+    console.log('isLoggedIn', isLoggedIn);
    
     if(isLoggedIn) {
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      setUserAddress(address);
-      dispatch(connected({ address: address }));
+      const { email, publicAddress } = await magic.user.getMetadata();
+      setUserAddress(publicAddress);
+      setUserEmail(email);
+      dispatch(connected({ address: publicAddress }));
       setWalletProvider(provider);
       dispatch(setProvider(provider));
       setConnectedWallet(true);
@@ -370,7 +371,10 @@ const Dashboard = () => {
       {createArtistAccount ? 
         <CreateArtistModal 
           createArtistAccount={createArtistAccount} 
-          setCreateArtistAccount={setCreateArtistAccount}/> 
+          setCreateArtistAccount={setCreateArtistAccount}
+          userEmail={userEmail}
+          userAddress={userAddress}
+          /> 
           : null}
 
       <div className="first-row-main-dash">

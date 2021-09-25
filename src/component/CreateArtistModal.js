@@ -6,41 +6,72 @@ import axios from 'axios'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TwitterIcon from '@mui/icons-material/Twitter';
+import { styled } from '@mui/material/styles';
 import { setUserData } from '../store/reducers/authSlice';
 
 const twitterRegex = /http(?:s)?:\/\/(?:www\.)?twitter\.com\/([a-zA-Z0-9_]+)/;
-const symbolRegex = /[A-Z]{3}/g;
+const symbolRegex = /[A-Z]{3}/;
 
-const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount }) => {
+const Input = styled('input')({
+    display: 'none',
+  });
+
+const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAddress, userEmail }) => {
 
     const [errorMessage, setErrorMessage] = useState("");
     const [errorFlg, setErrorFlg] = useState("");
     const [errTwitter, setErrTwitter] = useState(false);
     const [errSymbol, setErrSymbol] = useState(false);
     const [errArtistName, setErrArtistName] = useState(false);
+    const [errUpload, setErrUpload] = useState(false);
     const [errSocialTokenName, setErrSocialTokenName] = useState(false);
+    const [artistAccountCreated, setArtistAccountCreated] = useState(false);
     const [artistData, setArtistData] = useState({
         twitterUrl: "",
         artistName: "",
         socialTokenName: "",
         symbol: "",
+        profile: ""
     });
 
     const createArtist = async (e) => {
+        console.log('createArtist fired', artistData);
         e.preventDefault();
 
         if(!twitterRegex.test(String(artistData.twitterUrl).toLowerCase())){
             setErrTwitter(true);
+            alert('twitter error');
         } else if (!artistData.artistName){
             setErrArtistName(true);
+            alert('artist name error');
         } else if (!artistData.socialTokenName){
             setErrSocialTokenName(true);
-        } else if (symbolRegex.test(String(artistData.symbol))){
-            setErrSymbol(true)
+            alert('social token name error');
+        } else if (!symbolRegex.test(String(artistData.symbol))){
+            setErrSymbol(true);
+            alert('symbol error');
+        } else if(!artistData.profile){
+            setErrUpload(true);
+            alert('file upload error');
         } else {
-            await axios.post(`${process.env.REACT_APP_SERVER_URL}`)
-        }
-        
+            const data = new FormData();
+            data.append("twitter_url", artistData.twitterUrl);
+            data.append("first_name", artistData.artistName);
+            data.append("social_token_name", artistData.socialTokenName);
+            data.append("social_token_symbol", artistData.symbol);
+            data.append("wallet_id", userAddress);
+            data.append("profile", artistData.profile);
+            data.append("email", userEmail);
+
+            await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/onboardingupgrade`, data)
+            .then((res) => {
+                console.log(res);
+                setArtistAccountCreated(true);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        } 
     }
 
     const handleSocialTokenName = (e) => {
@@ -57,6 +88,10 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount }) => {
 
     const handleTwitterUrl = (e) => {
         setArtistData({ ...artistData, twitterUrl: e.target.value});
+    }
+
+    const handleUpload = (e) => {
+        setArtistData({...artistData, profile: e.target.files[0]});
     }
 
     console.log(artistData);
@@ -117,12 +152,20 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount }) => {
                     <div className="col-12">
                     <div className="comman-row-input">
                         <input
-                        placeholder="your social symbol"
+                        placeholder="your social token symbol (eg. INF)"
                         type="text"
                         name="social token name"
                         onChange={handleSymbol}
                         />
                     </div>
+                    </div>
+                    <div className="col-12">
+                        <label htmlFor="contained-button-file">
+                        <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleUpload}/>
+                        <Button variant="contained" color="secondary" fullWidth={true} component="span">
+                            UPLOAD PROFILE IMAGE
+                        </Button>
+                        </label>
                     </div>
                 </div>
             </Modal.Body>
