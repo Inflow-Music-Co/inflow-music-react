@@ -3,11 +3,12 @@ import "./component.css";
 import { assetsImages } from "../constants/images";
 import { Carousel } from "react-bootstrap";
 import SmallLoader from "./SmallLoader";
+import axios from 'axios'
 
-const Slider = ({ tokenAddresses, tokenSymbols, tokenPrices, profileImages }) => { 
+const Slider = ({ tokenAddresses, tokenSymbols, tokenPrices }) => { 
 
   useEffect(() => {
-    tokenAddresses.map(tokenAddress => console.log('slider, token Addresses', tokenAddress));
+    tokenAddresses.map(tokenAddress => console.log('slider, token Addresses', tokenAddress));  
   },[])
   
   return (

@@ -127,7 +127,12 @@
 .artist-tag {
   /* background-color: #2f3443; */
   background-color: transparent;
-  padding: 20px 50px;
+  padding: 50px 50px;
+}
+
+.artist-tag a {
+  display: block;
+  padding-bottom: 30px;
 }
 
 .artist-tag button {
@@ -175,7 +180,7 @@
 }
 
 .token-chart {
-  margin-top: 50px;
+  margin-top: 10px;
   background: rgb(37, 37, 37);
   border-radius: 10px;
   padding: 10px;

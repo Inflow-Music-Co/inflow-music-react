@@ -7,20 +7,38 @@ import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import Streamer from './Streamer'
 import SmallLoader from './SmallLoader';
+import { Magic } from "magic-sdk";
+
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+    network: "rinkeby",
+  });
 
 const GatedContent = (props) => {
 
     const MySwal = withReactContent(Swal);
-    const provider = useSelector((state) => state.wallet.provider);
+    const [provider, setProvider] = useState();
     const [socialTokenAddress, setSocialTokenAddress] = useState('');
     const [availableBalance, setAvailableBalance] = useState(null);
     const [requiredBalance, setRequiredBalance] = useState(null);
     const [sufficientBalance, setSufficientBalance] = useState(false);
     const [insufficientBalance, setInsuffucientBalance] = useState(false);
+    const [connectedWallet, setConnectedWallet] = useState(false)
     const [viewable, setViewable] = useState(false);
     const renderCount = useRef(0);
 
-    useEffect(() => {
+    useEffect(async () => {
+
+        const isLoggedIn = await magic.user.isLoggedIn();
+        console.log('isLoggedIn', isLoggedIn)
+        if(isLoggedIn) {
+            const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+            setProvider(provider);
+            setConnectedWallet(true);
+        } else {
+            setConnectedWallet(false);
+        }
+
         setSocialTokenAddress(props.location.address);
         setRequiredBalance(props.location.requiredBalance); 
     },[])

@@ -120,44 +120,8 @@ const LoginModal = (props) => {
           </div>
         </Modal.Header>
         <Modal.Body>
-          {/* {!forgotPasswordFlag && (
-            <div className="login-type d-flex flex-row justify-content-center col-12">
-              <button
-                id="user"
-                className={`${
-                  user.account_type === "user" ? "btn-selected" : "btn-gradiant"
-                } mr-3`}
-                onClick={handleChangeUsertype}
-              >
-                Fan
-              </button>
-              <button
-                id="artist"
-                className={`${
-                  user.account_type === "artist"
-                    ? "btn-selected"
-                    : "btn-gradiant"
-                } ml-3`}
-                onClick={handleChangeUsertype}
-              >
-                Artist
-              </button>
-            </div>
-          )}
- */}
           <div className="mt-5 mb-0 pb-0 form-group">
             <div className="col-12">
-              {/* {!forgotPasswordFlag && loginType === "signup" && (
-                <div className="comman-row-input persons-row">
-                  <input
-                    placeholder="Name"
-                    type="text"
-                    name="displayName"
-                    value={user.displayName}
-                    onChange={handleChange}
-                  />
-                </div>
-              )} */}
               <div className="comman-row-input email-row">
                 <input
                   placeholder="Email"

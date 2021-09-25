@@ -7,11 +7,6 @@ import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import Loader from '../component/Loader';
 import { assetsImages } from "../constants/images";
-import { Magic } from "magic-sdk";
-
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-    network: "rinkeby",
-  });
 
 const Inflowmusic = () => {
     const [artists, setArtists] = useState();
@@ -32,7 +27,6 @@ const Inflowmusic = () => {
             setloading(false);
         }
     }
-
 
     const displayArtists = () => {
         if (artists && artists.length > 0) {
@@ -66,8 +60,8 @@ const Inflowmusic = () => {
                     <Song />
                     <Song />
                     <Song />
-                </div> */}
-                {/* <div className="see-all-artist see-all-nft">
+                </div>
+                <div className="see-all-artist see-all-nft">
                     <a href="#">See All NFTs</a>
                 </div> */}
             </div>

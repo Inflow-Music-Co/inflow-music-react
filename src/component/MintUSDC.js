@@ -1,55 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { Contract, ethers, Wallet } from 'ethers';
 import { Button } from 'react-bootstrap';
+import { Magic } from "magic-sdk";
 import MockUSDC from '../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json';
 import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
 import Loader from './Loader';
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+    network: "rinkeby",
+  });
 
 const MintUSDC = () => {
     const [mockUSDCmint, setMockUSDCMint] = useState(0.0);
     const [balance, setbalance] = useState(0.0);
     const [loading, setLoading] = useState(false);
+    const [provider, setProvider] = useState();
 
-    useEffect(() => {
+    useEffect(async () => {
         try {
             const init = async () => {
-                await requestAccount();
-                const provider = new ethers.providers.Web3Provider(
-                    window.ethereum
-                );
-                const signer = provider.getSigner();
-                const inflow = new Inflow(provider, 4);
-                const signerAddress = await signer.getAddress();
-                const usdcBalance = await inflow.balanceOf(
-                    'USDC',
-                    signerAddress
-                );
-                setbalance(usdcBalance[0]);
+                const isLoggedIn = await magic.user.isLoggedIn();
+                console.log('isLoggedIn', isLoggedIn)
+                if(isLoggedIn) {
+                    const walletProvider = new ethers.providers.Web3Provider(magic.rpcProvider);
+                    setProvider(walletProvider);
+                } 
             };
             setLoading(true);
             init();
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            // console.log(error);
+            console.log(error);
         }
     }, []);
 
-    async function requestAccount() {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-    }
+    useEffect(async () => {
+        if(provider){
+            const signer = provider.getSigner();
+            const inflow = new Inflow(provider, 4);
+            const signerAddress = await signer.getAddress();
+            const usdcBalance = await inflow.balanceOf(
+                'USDC',
+                signerAddress
+            );
+        setbalance(usdcBalance[0]);
+        }
+        
+    },[provider])
+
 
     const mintUSDC = async () => {
         try {
-            await requestAccount();
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const admin = new Wallet(process.env.REACT_APP_ADMIN_PVT_KEY, provider);
-            console.log({ admin })
             const signer = provider.getSigner();
             const usdc = new Contract(
                 process.env.REACT_APP_MOCKUSDC,
                 MockUSDC.abi,
-                admin
+                signer
             );
             console.log('usdc Contract', usdc, 'signer', signer)
             const usdcMinter = usdc.connect(signer);

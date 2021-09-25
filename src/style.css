@@ -2088,6 +2088,14 @@ input:checked + .slider:before {
     font-size: 27px;
   }
 
+  .first-row-main-dash .left-col .below-row .left-pricing {
+    font-size: 30px;
+  }
+
+  .total-usdc {
+    font-size: 40px;
+  }
+
   .comman-div-for-pro {
     padding: 20px;
     width: 90%;

@@ -19,6 +19,8 @@ import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { CreateMintgateLink } from "../hooks/createMintGate";
 import Button from '@material-ui/core/Button'
+import { Magic } from "magic-sdk";
+
 
 // const GET_TOKEN_FEES = gql`
 //   query {
@@ -29,11 +31,12 @@ import Button from '@material-ui/core/Button'
 // `;
 
 const Artistpic = () => {
-  const { walletProvider } = useContext(WalletProviderContext);
+  //const { walletProvider } = useContext(WalletProviderContext);
   // const [profileModel, setProfileModel] = useState(false);
-  const wallet = useSelector((state) => state.wallet);
+  const [walletProvider, setWalletProvider] = useState();
   const [tokenfrees, settokenfrees] = useState(false);
   const [newvote, setnewvote] = useState(false);
+  const [connectedWallet, setConnectedWallet] = useState(false);
 
   /*MintGate Integration state*/
   const [link, setLink] = useState(false);
@@ -57,7 +60,27 @@ const Artistpic = () => {
   //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
   const [tokenfees, settokenfees] = useState(0.0);
 
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+    network: "rinkeby",
+  });
+
   useEffect(async () => {
+
+    const isLoggedIn = await magic.user.isLoggedIn();
+    console.log('isLoggedIn', isLoggedIn)
+   
+    if(isLoggedIn) {
+      const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      //dispatch(connected({ address: address }));
+      setWalletProvider(provider);
+      //dispatch(setProvider(provider));
+      setConnectedWallet(true);      
+    } else {
+      setConnectedWallet(false);
+    }
+
         const id = uid;
         const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
         console.log(data.artist.has_activated);

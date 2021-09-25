@@ -3,13 +3,6 @@ import React, { useState, useEffect, useContext } from "react";
 import "./component.css";
 import "./Artist.css";
 import { assetsImages } from "../constants/images";
-// import artistbg from "../assets/images/artist-background.jpg";
-// import Customdropdown from "./Customdropdown";
-// import Performbar from "./Performbar";
-// import ProgressBar from "react-bootstrap/ProgressBar";
-// import CircularProgress from "@material-ui/core/CircularProgress";
-// import Song from './Song';
-// import Mynftdropdown from './Mynftdropdown';
 import { Modal } from "react-bootstrap";
 import Loader from "./Loader";
 import SmallLoader from "./SmallLoader";
@@ -18,26 +11,24 @@ import { Contract, ethers } from "ethers";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
 import { useParams, useHistory } from "react-router-dom";
-import SweetAlert from "react-bootstrap-sweetalert";
 import Axios from "axios";
+import { Magic } from "magic-sdk";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
-import { WalletProviderContext } from "../contexts/walletProviderContext";
-import TokenChart from "./TokenChart";
+import ArtistTransact from './ArtistTransact';
+import ArtistHeader from './AritstHeader';
 import Swal from "sweetalert2";
-import { Link } from 'react-router-dom';
 import withReactContent from "sweetalert2-react-content";
 
-// import { Link } from '@material-ui/core';
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
+  network: "rinkeby",
+});
 
 let errcode = "";
 
 const Artist = () => {
   const history = useHistory();
   const MySwal = withReactContent(Swal);
-  const { walletProvider } = useContext(WalletProviderContext);
-  const wallet = useSelector((state) => state.wallet);
-  const provider = useSelector((state) => state.wallet.provider);
   const token = useSelector((state) => state.auth.token);
   const uid = useSelector((state) => state.auth.data._id);
   const { id } = useParams();
@@ -46,7 +37,7 @@ const Artist = () => {
   const [sell, setsell] = useState(false);
   const [buy, setbuy] = useState(false);
   const [MintPrice, setMintPrice] = useState("");
-  // const [BurnPrice, setBurnPrice] = useState();
+  const [provider, setProvider] = useState();
   const [TokensToMint, setTokensToMint] = useState(0);
   const [TokensToBurn, setTokensToBurn] = useState(0);
   const [balance, setBalance] = useState('');
@@ -71,13 +62,15 @@ const Artist = () => {
   const [requiredBalance, setRequiredBalance] = useState();
   const [encodedUrl, setEncodedUrl] = useState('');
   const [notMinted, setNotMinted] = useState(false);
+  const [connectedWallet, setConnectedWallet] = useState();
   const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
 
-  useEffect(() => {
+  useEffect(async () => {
 
-    if (!wallet.wallet_connected) {
-      setconnectedwallet(false);
-    }
+    const { data } = await Axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+      { id }
+    );
 
     if (balance !== ''){
       console.log(balance);
@@ -86,12 +79,16 @@ const Artist = () => {
 
     const init = async () => {
 
-      setLoading(true);
+      if(!connectedWallet){
+        const isLoggedIn = await magic.user.isLoggedIn();
+        console.log('isLoggedIn', isLoggedIn);
+        const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        setProvider(provider);
+        setConnectedWallet(true); 
+      } 
       
-      const { data } = await Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
-        { id }
-      );
 
       if(data.artist.social_token_id === null){
         setNotMinted(true);
@@ -119,7 +116,6 @@ const Artist = () => {
         `${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,
         { id }
       ).then((response) => {
-        
         if(response.data.inflowGatedUrls[0]){
           setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
           setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
@@ -134,7 +130,7 @@ const Artist = () => {
       console.log("NOT LOGGED IN");
       setconnectedwallet(false);
     }
-  }, [id, socialTokenAddress, provider]);
+  }, [socialTokenAddress]);
 
   useEffect(() => {
     notMinted &&
@@ -267,7 +263,7 @@ const Artist = () => {
 
   const fetchTokenPrice = async () => {
     try {
-      if (provider) {
+      if (connectedWallet) {
         const inflow = new Inflow(provider, 4);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
@@ -284,35 +280,8 @@ const Artist = () => {
     }
   };
 
-  const displayTokenPrice = () => {
-    if (MintPrice && MintPrice !== "") {
-      // const converted = Number(MintPrice).toFixed(4);
-      return (
-        <div className="dollar-price">
-          <span>$</span> {MintPrice}
-        </div>
-      );
-    } else {
-      return <SmallLoader />;
-    }
-  };
-
-  const displayBalance = () => {
-    let balanceInUSD = MintPrice * balance;
-    balanceInUSD = balanceInUSD.toFixed(2)
-      if (MintPrice && MintPrice !== '') {
-          return <div className="dollar-price">
-          {balance ? `${balance} ${artist.social_token_symbol}
-          \u00A0\u00A0\u00A0($${balanceInUSD})` 
-          :`0.0 ${artist.social_token_symbol}`}
-          </div>
-      } else {
-          return <SmallLoader />;
-      }
-  };
-
   const getUserBalance = async () => {
-    if (provider){
+    if (connectedWallet){
       const signer = provider.getSigner();
       const inflow = new Inflow(provider, 4);
       const signerAddress = await signer.getAddress();
@@ -344,12 +313,12 @@ const Artist = () => {
   const buyTokens = async () => {
     console.log(socialTokenAddress);
     console.log("MAGIC PROVIDER ____", provider);
-    if (!provider) {
+    if (!connectedWallet) {
       alert("Please log in");
       return;
     }
 
-    if (provider) {
+    if (connectedWallet) {
       console.log("wallet provider is true");
       try {
           const signer = provider.getSigner();
@@ -469,11 +438,9 @@ const Artist = () => {
   };
 
   const sellTokens = async () => {
-    if (walletProvider) {
+    if (provider) {
       try {
         setsellmodalloading(true);
-       
-        const provider = walletProvider;
         
         const signer = provider.getSigner();
         const socialMinter = new Contract(
@@ -521,14 +488,13 @@ const Artist = () => {
   };
 
   const fetchtotalburnprice = async () => {
-    if (walletProvider) {
+    if (provider) {
       try {
         setsellmodalloading(true);
         // await requestAccount();
         // const provider = new ethers.providers.Web3Provider(
         //     window.ethereum
         // );
-        const provider = walletProvider;
         const inflow = new Inflow(provider, 4);
         const burnPrice = await inflow.getBurnPriceSocial(
           socialTokenAddress,
@@ -546,12 +512,11 @@ const Artist = () => {
   };
 
   const fetchtotalmintprice = async () => {
-    if (walletProvider) {
+    if (provider) {
       try {
         setbuymodalloading(true);
         // // console.log({ socialTokenAddress })
         // await requestAccount();
-        const provider = walletProvider;
         const inflow = new Inflow(provider, 4);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
@@ -568,15 +533,6 @@ const Artist = () => {
     }
   };
 
-  const redirectToTokenGate = async () => {
-    if (inflowGatedUrl !== "") {
-    }
-  };
-
-  if (loading) {
-    return <Loader />;
-  }
-
   const updatePriceHistory = async () => {
     await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/tokentx`, {
       mint_price_history: {
@@ -592,179 +548,25 @@ const Artist = () => {
 
   return (
     <div className="artist-background">
-      <div className="artist-main">
-        <div className="background">
-          <img
-            alt=""
-            src={
-              artist.banner_image
-                ? `${process.env.REACT_APP_SERVER_URL}/${artist.banner_image}`
-                : null
-            }
-            className="background-blur"
-          />
-        </div>
-        <div className="artist-details">
-          <div className="artist-main-details">
-            <div className="artis-img mb-0">
-              <img
-                alt=""
-                src={
-                  artist.profile_image
-                    ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
-                    : null
-                }
-              />
-            </div>
-            <div className="artist-content">
-              <div className="artist-content-details">
-                <div className="artist-name">{`${
-                  artist.first_name ? artist.first_name : ""
-                } ${artist.last_name ? artist.last_name : ""}`}</div>
-                {/* <div className="album-name">--</div> */}
-                <ul>
-                  <li>
-                    <div className="song-total">325</div>
-                    <div className="song-folder">Superfans</div>
-                  </li>
-                  <li>
-                    <div className="song-total">28</div>
-                    <div className="song-folder">NFTs</div>
-                  </li>
-                  <li>
-                    <div className="song-total">{displayTokenPrice()}</div>
-                    <div className="song-folder">Token Price</div>
-                  </li>
-                </ul>
-              </div>
-              <div className="">
-                {/* <button className="follow-button">FOLLOW</button> */}
-                {/* <button
-                  className="edit-profile"
-                  type="button"
-                  onClick={() =>
-                    setprofileModel((profileModel) => !profileModel)
-                  }
-                >
-                  EDIT PROFILE
-                </button> */}
-              </div>
-            </div>
-          </div>
-          <div className="artist-tag">
-          {requiredBalance ?
-            <Link to={
-              {
-                pathname: `/${inflowGatedUrl}`,
-                requiredBalance : requiredBalance,
-                address : socialTokenAddress,
-                encodedUrl : encodedUrl 
-              }
-              }>
-            <button
-              className="tag-button"
-            >
-              UNRELEASED MUSIC VIDEO{" "}
-            </button>
-            </Link> : null}
-          </div>
-        </div>
-      </div>
-
+      <ArtistHeader 
+            artist={artist} 
+            requiredBalance={requiredBalance}
+            inflowGatedUrl={inflowGatedUrl}
+            socialTokenAddress={socialTokenAddress}
+            encodedUrl={encodedUrl}  
+            />
       <div className="dashboard-wrapper-main artist-main-wrapper">
-        {/* ---------------Total-wallet-balance-------- */}
-        <div className="token-chart">
-          <div className="chart-header-row d-flex flex-row justify-content-between col-12">
-            <div className="token-info">
-              <div className="card-heading">
-                {artist.social_token_symbol} Price
-              </div>
-              <div className="dollar-price">{displayTokenPrice()}</div>
-              <div className="small-heading">--</div>
-            </div>
-            <div className="btn-filter mt-2"></div>
-          </div>
-          <div className="total-balance-row">
-            <div className="token-info">
-              <div className="card-heading">Available Balance</div>
-              <div className="dollar-price">
-                <div className="dollar-price">{displayBalance()}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="total-bal-chart">
-            <TokenChart artist={artist} historicalData={historicalData} />
-          </div>
-
-          <div className="buy-sell-buttons col-4 offset-4">
-            <div className="d-flex justify-content-around align-items-center mt-5">
-              {/* <img alt="" src={assetsImages.button} /> */}
-
-              {token && token.trim() === "" ? (
-                <button
-                  className="buy-button"
-                  type="button"
-                  onClick={() => {
-                    // window.location.href = "/login";
-                    history.push("/");
-                  }}
-                >
-                  Sell
-                </button>
-              ) : walletProvider ? (
-                <button
-                  className="buy-button"
-                  type="button"
-                  onClick={() => setsell((sell) => !sell)}
-                >
-                  Sell
-                </button>
-              ) : (
-                <button
-                  className="buy-button"
-                  type="button"
-                  onClick={() =>
-                    setconnectedwallet((connectedwallet) => !connectedwallet)
-                  }
-                >
-                  Sell
-                </button>
-              )}
-
-              {token && token.trim() === "" ? (
-                <button
-                  className="sell-button"
-                  type="button"
-                  onClick={() => {
-                    // window.location.href = "/login";
-                    history.push("/");
-                  }}
-                >
-                  Buy
-                </button>
-              ) : walletProvider ? (
-                <button
-                  className="sell-button"
-                  type="button"
-                  onClick={() => setbuy((buy) => !buy)}
-                >
-                  Buy
-                </button>
-              ) : (
-                <button
-                  className="sell-button"
-                  type="button"
-                  onClick={() =>
-                    setconnectedwallet((connectedwallet) => !connectedwallet)
-                  }
-                >
-                  Buy
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <ArtistTransact 
+          artist={artist} 
+          MintPrice={MintPrice} 
+          historicalData={historicalData}
+          token={token}
+          provider={provider}
+          setsell={setsell}
+          setbuy={setbuy}
+          setconnectedwallet={setconnectedwallet}
+          balance={balance}
+          />
 
         <div className="poll-play-song-details">
           <div className="row">

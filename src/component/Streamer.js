@@ -1,23 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { findDOMNode } from "react-dom";
 import Cryptr from 'cryptr';
-
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import ReactPlayer from "react-player";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-
 import Slider from "@material-ui/core/Slider";
 import Tooltip from "@material-ui/core/Tooltip";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import VolumeUp from "@material-ui/icons/VolumeUp";
-import VolumeDown from "@material-ui/icons/VolumeDown";
-import VolumeMute from "@material-ui/icons/VolumeOff";
-import FullScreen from "@material-ui/icons/Fullscreen";
-import Popover from "@material-ui/core/Popover";
 import screenful from "screenfull";
 import Controls from "./Controls";
 
@@ -27,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   playerWrapper: {
     width: "100%",
 
-    position: "relative",
+    height: 600
     // "&:hover": {
     //   "& $controlsWrapper": {
     //     visibility: "visible",
@@ -335,19 +323,12 @@ const Streamer = ({ encodedUrl }) => {
 
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography>React Video Player</Typography>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
-      <Container maxWidth="md">
+      <Container maxWidth="xl" disableGutters="true">
         <div
           onMouseMove={handleMouseMove}
           onMouseLeave={hanldeMouseLeave}
           ref={playerContainerRef}
-          className={classes.playerWrapper}
-        >
+          className={classes.playerWrapper}>
           <ReactPlayer
             ref={playerRef}
             width="100%"
@@ -370,7 +351,6 @@ const Streamer = ({ encodedUrl }) => {
               },
             }}
           />
-
           <Controls
             ref={controlsRef}
             onSeek={handleSeekChange}
@@ -396,29 +376,6 @@ const Streamer = ({ encodedUrl }) => {
             onBookmark={addBookmark}
           />
         </div>
-
-        <Grid container style={{ marginTop: 20 }} spacing={3}>
-          {bookmarks.map((bookmark, index) => (
-            <Grid key={index} item>
-              <Paper
-                onClick={() => {
-                  playerRef.current.seekTo(bookmark.time);
-                  controlsRef.current.style.visibility = "visible";
-
-                  setTimeout(() => {
-                    controlsRef.current.style.visibility = "hidden";
-                  }, 1000);
-                }}
-                elevation={3}
-              >
-                <img crossOrigin="anonymous" src={bookmark.image} />
-                <Typography variant="body2" align="center">
-                  bookmark at {bookmark.display}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
         <canvas ref={canvasRef} />
       </Container>
     </>
