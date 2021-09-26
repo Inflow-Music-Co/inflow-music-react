@@ -91,7 +91,6 @@ const LoginModal = (props) => {
 
   const handleChangeUsertype = (e) => {
     setUser({ ...user, account_type: e.target.id });
-    // setUserType(e.target.id);
   };
 
   return (
