@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
 import { Modal } from "react-bootstrap";
 import Swal from "sweetalert2";
 import '../page/LoginModal.css'
 import axios from 'axios'
+import withReactContent from "sweetalert2-react-content";
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -26,6 +27,7 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
     const [errUpload, setErrUpload] = useState(false);
     const [errSocialTokenName, setErrSocialTokenName] = useState(false);
     const [artistAccountCreated, setArtistAccountCreated] = useState(false);
+    const MySwal = withReactContent(Swal);
     const [artistData, setArtistData] = useState({
         twitterUrl: "",
         artistName: "",
@@ -33,6 +35,20 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
         symbol: "",
         profile: ""
     });
+
+      useEffect(() => {
+        artistAccountCreated &&
+        MySwal.fire({
+            title: <p style={{ color: "white" }}>artist account created!</p>,
+            icon: "success",
+            background: "#303030",
+        }).then((result) => {
+            if (result.isConfirmed) {
+            console.log("need to implement direct magiclink login button here");
+            setArtistAccountCreated((artistAccountCreated) => !artistAccountCreated);
+            }
+        });
+    }, [artistAccountCreated])
 
     const createArtist = async (e) => {
         console.log('createArtist fired', artistData);
@@ -94,8 +110,6 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
         setArtistData({...artistData, profile: e.target.files[0]});
     }
 
-    console.log(artistData);
-
     return (
         <div>
             <Modal
@@ -109,7 +123,7 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
                 <Grid item xs={12} style={{paddingBottom: 30}}>
                 <span className="login-title col-12"> create your artist profile</span>
                 </Grid>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                 <Button
                     style={{backgroundColor: "#1DA1F2", color: "white", marginLeft: 5, borderRadius: 30}}
                     variant="contained"
@@ -118,7 +132,7 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
                     connect your twitter&nbsp;&nbsp;
                     <TwitterIcon />
                 </Button>
-                </Grid>
+                </Grid> */}
             </Grid>
             </Modal.Header>  
             <Modal.Body>
