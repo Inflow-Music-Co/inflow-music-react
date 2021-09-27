@@ -79,8 +79,6 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
     const initialDidToken = await magic.auth.loginWithMagicLink({ email });
     const metaData = await magic.user.getMetadata();
 
-    console.log({ metaData });
-
     //validate the didToken
     // await axios({
     //   url: `${process.env.REACT_APP_SERVER_URL}/v1/user/loginWithMagicLink`,
@@ -101,7 +99,7 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
     const didToken = await magic.user.generateIdToken({
       lifespan: 60 * 60 * 25,
     });
-    console.log("new didtoken!!!", didToken);
+    
     // Validate didToken with server and Create new token which includes didToken and account_type
     const { data } = await axios({
       url: `${process.env.REACT_APP_SERVER_URL}/v1/user/login`,
@@ -112,6 +110,8 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
       },
       data : { email, address : metaData.publicAddress }
     });
+
+    console.log('USER DATA : ', data.userData);
     
     const { access_token } = data;
     console.log('DATA from /login sent to localStorage!!');

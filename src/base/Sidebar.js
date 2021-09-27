@@ -18,6 +18,8 @@ const Sidebar = () => {
     dispatch(updateActivePage(page));
   };
 
+  console.log('IS ARTIST? ', isArtist);
+
   return (
     <div className="side-bar-main">
       <div className="side-bar-navigation">
@@ -67,7 +69,7 @@ const Sidebar = () => {
           </Link>
         )}
 
-        {isArtist && token && userData.status === "active" && (
+        {isArtist && (
           <Link to={"/artistmanage"}>
             <div
               className={
