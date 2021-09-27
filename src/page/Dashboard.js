@@ -38,6 +38,7 @@ const Dashboard = () => {
   // const { walletProvider } = useContext(WalletProviderContext);
   const MySwal = withReactContent(Swal);
   const uid = useSelector((state) => state.auth.data._id);
+  const isArtist = useSelector((state) => state.auth.isArtist);
   const [walletProvider, setWalletProvider] = useState();
   const [connectedWallet, setConnectedWallet] = useState(true);
   const [isFetched, setIsFetched] = useState(false);
@@ -362,12 +363,14 @@ const Dashboard = () => {
       <div className="heading">my dashboard</div>
         </Grid>
         <Grid item xs={3}>
-      <Button 
+
+      {isArtist ? <h5> approved artist account </h5>
+        : <Button 
         variant="contained" 
         style={{borderRadius: 40}}
-        onClick={onCreate}>Create Artist Account</Button>
+        onClick={onCreate}>Create Artist Account</Button> }
         </Grid>
-      </Grid>
+      </Grid> 
       {createArtistAccount ? 
         <CreateArtistModal 
           createArtistAccount={createArtistAccount} 
@@ -376,7 +379,6 @@ const Dashboard = () => {
           userAddress={userAddress}
           /> 
           : null}
-
       <div className="first-row-main-dash">
         <div className="left-col">
           <div className="above-row">
