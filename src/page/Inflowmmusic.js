@@ -33,7 +33,7 @@ const Inflowmusic = () => {
             return artists.map((artist, i) => {
                 if(artist.status !== 'pending'){
                     return (<Link to={`/artist/${artist._id}`} key={i}>
-                    <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name} ${artist.last_name}`} />
+                    <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name}`} />
                     </Link>)
                 }
             })
