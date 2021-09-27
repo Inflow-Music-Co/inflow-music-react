@@ -77,7 +77,10 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
   try {
     // Trigger Magic link to be sent to user, it expires in 15 mins
     const initialDidToken = await magic.auth.loginWithMagicLink({ email });
-    console.log("initialDidToken", initialDidToken);
+    const metaData = await magic.user.getMetadata();
+
+    console.log({ metaData });
+
     //validate the didToken
     // await axios({
     //   url: `${process.env.REACT_APP_SERVER_URL}/v1/user/loginWithMagicLink`,
@@ -94,6 +97,7 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
     //very long lifespan token
     // const didToken = await magic.user.getIdToken()
     //customized lifespan token 25 hours which is larger than JWT token lifespan: 24 hours
+    
     const didToken = await magic.user.generateIdToken({
       lifespan: 60 * 60 * 25,
     });
@@ -106,7 +110,7 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
         "Content-Type": "application/json",
         "x-access-token": "Bearer " + didToken,
       },
-      data : { email }
+      data : { email, address : metaData.publicAddress }
     });
     
     const { access_token } = data;
