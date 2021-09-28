@@ -364,7 +364,7 @@ const Dashboard = () => {
         </Grid>
         <Grid item xs={3}>
 
-      {isArtist ? <h5> approved artist account </h5>
+      {isArtist ? <h5> artist account </h5>
         : <Button 
         variant="contained" 
         style={{borderRadius: 40}}
