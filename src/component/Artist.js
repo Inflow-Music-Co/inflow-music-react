@@ -57,7 +57,7 @@ const Artist = () => {
   const [sellmodalloading, setsellmodalloading] = useState(false);
   const [insufficenttokens, setinsufficenttokens] = useState(false);
   const [historicalData, setHistoricalData] = useState([]);
-  const [playlistID, setPlaylistID] = useState("529230339");
+  const [playlistID, setPlaylistID] = useState();
   const [inflowGatedUrl, setInflowGatedUrl] = useState('');
   const [requiredBalance, setRequiredBalance] = useState();
   const [encodedUrl, setEncodedUrl] = useState('');
@@ -96,6 +96,11 @@ const Artist = () => {
         setArtist(data.artist);
         setSocialTokenAddress(data.artist.social_token_id);
         setArtistTokenSymbol(data.artist.social_token_symbol);
+        if(data.artist.soundcloud_playlist_id){
+          console.log(data.artist.soundcloud_playlist_id);
+          setPlaylistID(data.artist.soundcloud_playlist_id);
+        }
+        
         fetchTokenPrice();
         const res = await Axios.post(
           `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
@@ -572,7 +577,7 @@ const Artist = () => {
           <div className="row">
             <div className="col-lg-6">
               <div className="poll-details">
-                <iframe
+              <iframe
                   width="100%"
                   height="100%"
                   scrolling="no"
@@ -580,6 +585,7 @@ const Artist = () => {
                   allow="autoplay"
                   src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/${playlistID}&color=%237d2add&auto_play=false&visual=true`}
                 ></iframe>
+                
               </div>
             </div>
             <div className="col-lg-6">
@@ -600,11 +606,16 @@ const Artist = () => {
                     <span>$</span>37.99
                   </div>
                   <div className="img-wrapper">
-                    <img alt="" src={assetsImages.poster} />
+                  <img
+                      alt=""
+                      src={
+                        artist.profile_image
+                          ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
+                          : null
+                      }
+                    />
                   </div>
-                  <div className="playlist-title">Nothing Was The Same</div>
-                  <div className="album-title">Drake: Album NFT</div>
-
+                  <div className="album-title">{artist.first_name} NFT</div>
                   <div className="playlist-start">
                     <span>Tier:</span>
                     <ul>
@@ -625,40 +636,8 @@ const Artist = () => {
                       </li>
                     </ul>
                   </div>
-                  <div className="playlist-time">
-                    Auction Ends: 7 hrs 38 mins
-                  </div>
 
-                  <div className="playlist-card-footer">
-                    <div className="prev-button">
-                      <button className="btn prev-icon">
-                        <img alt="" src={assetsImages.prev} />
-                      </button>
-                    </div>
-                    <div className="center-button">
-                      <div className="bid-button">
-                        <button className="bid-icon btn">Bid</button>
-                      </div>
-                      <div className="bid-amount d-none">
-                        <input
-                          className="form-control"
-                          type="text"
-                          placeholder="Enter bid amount"
-                        />
-                        <div className="next-icon">
-                          <img alt="" src={assetsImages.next} />
-                        </div>
-                      </div>
-                      <div className="bid-text d-none">
-                        You are the high bidder!
-                      </div>
-                    </div>
-                    <div className="next-button">
-                      <button className="next-icon btn">
-                        <img alt="" src={assetsImages.next} />
-                      </button>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             </div>

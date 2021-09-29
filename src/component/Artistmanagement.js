@@ -55,6 +55,7 @@ const Artistpic = () => {
   const uid = useSelector((state) => state.auth.data._id);
   const [socialTokenAddress, setSocialTokenAddress] = useState('');
   const [artist, setArtist] = useState('');
+  const [soundCloudLink, setSoundCloudLink] = useState('');
   const [hasActivated, setHasActivated] = useState();
 
   //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
@@ -120,13 +121,44 @@ const Artistpic = () => {
     } catch (error) {
       console.log(error);
     }
+    
     const id = uid;
-    Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, { id });
+    
+    Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, { id })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    });
   };
+
+  const uploadSoundCloudLink = async () => {
+    setsuccess((success) => !success);
+
+    if(soundCloudLink){
+    
+
+      console.log(soundCloudLink, uid, );
+
+      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadsoundcloud`, {
+        soundcloud_embed: soundCloudLink,
+        id : uid
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    } else {
+      alert('please add a soundcloud embed link')
+    }
+  }
 
   return (
     <div className="dashboard-wrapper-main artist-management">
-      <div className="heading">Artist Management</div>
+      <div className="heading">Public Playlists</div>
       <div className="row">
         <div className="col-lg-4 col-md-6">
           <div className="card">
@@ -151,10 +183,10 @@ const Artistpic = () => {
               <div className="left-col"> 
                 <div className="below-row">
                 {hasActivated ? <Button variant="disabled" style={{height : '100px', width: '100px'}}>
-                  ACTIVATED
+                  TOKEN LAUNCHED
                   </Button> 
                   : <button className="btn-gradiant" onClick={changeOwner}>
-                  ACTIVATE
+                  LAUNCH TOKEN
                   </button>}
                 </div>
               </div>
@@ -257,7 +289,7 @@ const Artistpic = () => {
           <div className="card button-card d-flex justify-content-between">
             <div className="artist-title">
               <div className="d-flex flex-row justify-content-between w-100">
-                <span>New Proposal</span>
+                <span>Public Playlists</span>
                 <a href="#">
                   <img alt="" src={assetsImages.filter} />
                 </a>
@@ -270,7 +302,7 @@ const Artistpic = () => {
                 type="button"
                 onClick={() => setnewvote((newvote) => !newvote)}
               >
-                Create Vote
+                Add Playlist
               </button>
             </div>
           </div>
@@ -294,6 +326,7 @@ const Artistpic = () => {
           </div>
         </div>
       </div>
+      
 
       <Modal
         show={newvote}
@@ -306,50 +339,22 @@ const Artistpic = () => {
 
         <Modal.Body>
           <div className="form-group">
-            <label>Location</label>
+            <label>Sound Cloud Embed Link</label>
             <input
               className="form-control mb-3"
               type="text"
-              placeholder="Address"
+              placeholder="playlist embed link"
+              onChange={(e) => setSoundCloudLink(e.target.value)}
             />
-            <input
-              className="form-control mb-3"
-              type="text"
-              placeholder="Option 1"
-            />
-            <input
-              className="form-control mb-3"
-              type="text"
-              placeholder="Option 2"
-            />
-            <input
-              className="form-control mb-3"
-              type="text"
-              placeholder="Option 3"
-            />
-            <input
-              className="form-control mb-3"
-              type="text"
-              placeholder="Option 4"
-            />
-            <button className="upload-profile btn-gradiant">+</button>
-          </div>
-
-          <div className="form-group">
-            <input
-              className="form-control"
-              type="text"
-              placeholder="End Date"
-            />
-          </div>
+            </div>
         </Modal.Body>
 
         <Modal.Footer>
           <button
             className="save-btn btn-gradiant"
-            onClick={() => setsuccess((success) => !success)}
+            onClick={() => uploadSoundCloudLink()} 
           >
-            Launch Poll
+            Upload Playlist 
           </button>
         </Modal.Footer>
       </Modal>
