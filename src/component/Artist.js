@@ -16,7 +16,7 @@ import { Magic } from "magic-sdk";
 import { RINKEBY_MOCKUSDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
 import ArtistTransact from './ArtistTransact';
-import ArtistHeader from './AritstHeader';
+import ArtistHeader from './ArtistHeader';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -64,6 +64,8 @@ const Artist = () => {
   const [notMinted, setNotMinted] = useState(false);
   const [connectedWallet, setConnectedWallet] = useState();
   const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
+  const [trackId, setTrackId] = useState('');
+  const [trackBalance, setTrackBalance] = useState();
 
   useEffect(async () => {
 
@@ -94,6 +96,8 @@ const Artist = () => {
         setNotMinted(true);
       } else if (data.artist) {
         setArtist(data.artist);
+        setTrackId(data.artist.mp3_uploads[0].track_id);
+        setTrackBalance(data.artist.mp3_uploads[0].balance)
         setSocialTokenAddress(data.artist.social_token_id);
         setArtistTokenSymbol(data.artist.social_token_symbol);
         fetchTokenPrice();
@@ -112,10 +116,8 @@ const Artist = () => {
         // };
       }
 
-      Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,
-        { id }
-      ).then((response) => {
+      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`,{ id })
+      .then((response) => {
         if(response.data.inflowGatedUrls[0]){
           setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
           setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
@@ -549,7 +551,9 @@ const Artist = () => {
   return (
     <div className="artist-background">
       <ArtistHeader 
+            trackId={trackId}
             artist={artist} 
+            trackBalance={trackBalance}
             requiredBalance={requiredBalance}
             inflowGatedUrl={inflowGatedUrl}
             socialTokenAddress={socialTokenAddress}

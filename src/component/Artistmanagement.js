@@ -61,6 +61,7 @@ const Artistpic = () => {
   const uid = useSelector((state) => state.auth.data._id);
   const [socialTokenAddress, setSocialTokenAddress] = useState('');
   const [artist, setArtist] = useState('');
+  const [id, setId] = useState('');
   const [hasActivated, setHasActivated] = useState();
 
   //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
@@ -77,26 +78,24 @@ const Artistpic = () => {
   useEffect(async () => {
 
     const isLoggedIn = await magic.user.isLoggedIn();
-    console.log('isLoggedIn', isLoggedIn)
+    console.log('isLoggedIn', isLoggedIn);
    
     if(isLoggedIn) {
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
       const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      //dispatch(connected({ address: address }));
       setWalletProvider(provider);
-      //dispatch(setProvider(provider));
       setConnectedWallet(true);      
     } else {
       setConnectedWallet(false);
     }
 
-        const id = uid;
-        const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
-        console.log(data.artist.has_activated);
-        setHasActivated(data.artist.has_activated);
-        setSocialTokenAddress(data.artist.social_token_id);
-        setLoading(false);   
+    const id = uid;
+    const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
+    console.log(data.artist.has_activated);
+    setId(id);
+    setHasActivated(data.artist.has_activated);
+    setSocialTokenAddress(data.artist.social_token_id);
+    setLoading(false);   
   }, [])
 
   const formatAndSetTokenFees = async (value) => {
@@ -154,8 +153,8 @@ const Artistpic = () => {
 
       data.append("mp3_name", mp3FileName);
       data.append("mp3_file", mp3File);
-
-      console.log({ data })
+      data.append("balance", balance);
+      data.append("id", id);
 
       await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data)
       .then((res) => {
@@ -575,6 +574,7 @@ const Artistpic = () => {
           <Modal.Body>
               <Grid container direction="row">
               <Grid item xs={9}>
+              <label>Track Name </label>
                 <div className="comman-row-input">
                           <input
                           placeholder="track name"
@@ -589,7 +589,7 @@ const Artistpic = () => {
                     <Button 
                       variant="disabled" 
                       size="large"  
-                      style={{marginLeft: 20, backgroundColor: 'grey'}}
+                      style={{marginLeft: 20, marginTop: 31, backgroundColor: 'grey'}}
                       component="span"> 
                       UPLOAD 
                     </Button> 
@@ -600,12 +600,33 @@ const Artistpic = () => {
                       variant="contained" 
                       size="large" 
                       color="secondary" 
-                      style={{marginLeft: 20}}
+                      style={{marginLeft: 20, marginTop: 31}}
                       component="span"> 
                       UPLOAD 
                     </Button>
                     </label>}
               </Grid>
+              </Grid>
+              <Grid container direction ="column">
+                    <Grid item xs={12}>
+                      <label>Select Token</label>  
+                      <select id="tokenAddress"
+                          onChange={(e) => setTokenAddress(e.target.value)}
+                          className="form-control mb-3 mt-3">
+                          <option>Select Token</option>
+                          <option value={`${socialTokenAddress}`}>{socialTokenAddress}</option>
+                        </select>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <label>Amount of Tokens Required</label>
+                      <input
+                        id="balance"
+                        onChange={(e) => setBalance(e.target.value)}
+                        className="form-control mb-3 mt-4"
+                        type="number"
+                        placeholder="ex. 100"
+                      />
+                      </Grid>
               </Grid>
               <Modal.Footer>
                 <button className="btn-gradiant m-1" onClick={uploadMp3}>

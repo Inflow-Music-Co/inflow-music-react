@@ -5,16 +5,16 @@ import { Contract, ethers } from 'ethers'
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import Streamer from './Streamer'
+import AudioStreamer from './AudioStreamer';
 import SmallLoader from './SmallLoader';
+import axios from 'axios'
 import { Magic } from "magic-sdk";
-
 
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
     network: "rinkeby",
   });
 
-const GatedContent = (props) => {
+const GatedMusicContent = (props) => {
 
     const MySwal = withReactContent(Swal);
     const [provider, setProvider] = useState();
@@ -26,17 +26,26 @@ const GatedContent = (props) => {
     const [connectedWallet, setConnectedWallet] = useState(false)
     const [viewable, setViewable] = useState(false);
     const renderCount = useRef(0);
-
-    console.log('GATED VIDEO CONTENT');
+    const [setAudioFile, AudioFile] = useState('');
 
     useEffect(async () => {
 
         const isLoggedIn = await magic.user.isLoggedIn();
-        console.log('isLoggedIn', isLoggedIn)
+        
         if(isLoggedIn) {
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
             setProvider(provider);
             setConnectedWallet(true);
+
+            await axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/streammp3/${props.match.params.trackId}`)
+            .then((res) => {
+                console.log(res);
+                setAudioFile(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
         } else {
             setConnectedWallet(false);
         }
@@ -60,7 +69,7 @@ const GatedContent = (props) => {
             buttonsStyling: false,
             background: "#303030",
           }).then(() => {
-            setViewable(true);
+            //setViewable(true);
             setSufficientBalance(sufficientBalance => !sufficientBalance)
           });           
     }, [sufficientBalance])
@@ -91,39 +100,39 @@ const GatedContent = (props) => {
             hasEnoughTokens(); 
     },[availableBalance])
 
-      const getTokenBalance = async () => {
-        if (provider) {
-            try {
-                const signer = provider.getSigner();
-                const inflow = new Inflow(provider, 4);
-                const signerAddress = await signer.getAddress();
-                let userBalance = await inflow.balanceOf(
-                    "SocialToken",
-                    signerAddress,
-                    socialTokenAddress
-                     );
-                userBalance = parseFloat(userBalance[0]);
-                setAvailableBalance(userBalance);
-                console.log({ availableBalance }); 
-            } catch (err) {
-                console.log(err);
-                }
-            }
-        };
 
-        const hasEnoughTokens = () => {
-            console.log('hasEnoughTokens fired');
-
-            if(availableBalance !== null && availableBalance >= requiredBalance){
-                setSufficientBalance(true);
-            } else if (availableBalance !== null && availableBalance < requiredBalance) {
-                setInsuffucientBalance(true);
+    const getTokenBalance = async () => {
+    if (provider) {
+        try {
+            const signer = provider.getSigner();
+            const inflow = new Inflow(provider, 4);
+            const signerAddress = await signer.getAddress();
+            let userBalance = await inflow.balanceOf(
+                "SocialToken",
+                signerAddress,
+                socialTokenAddress
+                    );
+            userBalance = parseFloat(userBalance[0]);
+            setAvailableBalance(userBalance);
+            console.log({ availableBalance }); 
+        } catch (err) {
+            console.log(err);
             }
         }
+    };
+
+    const hasEnoughTokens = () => {
+        if(availableBalance !== null && availableBalance >= requiredBalance){
+            setSufficientBalance(true);
+        } else if (availableBalance !== null && availableBalance < requiredBalance) {
+            setInsuffucientBalance(true);
+        }
+    }
                 
     return (
         <div className="dashboard-wrapper-main">
-            {viewable ? <Streamer encodedUrl={props.location.encodedUrl}/> 
+            {viewable ? 
+            <audio></audio>
             : <div className="card-heading">
             <SmallLoader />
             <div className="dashboard-wrapper-main">
@@ -134,4 +143,4 @@ const GatedContent = (props) => {
     )
 }
 
-export default GatedContent
+export default GatedMusicContent

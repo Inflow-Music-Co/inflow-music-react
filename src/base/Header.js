@@ -69,7 +69,7 @@ const Header = () => {
           color="secondary" 
           style={{marginLeft: 10}}
           href="/dashboard"
-          onClick={() => updateActivePage("dashboard")}>MY DASHBOARD</Button>
+          onClick={() => updateActivePage("dashboard")}>DASHBOARD</Button>
        : <Button 
           className={classes.button} 
           variant="contained" 
