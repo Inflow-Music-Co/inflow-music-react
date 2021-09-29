@@ -105,7 +105,7 @@ const Sidebar = () => {
           </Link>
         )}
 
-        {token && (
+        {/* {token && (
           <Link to={"/accountsettings"}>
             <div
               className={
@@ -121,7 +121,7 @@ const Sidebar = () => {
               </div>
             </div>
           </Link>
-        )}
+        )} */}
 
         {/* <Link to={"/news"}>
           <div
