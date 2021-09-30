@@ -129,6 +129,18 @@ const Dashboard = () => {
       .catch((err) => {
         console.error(err);
       });
+
+      await axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettokensbought`, {
+        uid
+      })
+      .then((resp) => {
+        console.log(resp.data)
+        mapAndFilter(resp.data.tokensBought)     
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const mapAndFilter = (buys) => {
