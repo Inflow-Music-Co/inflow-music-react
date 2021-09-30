@@ -42,11 +42,8 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
             title: <p style={{ color: "white" }}>artist account created!</p>,
             icon: "success",
             background: "#303030",
-        }).then((result) => {
-            if (result.isConfirmed) {
-            console.log("need to implement direct magiclink login button here");
+        }).then(() => {
             setArtistAccountCreated((artistAccountCreated) => !artistAccountCreated);
-            }
         });
     }, [artistAccountCreated])
 
@@ -79,10 +76,10 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
             data.append("profile", artistData.profile);
             data.append("email", userEmail);
 
+            setArtistAccountCreated(true);
             await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/onboardingupgrade`, data)
             .then((res) => {
                 console.log(res);
-                setArtistAccountCreated(true);
             })
             .catch((error) => {
                 console.log(error);
