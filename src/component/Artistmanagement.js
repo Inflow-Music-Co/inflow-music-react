@@ -107,11 +107,7 @@ const Artistpic = () => {
     const id = uid;
     
     console.log({ signer });
-    const socialToken = new Contract(
-      socialTokenAddress,
-      SocialToken.abi,
-      signer
-    );
+    const socialToken = new Contract(socialTokenAddress, SocialToken.abi, signer);
 
     try {
         const transaction = await socialToken.transferOwnership('0x76aB04F8Adb222C7Bbc27991A82498906954dEae');
@@ -133,7 +129,6 @@ const Artistpic = () => {
 
     if(soundCloudLink){
     
-
       console.log(soundCloudLink, uid, );
 
       await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadsoundcloud`, {
@@ -149,6 +144,16 @@ const Artistpic = () => {
     } else {
       alert('please add a soundcloud embed link')
     }
+  }
+
+  const claimTokenFees = async () => {
+    console.log('claim Token Fees');
+    settokenfrees(tokenfrees => !tokenfrees);
+    const address = await signer.getAddress();
+
+    const contract = new Contract(socialTokenAddress, SocialToken.abi, signer);
+    const transaction = await contract.claimCreatorFee(address, ethers.utils.parseEther(String(0.00001)));
+    await transaction.wait();
   }
 
   return (
@@ -171,7 +176,7 @@ const Artistpic = () => {
                 className="amount d-flex justify-content-center align-items-center text-wrap"
                 style={{ wordWrap: "break-word" }}
               >
-                {loading ? <SmallLoader /> : "100"}
+                {loading ? <SmallLoader /> : null}
               </div>
             </div>
             <div className="first-row-main-dash">
@@ -188,16 +193,17 @@ const Artistpic = () => {
               </div>
             </div>
             <div className="footer-btn">
-              {/* <button className='btn-gradiant' onClick={() => settokenfrees(tokenfrees => !tokenfrees)}>
-                                Cash Out
-                            </button> */}
+              <button className='btn-gradiant' onClick={claimTokenFees}>
+                    CASH OUT
+                </button>
             </div>
           </div>
         </div>
 
         <div className="col-lg-4 col-md-6 mt-4 mt-md-0">
           <div className="card">
-            <div className="artist-title">
+            <span>Royalties</span>
+            {/* <div className="artist-title">
               <div className="d-flex flex-row justify-content-between w-100">
                 <span>Royalties</span>
                 <a href="#">
@@ -221,7 +227,7 @@ const Artistpic = () => {
             </div>
             <div className="footer-btn">
               <button className="btn-gradiant">Manage Royalties</button>
-            </div>
+            </div> */}
           </div>
         </div>
 

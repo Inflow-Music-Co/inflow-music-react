@@ -73,38 +73,9 @@ const AllArtists = () => {
 	const handleApprove = async (e) => {
 		console.log('approve fired')
         try {
-			// const contract = new ethers.Contract(
-			// 	socialTokenFactoryContract,
-			// 	SocialTokenFactory.abi,
-			// 	signer
-			// );
-		
-			// console.log("HEERREE");
-			// console.log(contract);
-			
-			// const whitelistAddress = await contract.whitelist(signerAddress);
-			// console.log(whitelistAddress);
-			// whitelistAddress.wait();
-
-			// console.log(whitelistAddress)
-			
-			// console.log("WHITELISTED");
-			// const socialTokenAddress = await getEventData(
-			// 	contract.create({
-			// 		creator: "0xecf16c34ccB07e7be2E955115A4945f999C9d759",
-			// 		collateral: usdc,
-			// 		maxSupply: ethers.utils.parseEther(String(10000000)),
-			// 		slope: ethers.utils.parseEther(String(0.0001)),
-			// 		name: "token name",
-			// 		symbol: "LLL"
-			// 	}),
-			// 	0
-			// );
-			// console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
-	  		
             await Axios.patch(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activate`, { id: e.target.id });
         } catch(e) {
-
+			console.log(e)
         }  
 	}
 
