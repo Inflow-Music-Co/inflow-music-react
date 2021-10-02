@@ -21,14 +21,12 @@ import { CreateMintgateLink } from "../hooks/createMintGate";
 import Button from '@material-ui/core/Button'
 import { Magic } from "magic-sdk";
 
+const customNodeOptions = {
+  rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+  chainId: 137, // Polygon chain id
+}
 
-// const GET_TOKEN_FEES = gql`
-//   query {
-//     minteds {
-//       royaltyPaid
-//     }
-//   }
-// `;
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
 
 const Artistpic = () => {
   //const { walletProvider } = useContext(WalletProviderContext);
@@ -37,6 +35,7 @@ const Artistpic = () => {
   const [tokenfrees, settokenfrees] = useState(false);
   const [newvote, setnewvote] = useState(false);
   const [connectedWallet, setConnectedWallet] = useState(false);
+  const [signer, setSigner] = useState();
 
   /*MintGate Integration state*/
   const [link, setLink] = useState(false);
@@ -53,7 +52,7 @@ const Artistpic = () => {
   const [loading, setLoading] = useState(true);
   const [connectedwallet, setconnectedwallet] = useState(true);
   const uid = useSelector((state) => state.auth.data._id);
-  const [socialTokenAddress, setSocialTokenAddress] = useState('');
+  const [socialTokenAddress, setSocialTokenAddress] = useState();
   const [artist, setArtist] = useState('');
   const [soundCloudLink, setSoundCloudLink] = useState('');
   const [hasActivated, setHasActivated] = useState();
@@ -61,9 +60,7 @@ const Artistpic = () => {
   //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
   const [tokenfees, settokenfees] = useState(0.0);
 
-  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-    network: "rinkeby",
-  });
+  console.log({ socialTokenAddress })
 
   useEffect(async () => {
 
@@ -73,15 +70,13 @@ const Artistpic = () => {
     if(isLoggedIn) {
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
       const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      //dispatch(connected({ address: address }));
       setWalletProvider(provider);
+      setSigner(signer);
       //dispatch(setProvider(provider));
       setConnectedWallet(true);      
     } else {
       setConnectedWallet(false);
     }
-
         const id = uid;
         const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
         console.log(data.artist.has_activated);
@@ -91,8 +86,7 @@ const Artistpic = () => {
   }, [])
 
   const formatAndSetTokenFees = async (value) => {
-    const provider = walletProvider;
-    const inflow = new Inflow(provider, 4);
+    const inflow = new Inflow((walletProvider, 137));
     const tokenfees = inflow.formatERC20("USDC", String(value));
     settokenfees(tokenfees);
   };
@@ -109,28 +103,29 @@ const Artistpic = () => {
   }
 
   const changeOwner = async () => {
-    const provider = walletProvider;
-    const signer = provider.getSigner();
+
+    const id = uid;
+    
+    console.log({ signer });
     const socialToken = new Contract(
       socialTokenAddress,
       SocialToken.abi,
       signer
     );
+
     try {
-      await socialToken.transferOwnership('0x76aB04F8Adb222C7Bbc27991A82498906954dEae');
+        const transaction = await socialToken.transferOwnership('0x76aB04F8Adb222C7Bbc27991A82498906954dEae');
+        transaction.wait();
+        Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, { id })
+      .then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      });
     } catch (error) {
       console.log(error);
     }
     
-    const id = uid;
-    
-    Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, { id })
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    });
   };
 
   const uploadSoundCloudLink = async () => {
@@ -182,12 +177,13 @@ const Artistpic = () => {
             <div className="first-row-main-dash">
               <div className="left-col"> 
                 <div className="below-row">
-                {hasActivated ? <Button variant="disabled" style={{height : '100px', width: '100px'}}>
-                  TOKEN LAUNCHED
-                  </Button> 
-                  : <button className="btn-gradiant" onClick={changeOwner}>
-                  LAUNCH TOKEN
-                  </button>}
+                {socialTokenAddress ? <> 
+                  {hasActivated ? <Button variant="disabled" style={{height : '100px', width: '100px', color: 'grey'}}>
+                    TOKEN LAUNCHED
+                    </Button> 
+                    : <button className="btn-gradiant" onClick={changeOwner}>
+                    LAUNCH TOKEN
+                    </button>} </> : null}
                 </div>
               </div>
             </div>

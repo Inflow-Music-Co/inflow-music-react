@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 import { Button, Table, Modal, Form } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import Axios from 'axios';
 import Loader from '../component/Loader';
 import { assetsImages } from '../constants/images';
+import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
+import SocialTokenFactory from '../artifacts/contracts/token/social/SocialTokenFactory.sol/SocialTokenFactory.json'
+import { getEventData } from '../utils/blockchain';
+import { Magic } from "magic-sdk";
 
 
 const AllArtists = () => {
@@ -25,8 +30,32 @@ const AllArtists = () => {
 	const [artistupdate, setartistupdate] = useState(false);
 	const [mprofileimage, setmprofileimage] = useState();
 	const [mbannerimage, setmbannerimage] = useState();
+	const [signer, setSigner] = useState();
+	const [signerAddress, setSignerAddress] = useState();
+	const [provider, setProvider] = useState();
 
-	useEffect(() => {
+	const customNodeOptions = {
+		rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+		chainId: 137, // Polygon chain id
+	  }
+	  
+	const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
+
+	const socialTokenFactoryContract = "0xcb993CBb64290f8575637D7e52a7A8E6895c70eB";
+	const usdc = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174";
+
+	useEffect( async () => {
+		const isLoggedIn = await magic.user.isLoggedIn();
+    	console.log('isLoggedIn', isLoggedIn);
+
+		if(isLoggedIn){
+			const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+			const signer = provider.getSigner();
+			const address = await signer.getAddress();
+			setSigner(signer);
+			setSignerAddress(address);
+			setProvider(provider);
+		}
 		getArtists();
 	}, [])
 
@@ -36,14 +65,44 @@ const AllArtists = () => {
             const { data } = await Axios.get(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getallapproval`, {params: {status: "pending"}})
             setartists(data.artists)
             setloading(false);
-        } catch(e) {
-            
+        } catch(error) {
+            console.log(error)
         }
 	}
 
 	const handleApprove = async (e) => {
+		console.log('approve fired')
         try {
-            await Axios.patch(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activate`, { id: e.target.id })
+			// const contract = new ethers.Contract(
+			// 	socialTokenFactoryContract,
+			// 	SocialTokenFactory.abi,
+			// 	signer
+			// );
+		
+			// console.log("HEERREE");
+			// console.log(contract);
+			
+			// const whitelistAddress = await contract.whitelist(signerAddress);
+			// console.log(whitelistAddress);
+			// whitelistAddress.wait();
+
+			// console.log(whitelistAddress)
+			
+			// console.log("WHITELISTED");
+			// const socialTokenAddress = await getEventData(
+			// 	contract.create({
+			// 		creator: "0xecf16c34ccB07e7be2E955115A4945f999C9d759",
+			// 		collateral: usdc,
+			// 		maxSupply: ethers.utils.parseEther(String(10000000)),
+			// 		slope: ethers.utils.parseEther(String(0.0001)),
+			// 		name: "token name",
+			// 		symbol: "LLL"
+			// 	}),
+			// 	0
+			// );
+			// console.log(`SOCIAL TOKEN ADDRESS: ${socialTokenAddress}`);
+	  		
+            await Axios.patch(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activate`, { id: e.target.id });
         } catch(e) {
 
         }  

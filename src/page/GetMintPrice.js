@@ -30,7 +30,7 @@ const GetMintPrice = () => {
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum
                 );
-                const inflow = new Inflow(provider, 4);
+                const inflow = new Inflow((provider, 137));
                 const mintPrice = await inflow.getMintPriceSocial(SocialTokenAddress, inflow.parseERC20("SocialToken", "1"))
                 setMintPrice(mintPrice[0]);
                 // console.log(`MINT PRICE: ${mintPrice[0]}`);
@@ -74,7 +74,7 @@ const GetMintPrice = () => {
                     admin
                 )
                 const usdcMinter = usdc.connect(signer);
-                const inflow = new Inflow(provider, 4);
+                const inflow = new Inflow((provider, 137));
                 await mint(socialMinter, usdcMinter, inflow.parseERC20("SocialToken", String(TokensToMint)));
                 // console.log("MINT SUCCESSFULL")
             } catch (err) {
@@ -94,7 +94,7 @@ const GetMintPrice = () => {
                 const provider = new ethers.providers.Web3Provider(
                     window.ethereum
                 );
-                const inflow = new Inflow(provider, 4);
+                const inflow = new Inflow((provider, 137));
                 const burnPrice = await inflow.getBurnPriceSocial(SocialTokenAddress, inflow.parseERC20("SocialToken", "1"))
                 setBurnPrice(burnPrice[0]);
                 // console.log(`BURN PRICE: ${burnPrice[0]}`);
@@ -129,7 +129,7 @@ const GetMintPrice = () => {
                     admin
                 )
                 const socialMinter = social.connect(signer)
-                const inflow = new Inflow(provider, 4);
+                const inflow = new Inflow((provider, 137));
                 await burn(socialMinter, inflow.parseERC20("SocialToken", String(TokensToBurn)));
                 // console.log("BURN SUCCESSFULL")
             } catch (err) {
@@ -151,7 +151,7 @@ const GetMintPrice = () => {
                 );
                 const signer = provider.getSigner();
                 const signerAddress = await signer.getAddress();
-                const inflow = new Inflow(provider, 4);
+                const inflow = new Inflow((provider, 137));
                 const balance = await inflow.balanceOf("SocialToken", signerAddress, SocialTokenAddress)
                 setBalance(balance[0]);
                 // console.log(`BALANCE: ${balance[0]}`);

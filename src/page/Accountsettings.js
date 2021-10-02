@@ -243,9 +243,12 @@ const Accountsettings = () => {
   const [resetpasswordemailsent, setresetpasswordemailsent] = useState(false);
   const [convertProfile, setConvertProfile] = useState(false);
 
-  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-    network: "rinkeby",
-  });
+  const customNodeOptions = {
+    rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+    chainId: 137, // Polygon chain id
+  }
+  
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
 
   useEffect(async () => {
 

@@ -8,9 +8,10 @@ import { Contract, ethers } from "ethers";
 import Loader from "./Loader";
 import { useSelector } from "react-redux";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
+import usdc from '../artifacts/contracts/token/erc20/usdc.json'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Swal from "sweetalert2";
-import { RINKEBY_MOCKUSDC } from "../utils/addresses";
+import { POLYGON_USDC } from "../utils/addresses";
 import withReactContent from "sweetalert2-react-content";
 
 const useStyles = makeStyles({
@@ -67,7 +68,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
 
       const addUsdc = () => {
         if(!addedUsdc){
-          tokenMappings.push({ address : RINKEBY_MOCKUSDC, symbol : 'USDC'})
+          tokenMappings.push({ address : POLYGON_USDC, symbol : 'USDC'})
           setAddedUsdc(true);
         }
       }
@@ -80,11 +81,23 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
             try {
                 const signer = provider.getSigner();
                 const amount = ethers.utils.parseUnits(amountToSend);
-                const contract = new ethers.Contract(tokenToSend, SocialToken.abi, signer);
-                setLoading(true);
-                const transaction = await contract.transfer(recipientAddress, amount);  
-                await transaction.wait();
-                console.log(transaction);
+                console.log({ tokenToSend })
+                if(tokenToSend === POLYGON_USDC){
+                  console.log('token is usdc')
+                  console.log(await signer.getAddress());
+                  const contract = new ethers.Contract(tokenToSend, usdc, signer);
+                  console.log({ contract });
+                  console.log(amountToSend)
+                  const transaction = await contract.transfer(recipientAddress, amount);  
+                  await transaction.wait();
+                  console.log(transaction);
+                } else {
+                  const contract = new ethers.Contract(tokenToSend, SocialToken.abi, signer);
+                  setLoading(true);
+                  const transaction = await contract.transfer(recipientAddress, amount);  
+                  await transaction.wait();
+                  console.log(transaction);
+                }
                 setLoading(false);
                 setSuccessTransfer(true);
                 getTokensBalAndPrice();
@@ -94,6 +107,8 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
             }  
           }    
     }
+
+    console.log({ POLYGON_USDC })
 
     return (
             <>
@@ -114,9 +129,9 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
                     style={{minWidth: 150}}
                     disableUnderline
                     variant="filled">
-                    {tokenMappings.map((pair, index) => {
+                    {addedUsdc? tokenMappings.map((pair, index) => {
                         return <MenuItem value={pair.address} key={index}>{pair.symbol}</MenuItem>
-                    })}
+                    }) : null }
                     </Select>
                   <div className="mt-5 mb-0 pb-0 form-group">
                     <div className="col-12">

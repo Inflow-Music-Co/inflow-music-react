@@ -9,10 +9,12 @@ import Streamer from './Streamer'
 import SmallLoader from './SmallLoader';
 import { Magic } from "magic-sdk";
 
-
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-    network: "rinkeby",
-  });
+const customNodeOptions = {
+    rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+    chainId: 137, // Polygon chain id
+  }
+  
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
 
 const GatedContent = (props) => {
 
@@ -99,7 +101,7 @@ const GatedContent = (props) => {
         if (provider) {
             try {
                 const signer = provider.getSigner();
-                const inflow = new Inflow(provider, 4);
+                const inflow = new Inflow((provider, 137));
                 const signerAddress = await signer.getAddress();
                 let userBalance = await inflow.balanceOf(
                     "SocialToken",

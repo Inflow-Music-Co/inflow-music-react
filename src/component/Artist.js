@@ -9,20 +9,23 @@ import SmallLoader from "./SmallLoader";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import { Contract, ethers } from "ethers";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
-import MockUSDC from "../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json";
+import usdc from '../artifacts/contracts/token/erc20/usdc.json'
 import { useParams, useHistory } from "react-router-dom";
 import Axios from "axios";
 import { Magic } from "magic-sdk";
-import { RINKEBY_MOCKUSDC } from "../utils/addresses";
+import { POLYGON_USDC } from "../utils/addresses";
 import { useSelector } from "react-redux";
 import ArtistTransact from './ArtistTransact';
 import ArtistHeader from './AritstHeader';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-  network: "rinkeby",
-});
+const customNodeOptions = {
+  rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+  chainId: 137, // Polygon chain id
+}
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
 
 let errcode = "";
 
@@ -86,6 +89,7 @@ const Artist = () => {
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         setProvider(provider);
+        console.log('Provider', provider);
         setConnectedWallet(true); 
       } 
       
@@ -262,14 +266,10 @@ const Artist = () => {
       });
   }, [successmint]);
 
-  async function requestAccount() {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-  }
-
   const fetchTokenPrice = async () => {
     try {
       if (connectedWallet) {
-        const inflow = new Inflow(provider, 4);
+        const inflow = new Inflow(provider, 137);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
           inflow.parseERC20("SocialToken", "1")
@@ -288,14 +288,13 @@ const Artist = () => {
   const getUserBalance = async () => {
     if (connectedWallet){
       const signer = provider.getSigner();
-      const inflow = new Inflow(provider, 4);
+      const inflow = new Inflow(provider, 137);
       const signerAddress = await signer.getAddress();
       const userBalance = await inflow.balanceOf(
         "SocialToken",
         signerAddress,
         socialTokenAddress
       );
-      
       setBalance(userBalance[0]);
 
       //if balance is zero, remove token address from user record in DB
@@ -333,11 +332,11 @@ const Artist = () => {
             signer
           );
 
-        const usdcMinter = new Contract(RINKEBY_MOCKUSDC, MockUSDC.abi, signer);
+        const usdcMinter = new Contract(POLYGON_USDC, usdc, signer);
         console.log({ usdcMinter });
 
         // const usdcMinter = usdc.connect(signer);
-        const inflow = new Inflow(provider, 4);
+        const inflow = new Inflow(provider, 137);
         setbuymodalloading(true);
         const signerAddress = await signer.getAddress();
         const usdcBalance = await inflow.balanceOf("USDC", signerAddress);
@@ -454,7 +453,7 @@ const Artist = () => {
           signer
         );
 
-        const inflow = new Inflow(provider, 4);
+        const inflow = new Inflow(provider, 137);
         const signerAddress = await signer.getAddress();
         const balance = await inflow.balanceOf(
           "SocialToken",
@@ -500,7 +499,7 @@ const Artist = () => {
         // const provider = new ethers.providers.Web3Provider(
         //     window.ethereum
         // );
-        const inflow = new Inflow(provider, 4);
+        const inflow = new Inflow(provider, 137);
         const burnPrice = await inflow.getBurnPriceSocial(
           socialTokenAddress,
           inflow.parseERC20("SocialToken", String(TokensToBurn))
@@ -522,7 +521,7 @@ const Artist = () => {
         setbuymodalloading(true);
         // // console.log({ socialTokenAddress })
         // await requestAccount();
-        const inflow = new Inflow(provider, 4);
+        const inflow = new Inflow(provider, 137);
         const mintPrice = await inflow.getMintPriceSocial(
           socialTokenAddress,
           inflow.parseERC20("SocialToken", String(TokensToMint))

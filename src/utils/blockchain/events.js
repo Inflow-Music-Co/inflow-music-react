@@ -82,7 +82,7 @@ function getEventData(input, argsIdx, eventsIdx) {
                     return [4 /*yield*/, tx.wait()];
                 case 4:
                     data = _b.sent();
-                    // console.log({ data: data });
+                    console.log({ data: data });
                     events = data.events;
                     if (events === undefined)
                         throw new Error('events array undefined');

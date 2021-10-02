@@ -48,7 +48,6 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
     }, [artistAccountCreated])
 
     const createArtist = async (e) => {
-        console.log('createArtist fired', artistData);
         e.preventDefault();
 
         if(!twitterRegex.test(String(artistData.twitterUrl).toLowerCase())){
@@ -76,7 +75,12 @@ const CreateArtistModal = ({ createArtistAccount, setCreateArtistAccount, userAd
             data.append("profile", artistData.profile);
             data.append("email", userEmail);
 
-            setArtistAccountCreated(true);
+            for (var pair of data.entries()) {
+             console.log(pair[0]+ ', ' + pair[1]); 
+                }
+
+             setArtistAccountCreated(true);
+
             await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/onboardingupgrade`, data)
             .then((res) => {
                 console.log(res);

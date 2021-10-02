@@ -28,9 +28,12 @@ import IconButton from "@material-ui/core/IconButton";
 import FileCopy from "@material-ui/icons/FileCopy";
 import transakSDK from '@transak/transak-sdk';
 
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-  network: "rinkeby",
-});
+const customNodeOptions = {
+  rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+  chainId: 137, // Polygon chain id
+}
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
 
 const Dashboard = () => {
 
@@ -197,15 +200,18 @@ const Dashboard = () => {
       let transak = new transakSDK({
         apiKey: 'ee41ed4b-c89a-42c0-9aab-d9d472916ac7',  // Your API Key
         environment: 'PRODUCTION', // STAGING/PRODUCTION
-        defaultCryptoCurrency: 'ETH',
+        cryptoCurrencyCode: 'USDC',
+        networks: 'polygon',
         walletAddress: userAddress, // Your customer's wallet address
-        themeColor: '000000', // App theme color
-        fiatCurrency: 'USD', // INR/GBP
-        email: 'limited-game@dfjqlpa2.mailosaur.net', // Your customer's email address
+        themeColor: '000001', // App theme color
+        fiatCurrency: 'GBP', // INR/GBP
+        email: 'r.v.melkonian@gmail.com', // Your customer's email address
         redirectURL: '',
         hostURL: window.location.origin,
         widgetHeight: '550px',
-        widgetWidth: '450px'
+        widgetWidth: '450px',
+        defaultFiatAmount : 50,
+        defaultPaymentMethod: 'credit_debit_card'
     });
     transak.init();
     transak.on(transak.ALL_EVENTS, (data) => {console.log(data)});
@@ -219,7 +225,7 @@ const Dashboard = () => {
     if (walletProvider) {
       try {
         const provider = walletProvider;
-        const inflow = new Inflow(provider, 4);
+        const inflow = new Inflow((provider, 137));
 
         const singleTokenPrice = await inflow.getMintPriceSocial(
           token,
@@ -269,7 +275,7 @@ const Dashboard = () => {
   const displayTotalUSDC = async () => {
     console.log('displayTotalUSD fired');
     if(walletProvider){
-      const inflow = new Inflow(walletProvider, 4);
+      const inflow = new Inflow(walletProvider, 137);
       const signer = walletProvider.getSigner();
       const signerAddress = await signer.getAddress();
       const usdcBalance = await inflow.balanceOf("USDC", signerAddress);
@@ -529,7 +535,7 @@ const Dashboard = () => {
         <div className="chart-header-row">
         <Grid container direction="column" alignItems="center" justify="center">
           <Grid item style={{paddingBottom: 10}}>
-               {tokenSymbols.length > 0 ? <div className="right-side-value">total usdc : ${usdcBalance}</div> : <span>loading ... </span>}
+               {usdcBalance ? <div className="right-side-value">total usdc : ${usdcBalance}</div> : <span>loading ... </span>}
           </Grid>
             <Button 
               style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 

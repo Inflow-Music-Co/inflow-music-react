@@ -6,9 +6,12 @@ import MockUSDC from '../artifacts/contracts/mocks/MockUSDC.sol/MockUSDC.json';
 import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
 import Loader from './Loader';
 
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY, {
-    network: "rinkeby",
-  });
+const customNodeOptions = {
+    rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+    chainId: 137, // Polygon chain id
+  }
+  
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
 
 const MintUSDC = () => {
     const [mockUSDCmint, setMockUSDCMint] = useState(0.0);
@@ -38,7 +41,7 @@ const MintUSDC = () => {
     useEffect(async () => {
         if(provider){
             const signer = provider.getSigner();
-            const inflow = new Inflow(provider, 4);
+            const inflow = new Inflow((provider, 137));
             const signerAddress = await signer.getAddress();
             const usdcBalance = await inflow.balanceOf(
                 'USDC',
@@ -61,7 +64,7 @@ const MintUSDC = () => {
             console.log('usdc Contract', usdc, 'signer', signer)
             const usdcMinter = usdc.connect(signer);
             console.log({ usdcMinter });
-            const inflow = new Inflow(provider, 4);
+            const inflow = new Inflow((provider, 137));
             console.log(inflow.parseERC20('USDC', String(mockUSDCmint)));
             setLoading(true);
             const signerAddress = await signer.getAddress();

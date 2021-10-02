@@ -2,7 +2,12 @@ import axios from "axios";
 import { Magic } from "magic-sdk";
 import jwt_decode from "jwt-decode";
 
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY_RINKEBY);
+const customNodeOptions = {
+  rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+  chainId: 137, // Polygon chain id
+}
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
 
 // Add a request interceptor
 axios.interceptors.request.use(

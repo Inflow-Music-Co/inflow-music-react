@@ -36,7 +36,7 @@ const Inflowmusic = () => {
                     <Artistpic imglink={`${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`} name={`${artist.first_name}`} />
                     </Link>)
                 }
-            })
+            });
         }
     }
 

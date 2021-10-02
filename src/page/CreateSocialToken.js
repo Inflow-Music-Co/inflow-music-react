@@ -292,7 +292,7 @@ const CreateSocialToken = () => {
       console.log({ signer });
       const signerAddress = await signer.getAddress();
       console.log({ signerAddress });
-      const inflow = new Inflow(provider, 4);
+      const inflow = new Inflow((provider, 137));
       console.log(inflow);
       const socialTokenAddress = await inflow.getTokenSocialFactory(
         artistToken.walletAddress
