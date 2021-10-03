@@ -154,22 +154,25 @@ const CreateArtistModal = ({
           <div className="mt-4 mb-0 pb-0 form-group">
             <div className="col-12">
               <div className="comman-row-input">
+              <h5>instagram link</h5>
                 <input
-                  placeholder="twitter url"
+                  placeholder="your instagram link"
                   type="text"
                   name="twitter url"
                   onChange={handleTwitterUrl}
                 />
               </div>
               <div className="comman-row-input">
+              <h5>artit name</h5>
                 <input
-                  placeholder="artist name"
+                  placeholder="your artist name"
                   type="text"
                   name="artist name"
                   onChange={handleArtistName}
                 />
               </div>
               <div className="comman-row-input">
+              <h5>name your token</h5>
                 <input
                   placeholder="your social token name"
                   type="text"
@@ -180,6 +183,7 @@ const CreateArtistModal = ({
             </div>
             <div className="col-12">
               <div className="comman-row-input">
+              <h5>your token symbol</h5>
                 <input
                   placeholder="your social token symbol (eg. INF)"
                   type="text"
@@ -189,6 +193,7 @@ const CreateArtistModal = ({
               </div>
             </div>
             <div className="col-12">
+              <h5>your profile picture </h5>
               <label htmlFor="contained-button-file">
                 <Input
                   accept="image/*"
@@ -203,7 +208,7 @@ const CreateArtistModal = ({
                   fullWidth={true}
                   component="span"
                 >
-                  UPLOAD PROFILE IMAGE
+                  UPLOAD IMAGE
                 </Button>
               </label>
             </div>
