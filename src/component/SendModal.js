@@ -80,12 +80,22 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
             return;
         } else {
             try {
-                const signer = provider.getSigner();
-                const amount = ethers.utils.parseUnits(amountToSend);                
-                const contract = new ethers.Contract(tokenToSend, SocialToken.abi, signer);
-                setLoading(true);
+              setLoading(true);
+              let amount;
+              const signer = provider.getSigner();
+              const contract = new ethers.Contract(tokenToSend, usdc, signer);
+              
+              if(tokenToSend === POLYGON_USDC){
+                console.log('token is USDC')
+                amount = ethers.utils.parseUnits(amountToSend, 6);
                 const transaction = await contract.transfer(recipientAddress, amount, {gasLimit: 250000});  
                 await transaction.wait();
+              } else {
+                console.log('token is social token')
+                amount = ethers.utils.parseUnits(amountToSend);
+                const transaction = await contract.transfer(recipientAddress, amount, {gasLimit: 250000});  
+                await transaction.wait();
+              }                
                 setLoading(false);
                 setSuccessTransfer(true);
                 getTokensBalAndPrice();
@@ -97,7 +107,7 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
           }    
     }
 
-    console.log({ POLYGON_USDC })
+    console.log(tokenMappings);
 
     return (
             <>
