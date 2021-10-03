@@ -18,7 +18,7 @@ const Sidebar = () => {
     dispatch(updateActivePage(page));
   };
 
-  console.log('IS ARTIST? ', isArtist);
+  console.log("IS ARTIST? ", isArtist);
 
   return (
     <div className="side-bar-main">

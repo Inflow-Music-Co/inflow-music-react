@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { findDOMNode } from "react-dom";
-import Cryptr from 'cryptr';
+import Cryptr from "cryptr";
 import Container from "@material-ui/core/Container";
 import ReactPlayer from "react-player";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -9,13 +9,13 @@ import Tooltip from "@material-ui/core/Tooltip";
 import screenful from "screenfull";
 import Controls from "./Controls";
 
-const cryptr = new Cryptr(process.env.REACT_APP_CRYPTR_SECRET)
+const cryptr = new Cryptr(process.env.REACT_APP_CRYPTR_SECRET);
 
 const useStyles = makeStyles((theme) => ({
   playerWrapper: {
     width: "100%",
 
-    height: 600
+    height: 600,
     // "&:hover": {
     //   "& $controlsWrapper": {
     //     visibility: "visible",
@@ -149,9 +149,9 @@ const Streamer = ({ encodedUrl }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [timeDisplayFormat, setTimeDisplayFormat] = React.useState("normal");
   const [bookmarks, setBookmarks] = useState([]);
-  const [decodedUrl, setDecodedlUrl] = useState('');
+  const [decodedUrl, setDecodedlUrl] = useState("");
   const [view, setView] = useState(false);
-  
+
   const [state, setState] = useState({
     pip: false,
     playing: true,
@@ -187,14 +187,14 @@ const Streamer = ({ encodedUrl }) => {
 
   useEffect(() => {
     setDecodedlUrl(cryptr.decrypt(encodedUrl));
-  },[]);
+  }, []);
 
   useEffect(() => {
-    console.log('decodedUrl', decodedUrl, 'view', view);
-    if(decodedUrl !== ''){
-        setView(true);
+    console.log("decodedUrl", decodedUrl, "view", view);
+    if (decodedUrl !== "") {
+      setView(true);
     }
-  })
+  });
 
   const handlePlayPause = () => {
     setState({ ...state, playing: !state.playing });
@@ -328,7 +328,8 @@ const Streamer = ({ encodedUrl }) => {
           onMouseMove={handleMouseMove}
           onMouseLeave={hanldeMouseLeave}
           ref={playerContainerRef}
-          className={classes.playerWrapper}>
+          className={classes.playerWrapper}
+        >
           <ReactPlayer
             ref={playerRef}
             width="100%"
@@ -380,6 +381,6 @@ const Streamer = ({ encodedUrl }) => {
       </Container>
     </>
   );
-}
+};
 
 export default Streamer;

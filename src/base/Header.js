@@ -10,21 +10,21 @@ import { Link, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
-import Button from '@material-ui/core/Button'
+import Button from "@material-ui/core/Button";
 import { logout } from "../store/reducers/authSlice";
-import { makeStyles } from '@material-ui/core/styles'
-import LoginModal from '../page/LoginModal'
+import { makeStyles } from "@material-ui/core/styles";
+import LoginModal from "../page/LoginModal";
 
 const styles = {
-  button: { 
-      color: 'white',
-      background: 'linear-gradient(45deg, #8A17A5 30%, #707DF8 90%)',
-      borderRadius: 30,
-      boxShadow: '20px',
-      '&:hover': {
-        background: 'linear-gradient(45deg, #707DF8 30%, #8A17A5 90%)'       
-      },
-    }
+  button: {
+    color: "white",
+    background: "linear-gradient(45deg, #8A17A5 30%, #707DF8 90%)",
+    borderRadius: 30,
+    boxShadow: "20px",
+    "&:hover": {
+      background: "linear-gradient(45deg, #707DF8 30%, #8A17A5 90%)",
+    },
+  },
 };
 
 const useStyles = makeStyles(styles);
@@ -61,29 +61,36 @@ const Header = () => {
         </Link>
       </div>
       <div className="left-col-main"></div>
-      {token ? 
-        <Button 
-          className={classes.button} 
-          variant="contained" 
-          size="large" 
-          color="secondary" 
-          style={{marginLeft: 10}}
+      {token ? (
+        <Button
+          className={classes.button}
+          variant="contained"
+          size="large"
+          color="secondary"
+          style={{ marginLeft: 10 }}
           href="/dashboard"
-          onClick={() => updateActivePage("dashboard")}>MY DASHBOARD</Button>
-       : <Button 
-          className={classes.button} 
-          variant="contained" 
-          size="large" 
-          color="secondary" 
-          style={{marginLeft: 10}}
-          onClick={onLogin}>LOGIN</Button>}
+          onClick={() => updateActivePage("dashboard")}
+        >
+          MY DASHBOARD
+        </Button>
+      ) : (
+        <Button
+          className={classes.button}
+          variant="contained"
+          size="large"
+          color="secondary"
+          style={{ marginLeft: 10 }}
+          onClick={onLogin}
+        >
+          LOGIN
+        </Button>
+      )}
       <div className="right-col-main">
-        
         <div className="profile-dropdown">
           <Profiledropdown />
         </div>
       </div>
-      {login? <LoginModal login={login} setLogin={setLogin} /> : null}
+      {login ? <LoginModal login={login} setLogin={setLogin} /> : null}
     </div>
   );
 };

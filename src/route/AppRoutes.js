@@ -17,7 +17,7 @@ import AdminRoutes from "./AdminRoutes";
 import ArtistRoutes from "./ArtistRoutes";
 // import Artistpic from '../component/Artistpic';
 import Artist from "../component/Artist";
-import GatedContent from '../component/GatedContent'
+import GatedContent from "../component/GatedContent";
 import Artistmanagement from "../component/Artistmanagement";
 import ApproveArtist from "../page/ApproveArtist";
 import CreateSocialToken from "../page/CreateSocialToken";

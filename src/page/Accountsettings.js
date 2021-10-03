@@ -244,24 +244,25 @@ const Accountsettings = () => {
   const [convertProfile, setConvertProfile] = useState(false);
 
   const customNodeOptions = {
-    rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+    rpcUrl: "https://rpc-mainnet.maticvigil.com/", // Polygon RPC URL
     chainId: 137, // Polygon chain id
-  }
-  
-  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
+  };
+
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+    network: customNodeOptions,
+  });
 
   useEffect(async () => {
-
     const isLoggedIn = await magic.user.isLoggedIn();
-    console.log('isLoggedIn', isLoggedIn)
-   
-    if(isLoggedIn) {
+    console.log("isLoggedIn", isLoggedIn);
+
+    if (isLoggedIn) {
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
       setWalletAddress(address);
-    } 
-    
+    }
+
     getdata();
   }, []);
 
@@ -334,10 +335,10 @@ const Accountsettings = () => {
       data.append("country", country ? country : "");
       data.append("pin_code", pincode ? pincode : "");
       data.append("address", address ? address : "");
-      data.append("social_token_name", tokenName? tokenName : "");
-      data.append("social_token_symbol", tokenSymbol? tokenSymbol : "");
-      data.append("wallet_id", walletAddress? walletAddress : "");
-      
+      data.append("social_token_name", tokenName ? tokenName : "");
+      data.append("social_token_symbol", tokenSymbol ? tokenSymbol : "");
+      data.append("wallet_id", walletAddress ? walletAddress : "");
+
       if (uprofileimage) {
         data.append("profile", uprofileimage);
       }
@@ -683,9 +684,7 @@ const Accountsettings = () => {
                     <div className="comman-grids">
                       <input
                         placeholder="Token Name"
-                        value={
-                          tokenName ? tokenName["tokenName"] : null
-                        }
+                        value={tokenName ? tokenName["tokenName"] : null}
                         onChange={(e) =>
                           setTokenName((tokenName) => {
                             return {
@@ -699,9 +698,7 @@ const Accountsettings = () => {
                     <div className="comman-grids">
                       <input
                         placeholder="Token Name"
-                        value={
-                          tokenSymbol ? tokenSymbol["tokenSymbol"] : null
-                        }
+                        value={tokenSymbol ? tokenSymbol["tokenSymbol"] : null}
                         onChange={(e) =>
                           setTokenSymbol((tokenSymbol) => {
                             return {
@@ -735,9 +732,9 @@ const Accountsettings = () => {
               </div>
             </div>
           </div>
-          </div>
         </div>
       </div>
+    </div>
   );
 };
 

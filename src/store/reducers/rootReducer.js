@@ -5,8 +5,8 @@ import storage from "redux-persist/lib/storage";
 import authReducer from "./authSlice";
 import walletSlice from "./walletSlice";
 import appSlice from "./appSlice";
-import { createTransform } from 'redux-persist';
-import JSOG from 'jsog'
+import { createTransform } from "redux-persist";
+import JSOG from "jsog";
 
 const persistConfig = {
   key: "root",

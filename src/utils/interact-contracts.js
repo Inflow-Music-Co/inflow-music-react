@@ -1,14 +1,16 @@
-import { createAlchemyWeb3 } from '@alch/alchemy-web3';
-import { default as contractABI } from '../../contract-abi.json';
+import { createAlchemyWeb3 } from "@alch/alchemy-web3";
+import { default as contractABI } from "../../contract-abi.json";
 
-const web3 = createAlchemyWeb3(process.env.NEXT_PUBLIC_ALCHEMY_API_URL_RINKEBY || '');
+const web3 = createAlchemyWeb3(
+  process.env.NEXT_PUBLIC_ALCHEMY_API_URL_RINKEBY || ""
+);
 
 export const connectWallet = async () => {
   if (window.ethereum) {
     // if you have metamask installed
     try {
       const addressArray = await window.ethereum.request({
-        method: 'eth_requestAccounts',
+        method: "eth_requestAccounts",
       });
       const obj = {
         status: undefined,
@@ -18,14 +20,14 @@ export const connectWallet = async () => {
     } catch (err) {
       return {
         address: null,
-        status: 'An error has ocurred: ' + err.message,
+        status: "An error has ocurred: " + err.message,
       };
     }
   } else {
     // you do not have metamask installed
     return {
       address: undefined,
-      status: 'You need to install Metamask wallet.',
+      status: "You need to install Metamask wallet.",
     };
   }
 };
@@ -34,7 +36,7 @@ export const getCurrentWalletConnected = async () => {
   if (window.ethereum) {
     try {
       const addressArray = await window.ethereum.request({
-        method: 'eth_accounts',
+        method: "eth_accounts",
       });
       if (addressArray.length > 0) {
         return {
@@ -42,42 +44,37 @@ export const getCurrentWalletConnected = async () => {
         };
       } else {
         return {
-          address: '',
-          status: '🦊 Connect to Metamask using the top right button.',
+          address: "",
+          status: "🦊 Connect to Metamask using the top right button.",
         };
       }
     } catch (err) {
       return {
-        address: '',
-        status: 'An error has ocurred: ' + err.message,
+        address: "",
+        status: "An error has ocurred: " + err.message,
       };
     }
   } else {
     return {
-      address: '',
-      status: 'You need to install Metamask wallet.',
+      address: "",
+      status: "You need to install Metamask wallet.",
     };
   }
 };
 
-export const mintNFT = async (
-  image,
-  author,
-  name,
-  description,
-) => {
-  if (!image || name.trim() === '' || description.trim() === '') {
+export const mintNFT = async (image, author, name, description) => {
+  if (!image || name.trim() === "" || description.trim() === "") {
     return {
       success: false,
-      status: 'Please make sure all fields are completed before minting.',
+      status: "Please make sure all fields are completed before minting.",
     };
   }
 
   const metadata = {
-    name: '',
-    author: '',
-    description: '',
-    image: '',
+    name: "",
+    author: "",
+    description: "",
+    image: "",
   };
 
   metadata.image = image;
@@ -85,10 +82,10 @@ export const mintNFT = async (
   metadata.author = author;
   metadata.description = description;
 
-  const pinataResponse = await fetch('/api/upload-asset', {
-    method: 'POST',
+  const pinataResponse = await fetch("/api/upload-asset", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ metadata }),
   });
@@ -98,7 +95,7 @@ export const mintNFT = async (
   if (!response.success) {
     return {
       success: false,
-      status: '😢 Something went wrong while uploading your tokenURI.',
+      status: "😢 Something went wrong while uploading your tokenURI.",
     };
   }
 
@@ -106,7 +103,7 @@ export const mintNFT = async (
 
   window.contract = await new web3.eth.Contract(
     contractABI.abi,
-    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
   );
 
   const transactionParameters = {
@@ -120,7 +117,7 @@ export const mintNFT = async (
   //sign the transaction via Metamask
   try {
     const txHash = await window.ethereum.request({
-      method: 'eth_sendTransaction',
+      method: "eth_sendTransaction",
       params: [transactionParameters],
     });
     return {
@@ -130,7 +127,7 @@ export const mintNFT = async (
   } catch (error) {
     return {
       success: false,
-      status: '😥 Something went wrong: ' + error.message,
+      status: "😥 Something went wrong: " + error.message,
     };
   }
 };

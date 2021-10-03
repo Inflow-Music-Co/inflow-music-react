@@ -5,7 +5,7 @@ import { AppRoutes } from "./route/AppRoutes";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./utils/axios";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 
 // const { store, persistor } = configureStore();
 import Header from "../src/base/Header";
@@ -15,9 +15,9 @@ import { WalletProviderContext } from "./contexts/walletProviderContext";
 const theme = createTheme({
   palette: {
     secondary: {
-      main: '#863ee3'
-    }
-  }
+      main: "#863ee3",
+    },
+  },
 });
 
 function App() {
@@ -35,7 +35,8 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <WalletProviderContext.Provider
-        value={{ walletProvider, setWalletProvider }}>
+        value={{ walletProvider, setWalletProvider }}
+      >
         <ApolloProvider client={client}>
           <Router>
             <AppRoutes />

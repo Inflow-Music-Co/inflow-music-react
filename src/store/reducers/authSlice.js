@@ -6,11 +6,13 @@ import jwt_decode from "jwt-decode";
 import { disconnect } from "./walletSlice";
 
 const customNodeOptions = {
-  rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+  rpcUrl: "https://rpc-mainnet.maticvigil.com/", // Polygon RPC URL
   chainId: 137, // Polygon chain id
-}
+};
 
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+  network: customNodeOptions,
+});
 
 export const authSlice = createSlice({
   name: "auth",
@@ -101,11 +103,11 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
     //very long lifespan token
     // const didToken = await magic.user.getIdToken()
     //customized lifespan token 25 hours which is larger than JWT token lifespan: 24 hours
-    
+
     const didToken = await magic.user.generateIdToken({
       lifespan: 60 * 60 * 25,
     });
-    
+
     // Validate didToken with server and Create new token which includes didToken and account_type
     const { data } = await axios({
       url: `${process.env.REACT_APP_SERVER_URL}/v1/user/login`,
@@ -114,13 +116,13 @@ export const loginWithMagicLink = (email) => async (dispatch) => {
         "Content-Type": "application/json",
         "x-access-token": "Bearer " + didToken,
       },
-      data : { email, address : metaData.publicAddress }
+      data: { email, address: metaData.publicAddress },
     });
 
-    console.log('USER DATA : ', data.userData);
-    
+    console.log("USER DATA : ", data.userData);
+
     const { access_token } = data;
-    console.log('DATA from /login sent to localStorage!!');
+    console.log("DATA from /login sent to localStorage!!");
     localStorage.setItem("access_token", access_token);
 
     dispatch(

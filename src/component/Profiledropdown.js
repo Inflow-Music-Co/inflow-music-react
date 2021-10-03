@@ -104,7 +104,6 @@ function Profiledropdown() {
             </div>
 
             <LoginModal login={login} setLogin={setLogin} />
-
           </div>
         </Dropdown.Menu>
       </Dropdown>

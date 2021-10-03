@@ -26,7 +26,6 @@ import { ethers } from "ethers";
 import { connected, setProvider } from "../store/reducers/walletSlice";
 
 const LoginModal = (props) => {
-  
   const { login, setLogin } = props;
   WalletProviderContext;
   const MySwal = withReactContent(Swal);
@@ -53,11 +52,13 @@ const LoginModal = (props) => {
   );
 
   const customNodeOptions = {
-    rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+    rpcUrl: "https://rpc-mainnet.maticvigil.com/", // Polygon RPC URL
     chainId: 137, // Polygon chain id
-  }
-  
-  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
+  };
+
+  const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+    network: customNodeOptions,
+  });
 
   const handleLoginWithMagic = async (e) => {
     try {
@@ -73,7 +74,7 @@ const LoginModal = (props) => {
       dispatch(connected({ address: address }));
       dispatch(setProvider(provider));
       setWalletProvider(provider);
-      localStorage.setItem("provider", provider)
+      localStorage.setItem("provider", provider);
     } catch (e) {
       console.log("handleLoginWithMagic", e);
     }

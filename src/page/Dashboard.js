@@ -8,7 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Doughnutchart from "../component/Doughnutchart";
 import MyBalanceChart from "../component/MyBalanceChart";
 import CreateArtistModal from "../component/CreateArtistModal";
-import { ethers } from 'ethers'
+import { ethers } from "ethers";
 import { connected, setProvider } from "../store/reducers/walletSlice";
 // import Mynftdropdown from '../component/Mynftdropdown';
 // import Song from '../component/Song';
@@ -16,27 +16,28 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
 import SmallLoader from "../component/SmallLoader";
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import "../component/Artist.css";
-import SendModal from "../component/SendModal"
+import SendModal from "../component/SendModal";
 import Swal from "sweetalert2";
 import { Magic } from "magic-sdk";
 import withReactContent from "sweetalert2-react-content";
 import { updateActivePage } from "../store/reducers/appSlice";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopy from "@material-ui/icons/FileCopy";
-import transakSDK from '@transak/transak-sdk';
+import transakSDK from "@transak/transak-sdk";
 
 const customNodeOptions = {
-  rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+  rpcUrl: "https://rpc-mainnet.maticvigil.com/", // Polygon RPC URL
   chainId: 137, // Polygon chain id
-}
+};
 
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+  network: customNodeOptions,
+});
 
 const Dashboard = () => {
-
   const dispatch = useDispatch();
   // const { walletProvider } = useContext(WalletProviderContext);
   const MySwal = withReactContent(Swal);
@@ -62,11 +63,10 @@ const Dashboard = () => {
   const [createArtistAccount, setCreateArtistAccount] = useState(false);
 
   useEffect(async () => {
-    
     const isLoggedIn = await magic.user.isLoggedIn();
-    console.log('isLoggedIn', isLoggedIn);
-   
-    if(isLoggedIn) {
+    console.log("isLoggedIn", isLoggedIn);
+
+    if (isLoggedIn) {
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
       const { email, publicAddress } = await magic.user.getMetadata();
       setUserAddress(publicAddress);
@@ -78,7 +78,6 @@ const Dashboard = () => {
       setSend(false);
       dispatch(updateActivePage("dashboard"));
       await getTokensOwnedByUser();
-      
     } else {
       setConnectedWallet(false);
     }
@@ -86,12 +85,12 @@ const Dashboard = () => {
 
   useEffect(async () => {
     formatAddress();
-  },[userAddress])
+  }, [userAddress]);
 
   useEffect(async () => {
-      await getTokensBalAndPrice();
-      setIsFetched(true);
-  },[tokenAddresses])
+    await getTokensBalAndPrice();
+    setIsFetched(true);
+  }, [tokenAddresses]);
 
   useEffect(() => {
     copied &&
@@ -105,12 +104,17 @@ const Dashboard = () => {
           setCopied((copied) => !copied);
         }
       });
-  }, [copied])
+  }, [copied]);
 
   useEffect(() => {
     recieve &&
       MySwal.fire({
-        title: <p style={{ color: "white" }}>copy your address to recieve tokens in your wallet address : {`${userAddress}`}</p>,
+        title: (
+          <p style={{ color: "white" }}>
+            copy your address to recieve tokens in your wallet address :{" "}
+            {`${userAddress}`}
+          </p>
+        ),
         icon: "info",
         background: "#303030",
       }).then((result) => {
@@ -118,28 +122,28 @@ const Dashboard = () => {
           setCopied((recieve) => !recieve);
         }
       });
-  }, [recieve])
+  }, [recieve]);
 
   const getTokensOwnedByUser = async () => {
     await axios
       .post(`${process.env.REACT_APP_SERVER_URL}/v1/user/gettokensbought`, {
-        uid
+        uid,
       })
       .then((resp) => {
-        console.log(resp.data)
-        mapAndFilter(resp.data.tokensBought)     
+        console.log(resp.data);
+        mapAndFilter(resp.data.tokensBought);
       })
       .catch((err) => {
         console.error(err);
       });
 
-      await axios
+    await axios
       .post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettokensbought`, {
-        uid
+        uid,
       })
       .then((resp) => {
-        console.log(resp.data)
-        mapAndFilter(resp.data.tokensBought)     
+        console.log(resp.data);
+        mapAndFilter(resp.data.tokensBought);
       })
       .catch((err) => {
         console.error(err);
@@ -150,27 +154,28 @@ const Dashboard = () => {
     let tempAddresses = [];
     let tempSymbols = [];
     let filtered = [];
-    buys.forEach(buy => {
-      if(buy.address && buy.symbol){
+    buys.forEach((buy) => {
+      if (buy.address && buy.symbol) {
         tempAddresses.push(buy.address);
-        tempSymbols.push(buy.symbol)
+        tempSymbols.push(buy.symbol);
       }
     });
-    const noDuplicateAddresses = tempAddresses.filter((value, index) => tempAddresses.indexOf(value) === index);
-    const noDuplicateSymbols = tempSymbols.filter((value, index) => tempSymbols.indexOf(value) === index)
+    const noDuplicateAddresses = tempAddresses.filter(
+      (value, index) => tempAddresses.indexOf(value) === index
+    );
+    const noDuplicateSymbols = tempSymbols.filter(
+      (value, index) => tempSymbols.indexOf(value) === index
+    );
     noDuplicateAddresses.forEach((address, index) => {
-      filtered.push({ address, symbol : noDuplicateSymbols[index]})
-    })
+      filtered.push({ address, symbol: noDuplicateSymbols[index] });
+    });
     console.log(filtered);
     setTokenMappings(filtered);
     setTokenSymbols(noDuplicateSymbols);
     setTokenAddresses(noDuplicateAddresses);
-  }
-
-  
+  };
 
   const getTokensBalAndPrice = async () => {
-    
     const tempBalances = [];
     const tempPrices = [];
     const tempValues = [];
@@ -190,36 +195,37 @@ const Dashboard = () => {
       setTokenBalances(tempBalances);
       setTokenPrices(tempPrices);
       setTotalValues(tempValues);
-      console.log('totalValues', totalValues);
-      setIsFetched(true); 
+      console.log("totalValues", totalValues);
+      setIsFetched(true);
     }
   };
 
   const launchTransak = () => {
-
-      let transak = new transakSDK({
-        apiKey: 'ee41ed4b-c89a-42c0-9aab-d9d472916ac7',  // Your API Key
-        environment: 'PRODUCTION', // STAGING/PRODUCTION
-        cryptoCurrencyCode: 'USDC',
-        networks: 'polygon',
-        walletAddress: userAddress, // Your customer's wallet address
-        themeColor: '000001', // App theme color
-        fiatCurrency: 'USD', // INR/GBP
-        email: userEmail, // Your customer's email address
-        redirectURL: '',
-        hostURL: window.location.origin,
-        widgetHeight: '550px',
-        widgetWidth: '450px',
-        defaultFiatAmount : 50,
-        defaultPaymentMethod: 'credit_debit_card'
+    let transak = new transakSDK({
+      apiKey: "ee41ed4b-c89a-42c0-9aab-d9d472916ac7", // Your API Key
+      environment: "PRODUCTION", // STAGING/PRODUCTION
+      cryptoCurrencyCode: "USDC",
+      networks: "polygon",
+      walletAddress: userAddress, // Your customer's wallet address
+      themeColor: "000001", // App theme color
+      fiatCurrency: "USD", // INR/GBP
+      email: userEmail, // Your customer's email address
+      redirectURL: "",
+      hostURL: window.location.origin,
+      widgetHeight: "550px",
+      widgetWidth: "450px",
+      defaultFiatAmount: 50,
+      defaultPaymentMethod: "credit_debit_card",
     });
     transak.init();
-    transak.on(transak.ALL_EVENTS, (data) => {console.log(data)});
+    transak.on(transak.ALL_EVENTS, (data) => {
+      console.log(data);
+    });
     transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
       console.log(orderData);
       transak.close();
     });
-  }
+  };
 
   const getTokenPrice = async (token, balance) => {
     if (walletProvider) {
@@ -273,17 +279,17 @@ const Dashboard = () => {
   };
 
   const displayTotalUSDC = async () => {
-    console.log('displayTotalUSD fired');
-    if(walletProvider){
+    console.log("displayTotalUSD fired");
+    if (walletProvider) {
       const inflow = new Inflow(walletProvider, 137);
       const signer = walletProvider.getSigner();
       const signerAddress = await signer.getAddress();
       const usdcBalance = await inflow.balanceOf("USDC", signerAddress);
       let formattedBalance = parseInt(usdcBalance[0]).toFixed(2);
       setUsdcBalance(formattedBalance);
-      console.log('usdc Balance', formattedBalance);
-    } 
-  }
+      console.log("usdc Balance", formattedBalance);
+    }
+  };
 
   const formatBalanceArray = (arr) => {
     let index = 0;
@@ -307,12 +313,12 @@ const Dashboard = () => {
   };
 
   const formatAddress = () => {
-    if(userAddress) {
+    if (userAddress) {
       let formatted = userAddress.substring(0, 20);
-      formatted += ' ...';
+      formatted += " ...";
       setFormattedAddress(formatted);
     }
-  }
+  };
 
   const displayPercentageBalances = () => {
     if (isFetched) {
@@ -362,13 +368,18 @@ const Dashboard = () => {
 
   const displayDoughnutChart = () => {
     if (isFetched && totalValues.length !== 0) {
-      return <Doughnutchart totalValues={tokenBalances} tokenSymbols={tokenSymbols} />;
-    } 
+      return (
+        <Doughnutchart
+          totalValues={tokenBalances}
+          tokenSymbols={tokenSymbols}
+        />
+      );
+    }
   };
 
   const onCreate = () => {
-    setCreateArtistAccount((createArtistAccount) => !createArtistAccount)
-  }
+    setCreateArtistAccount((createArtistAccount) => !createArtistAccount);
+  };
 
   displayTotalUSDC();
   displayDoughnutChart();
@@ -378,25 +389,30 @@ const Dashboard = () => {
     <div className="dashboard-wrapper-main">
       <Grid container direction="row">
         <Grid item xs={9}>
-      <div className="heading">my dashboard</div>
+          <div className="heading">my dashboard</div>
         </Grid>
         <Grid item xs={3}>
-
-      {isArtist ? <h5> approved artist account </h5>
-        : <Button 
-        variant="contained" 
-        style={{borderRadius: 40}}
-        onClick={onCreate}>Create Artist Account</Button> }
+          {isArtist ? (
+            <h5> approved artist account </h5>
+          ) : (
+            <Button
+              variant="contained"
+              style={{ borderRadius: 40 }}
+              onClick={onCreate}
+            >
+              Create Artist Account
+            </Button>
+          )}
         </Grid>
-      </Grid> 
-      {createArtistAccount ? 
-        <CreateArtistModal 
-          createArtistAccount={createArtistAccount} 
+      </Grid>
+      {createArtistAccount ? (
+        <CreateArtistModal
+          createArtistAccount={createArtistAccount}
           setCreateArtistAccount={setCreateArtistAccount}
           userEmail={userEmail}
           userAddress={userAddress}
-          /> 
-          : null}
+        />
+      ) : null}
       <div className="first-row-main-dash">
         <div className="left-col">
           <div className="above-row">
@@ -474,29 +490,37 @@ const Dashboard = () => {
           </div>
 
           <div className="artist-holdings">
-            {isFetched ?  <div className="chart-row">{displayDoughnutChart()}</div> : null}
+            {isFetched ? (
+              <div className="chart-row">{displayDoughnutChart()}</div>
+            ) : null}
             <div className="chart-row">{displayPercentageBalances()}</div>
             <div className="artist-holdings-total m-auto col-12 d-flex align-items-center">
-              <div
-                className="artist-holdings-inner d-flex flex-column"
-              >
+              <div className="artist-holdings-inner d-flex flex-column">
                 <span
                   className="d-flex flex-row"
                   style={{ fontSize: "1.1rem" }}
-              >
-                {formattedAddress ? <div>{formattedAddress} </div> : <div>loading address ... </div>}
-                <IconButton onClick={() => {navigator.clipboard.writeText(userAddress); setCopied(true)}} style={{paddingTop: 0}}>
-                    <FileCopy fontSize="small"/>
-                </IconButton>
+                >
+                  {formattedAddress ? (
+                    <div>{formattedAddress} </div>
+                  ) : (
+                    <div>loading address ... </div>
+                  )}
+                  <IconButton
+                    onClick={() => {
+                      navigator.clipboard.writeText(userAddress);
+                      setCopied(true);
+                    }}
+                    style={{ paddingTop: 0 }}
+                  >
+                    <FileCopy fontSize="small" />
+                  </IconButton>
                 </span>
                 <span className="small-heading">your address</span>
               </div>
             </div>
 
             <div className="artist-holdings-total mr-auto mt-3 ml-auto col-12 d-flex align-items-center">
-              <div
-                className="artist-holdings-inner d-flex flex-column"
-              >
+              <div className="artist-holdings-inner d-flex flex-column">
                 <span className="d-flex flex-row"></span>
                 <span className="small-heading">Total Wallet Balance</span>
               </div>
@@ -506,77 +530,116 @@ const Dashboard = () => {
       </div>
       <div className="token-chart">
         <div className="card-heading">
-        <Grid container direction="row">
-          {walletProvider ? 
-          <Grid item container xs={9} direction="row" alignItems="flex-end" justify="flex-end">
-          <Button 
-            variant="contained" 
-            size="medium" 
-            color="secondary"
-            onClick={() => setSend(true)}
-            style={{margin : 10}}>
-              Send Tokens & NFTs
-          </Button>
-          </Grid> : <div> connecting wallet ... </div>}
-          <Grid Grid item container xs={3} direction="row" alignItems="flex-end" justify="flex-end">
-          <Button 
-            onClick={() => setRecieve(true)}
-            variant="contained" 
-            size="medium" 
-            color="primary"
-            style={{margin : 10}}>
-              Recieve Tokens & NFTs
-          </Button>
-          </Grid>
+          <Grid container direction="row">
+            {walletProvider ? (
+              <Grid
+                item
+                container
+                xs={9}
+                direction="row"
+                alignItems="flex-end"
+                justify="flex-end"
+              >
+                <Button
+                  variant="contained"
+                  size="medium"
+                  color="secondary"
+                  onClick={() => setSend(true)}
+                  style={{ margin: 10 }}
+                >
+                  Send Tokens & NFTs
+                </Button>
+              </Grid>
+            ) : (
+              <div> connecting wallet ... </div>
+            )}
+            <Grid
+              Grid
+              item
+              container
+              xs={3}
+              direction="row"
+              alignItems="flex-end"
+              justify="flex-end"
+            >
+              <Button
+                onClick={() => setRecieve(true)}
+                variant="contained"
+                size="medium"
+                color="primary"
+                style={{ margin: 10 }}
+              >
+                Recieve Tokens & NFTs
+              </Button>
+            </Grid>
           </Grid>
         </div>
       </div>
       <div className="token-chart">
         <div className="chart-header-row">
-        <Grid container direction="column" alignItems="center" justify="center">
-          <Grid item style={{paddingBottom: 10}}>
-               {usdcBalance ? <div className="right-side-value">total usdc : ${usdcBalance}</div> : <span>loading ... </span>}
-          </Grid>
-            <Button 
-              style={{backgroundColor: "#3f7da6", color: "white", marginLeft: 5}} 
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item style={{ paddingBottom: 10 }}>
+              {usdcBalance ? (
+                <div className="right-side-value">
+                  total usdc : ${usdcBalance}
+                </div>
+              ) : (
+                <span>loading ... </span>
+              )}
+            </Grid>
+            <Button
+              style={{
+                backgroundColor: "#3f7da6",
+                color: "white",
+                marginLeft: 5,
+              }}
               variant="contained"
               onClick={launchTransak}
-              size="large">
+              size="large"
+            >
               Buy USDC
-          </Button>          
+            </Button>
           </Grid>
         </div>
         <div className="total-bal-chart">{/* <Totalbalancechart /> */}</div>
         <div className="deposite-earning-row">
           <div className="deposits">
-                  <div className="square-lab"></div>
-                  <div className="deposite-heaing">
-                      <span className="labal-heading">Deposits</span>
-                      <span className="percent">+11.7%</span>
-                  </div>
-              </div>
-              <div className="earning">
-                  <div className="square-lab"></div>
-                  <div className="deposite-heaing">
-                      <span className="labal-heading">Earnings</span>
-                      <span className="percent">+11.7%</span>
-                  </div>
-              </div>
+            <div className="square-lab"></div>
+            <div className="deposite-heaing">
+              <span className="labal-heading">Deposits</span>
+              <span className="percent">+11.7%</span>
+            </div>
+          </div>
+          <div className="earning">
+            <div className="square-lab"></div>
+            <div className="deposite-heaing">
+              <span className="labal-heading">Earnings</span>
+              <span className="percent">+11.7%</span>
+            </div>
+          </div>
         </div>
       </div>
-      {send ? <div> 
-                <SendModal 
-                send={send} 
-                setSend={setSend} 
-                tokenMappings={tokenMappings}
-                provider={walletProvider}
-                getTokensBalAndPrice={getTokensBalAndPrice}
-                addedUsdc={addedUsdc}
-                setAddedUsdc={setAddedUsdc}
-                /> 
-                <div className="card-heading">Processing Transaction Please Wait </div>
-                </div>
-                 : null}
+      {send ? (
+        <div>
+          <SendModal
+            send={send}
+            setSend={setSend}
+            tokenMappings={tokenMappings}
+            provider={walletProvider}
+            getTokensBalAndPrice={getTokensBalAndPrice}
+            addedUsdc={addedUsdc}
+            setAddedUsdc={setAddedUsdc}
+          />
+          <div className="card-heading">
+            Processing Transaction Please Wait{" "}
+          </div>
+        </div>
+      ) : null}
 
       {/* -----------My-NFTs----------------------- */}
       {/* <div className="mynfts-row-main">

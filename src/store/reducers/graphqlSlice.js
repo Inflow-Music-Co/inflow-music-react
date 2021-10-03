@@ -1,18 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 export const graphqlSlice = createSlice({
-  name: 'graphql',
+  name: "graphql",
   initialState: {
-    clienturl:''
+    clienturl: "",
   },
   reducers: {
     setclienturl: (state, action) => {
-      state.clienturl = action.payload.clienturl
+      state.clienturl = action.payload.clienturl;
     },
   },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { setclienturl } = graphqlSlice.actions
+export const { setclienturl } = graphqlSlice.actions;
 
-export default graphqlSlice.reducer
+export default graphqlSlice.reducer;

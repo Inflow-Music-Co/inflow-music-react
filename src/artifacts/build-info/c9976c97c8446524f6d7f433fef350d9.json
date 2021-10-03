@@ -26,9 +26,7 @@
             "evm.deployedBytecode",
             "evm.methodIdentifiers"
           ],
-          "": [
-            "ast"
-          ]
+          "": ["ast"]
         }
       }
     }
@@ -64,9 +62,7 @@
         "ast": {
           "absolutePath": "contracts/rarible/libs/LibRoyaltiesV2.sol",
           "exportedSymbols": {
-            "LibRoyaltiesV2": [
-              5
-            ]
+            "LibRoyaltiesV2": [5]
           },
           "id": 6,
           "license": "MIT",
@@ -74,12 +70,7 @@
           "nodes": [
             {
               "id": 1,
-              "literals": [
-                "solidity",
-                "^",
-                "0.8",
-                ".4"
-              ],
+              "literals": ["solidity", "^", "0.8", ".4"],
               "nodeType": "PragmaDirective",
               "src": "33:23:0"
             },
@@ -90,9 +81,7 @@
               "contractKind": "library",
               "fullyImplemented": true,
               "id": 5,
-              "linearizedBaseContracts": [
-                5
-              ],
+              "linearizedBaseContracts": [5],
               "name": "LibRoyaltiesV2",
               "nameLocation": "66:14:0",
               "nodeType": "ContractDefinition",

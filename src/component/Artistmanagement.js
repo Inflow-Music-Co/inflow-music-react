@@ -12,21 +12,23 @@ import { Modal } from "react-bootstrap";
 import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
 // import Loader from "./Loader";
 import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
-import Axios from 'axios';
+import Axios from "axios";
 import SmallLoader from "./SmallLoader";
 import { useSelector } from "react-redux";
 import { WalletProviderContext } from "../contexts/walletProviderContext";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { CreateMintgateLink } from "../hooks/createMintGate";
-import Button from '@material-ui/core/Button'
+import Button from "@material-ui/core/Button";
 import { Magic } from "magic-sdk";
 
 const customNodeOptions = {
-  rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+  rpcUrl: "https://rpc-mainnet.maticvigil.com/", // Polygon RPC URL
   chainId: 137, // Polygon chain id
-}
+};
 
-const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, { network: customNodeOptions });
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+  network: customNodeOptions,
+});
 
 const Artistpic = () => {
   //const { walletProvider } = useContext(WalletProviderContext);
@@ -39,11 +41,11 @@ const Artistpic = () => {
 
   /*MintGate Integration state*/
   const [link, setLink] = useState(false);
-  const [url, setURL] = useState('');
-  const [linkTitle, setLinkTitle] = useState('');
-  const [tokenAddress, setTokenAddress] = useState('');
-  const [balance, setBalance] = useState('');
-  const [mintgateLink, setMintgateLink] = useState('');
+  const [url, setURL] = useState("");
+  const [linkTitle, setLinkTitle] = useState("");
+  const [tokenAddress, setTokenAddress] = useState("");
+  const [balance, setBalance] = useState("");
+  const [mintgateLink, setMintgateLink] = useState("");
   const [linkSuccess, setLinkSuccess] = useState(false);
 
   const jwt = process.env.REACT_APP_MINTGATE_JWT;
@@ -53,37 +55,39 @@ const Artistpic = () => {
   const [connectedwallet, setconnectedwallet] = useState(true);
   const uid = useSelector((state) => state.auth.data._id);
   const [socialTokenAddress, setSocialTokenAddress] = useState();
-  const [artist, setArtist] = useState('');
-  const [soundCloudLink, setSoundCloudLink] = useState('');
+  const [artist, setArtist] = useState("");
+  const [soundCloudLink, setSoundCloudLink] = useState("");
   const [hasActivated, setHasActivated] = useState();
 
   //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
   const [tokenfees, settokenfees] = useState(0.0);
 
-  console.log({ socialTokenAddress })
+  console.log({ socialTokenAddress });
 
   useEffect(async () => {
-
     const isLoggedIn = await magic.user.isLoggedIn();
-    console.log('isLoggedIn', isLoggedIn)
-   
-    if(isLoggedIn) {
+    console.log("isLoggedIn", isLoggedIn);
+
+    if (isLoggedIn) {
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
       const signer = provider.getSigner();
       setWalletProvider(provider);
       setSigner(signer);
       //dispatch(setProvider(provider));
-      setConnectedWallet(true);      
+      setConnectedWallet(true);
     } else {
       setConnectedWallet(false);
     }
-        const id = uid;
-        const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, { id } );
-        console.log(data.artist.has_activated);
-        setHasActivated(data.artist.has_activated);
-        setSocialTokenAddress(data.artist.social_token_id);
-        setLoading(false);   
-  }, [])
+    const id = uid;
+    const { data } = await Axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+      { id }
+    );
+    console.log(data.artist.has_activated);
+    setHasActivated(data.artist.has_activated);
+    setSocialTokenAddress(data.artist.social_token_id);
+    setLoading(false);
+  }, []);
 
   const formatAndSetTokenFees = async (value) => {
     const inflow = new Inflow((walletProvider, 137));
@@ -94,67 +98,82 @@ const Artistpic = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
-  }
+  };
 
   const saveInflowGatedLink = async (url) => {
-    console.log('savedLink!!!!', url)
+    console.log("savedLink!!!!", url);
     // await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { url } )
-    await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updateinflowgatedurls`,  { inflowGatedUrl: url, balance } )
-  }
+    await Axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/v1/artist/updateinflowgatedurls`,
+      { inflowGatedUrl: url, balance }
+    );
+  };
 
   const changeOwner = async () => {
-
     const id = uid;
-    
+
     console.log({ signer });
-    const socialToken = new Contract(socialTokenAddress, SocialToken.abi, signer);
+    const socialToken = new Contract(
+      socialTokenAddress,
+      SocialToken.abi,
+      signer
+    );
 
     try {
-        const transaction = await socialToken.transferOwnership('0x76aB04F8Adb222C7Bbc27991A82498906954dEae');
-        transaction.wait();
-        Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, { id })
-      .then((res) => {
-        console.log(res)
-      }).catch((err) => {
-        console.log(err)
-      });
+      const transaction = await socialToken.transferOwnership(
+        "0x76aB04F8Adb222C7Bbc27991A82498906954dEae"
+      );
+      transaction.wait();
+      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, {
+        id,
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (error) {
       console.log(error);
     }
-    
   };
 
   const uploadSoundCloudLink = async () => {
     setsuccess((success) => !success);
 
-    if(soundCloudLink){
-    
-      console.log(soundCloudLink, uid, );
+    if (soundCloudLink) {
+      console.log(soundCloudLink, uid);
 
-      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadsoundcloud`, {
-        soundcloud_embed: soundCloudLink,
-        id : uid
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await Axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadsoundcloud`,
+        {
+          soundcloud_embed: soundCloudLink,
+          id: uid,
+        }
+      )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
-      alert('please add a soundcloud embed link')
+      alert("please add a soundcloud embed link");
     }
-  }
+  };
 
   const claimTokenFees = async () => {
-    console.log('claim Token Fees');
-    settokenfrees(tokenfrees => !tokenfrees);
+    console.log("claim Token Fees");
+    settokenfrees((tokenfrees) => !tokenfrees);
     const address = await signer.getAddress();
 
     const contract = new Contract(socialTokenAddress, SocialToken.abi, signer);
-    const transaction = await contract.claimCreatorFee(address, ethers.utils.parseEther(String(0.00001)));
+    const transaction = await contract.claimCreatorFee(
+      address,
+      ethers.utils.parseEther(String(0.00001))
+    );
     await transaction.wait();
-  }
+  };
 
   return (
     <div className="dashboard-wrapper-main artist-management">
@@ -180,22 +199,35 @@ const Artistpic = () => {
               </div>
             </div>
             <div className="first-row-main-dash">
-              <div className="left-col"> 
+              <div className="left-col">
                 <div className="below-row">
-                {socialTokenAddress ? <> 
-                  {hasActivated ? <Button variant="disabled" style={{height : '100px', width: '100px', color: 'grey'}}>
-                    TOKEN LAUNCHED
-                    </Button> 
-                    : <button className="btn-gradiant" onClick={changeOwner}>
-                    LAUNCH TOKEN
-                    </button>} </> : null}
+                  {socialTokenAddress ? (
+                    <>
+                      {hasActivated ? (
+                        <Button
+                          variant="disabled"
+                          style={{
+                            height: "100px",
+                            width: "100px",
+                            color: "grey",
+                          }}
+                        >
+                          TOKEN LAUNCHED
+                        </Button>
+                      ) : (
+                        <button className="btn-gradiant" onClick={changeOwner}>
+                          LAUNCH TOKEN
+                        </button>
+                      )}{" "}
+                    </>
+                  ) : null}
                 </div>
               </div>
             </div>
             <div className="footer-btn">
-              <button className='btn-gradiant' onClick={claimTokenFees}>
-                    CASH OUT
-                </button>
+              <button className="btn-gradiant" onClick={claimTokenFees}>
+                CASH OUT
+              </button>
             </div>
           </div>
         </div>
@@ -322,13 +354,16 @@ const Artistpic = () => {
             </div>
 
             <div className="footer-btn">
-              <button className="btn-gradiant"
-              onClick={() => setLink((link) => !link)}>Create URL</button>
+              <button
+                className="btn-gradiant"
+                onClick={() => setLink((link) => !link)}
+              >
+                Create URL
+              </button>
             </div>
           </div>
         </div>
       </div>
-      
 
       <Modal
         show={newvote}
@@ -348,15 +383,15 @@ const Artistpic = () => {
               placeholder="playlist embed link"
               onChange={(e) => setSoundCloudLink(e.target.value)}
             />
-            </div>
+          </div>
         </Modal.Body>
 
         <Modal.Footer>
           <button
             className="save-btn btn-gradiant"
-            onClick={() => uploadSoundCloudLink()} 
+            onClick={() => uploadSoundCloudLink()}
           >
-            Upload Playlist 
+            Upload Playlist
           </button>
         </Modal.Footer>
       </Modal>
@@ -434,55 +469,60 @@ const Artistpic = () => {
 
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Original Content Url</label>
-            <input
-              id="url"
-              onChange={(e) => setURL(e.target.value)}
-              className="form-control mb-3"
-              type="text"
-              placeholder="Example: https://youtube.com"
-            />
-            <label>Link Title</label>
-            <input
-              id="title"
-              onChange={(e) => setLinkTitle(e.target.value)}
-              className="form-control mb-3 mt-3"
-              type="text"
-              placeholder="Link Title"
-            />
+            <div className="form-group">
+              <label>Original Content Url</label>
+              <input
+                id="url"
+                onChange={(e) => setURL(e.target.value)}
+                className="form-control mb-3"
+                type="text"
+                placeholder="Example: https://youtube.com"
+              />
+              <label>Link Title</label>
+              <input
+                id="title"
+                onChange={(e) => setLinkTitle(e.target.value)}
+                className="form-control mb-3 mt-3"
+                type="text"
+                placeholder="Link Title"
+              />
 
-            <label>Select Token</label>  
-            <select id="tokenAddress"
-              onChange={(e) => setTokenAddress(e.target.value)}
-              className="form-control mb-3 mt-3">
-              <option>Select Token</option>
-              <option value={`${socialTokenAddress}`}>{socialTokenAddress}</option>
+              <label>Select Token</label>
+              <select
+                id="tokenAddress"
+                onChange={(e) => setTokenAddress(e.target.value)}
+                className="form-control mb-3 mt-3"
+              >
+                <option>Select Token</option>
+                <option value={`${socialTokenAddress}`}>
+                  {socialTokenAddress}
+                </option>
               </select>
-            <label>Amount of Tokens Required</label>
-            <input
-              id="balance"
-              onChange={(e) => setBalance(e.target.value)}
-              className="form-control mb-3 mt-4"
-              type="number"
-              placeholder="ex. 100"
-            />
-            <button
-            className="upload-profile btn-gradiant"
-            onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
-            type="submit">Created Token Gated Link</button>
-          </div>
+              <label>Amount of Tokens Required</label>
+              <input
+                id="balance"
+                onChange={(e) => setBalance(e.target.value)}
+                className="form-control mb-3 mt-4"
+                type="number"
+                placeholder="ex. 100"
+              />
+              <button
+                className="upload-profile btn-gradiant"
+                onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
+                type="submit"
+              >
+                Created Token Gated Link
+              </button>
+            </div>
           </form>
         </Modal.Body>
-
       </Modal>
 
-      <Modal
-        show={linkSuccess}
-        className="edit-profile-modal success"
-      >
-        <Modal.Header closeButton 
-        onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}>
+      <Modal show={linkSuccess} className="edit-profile-modal success">
+        <Modal.Header
+          closeButton
+          onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
+        >
           <span className="title">Your Token Gated Link</span>
         </Modal.Header>
 
@@ -492,23 +532,25 @@ const Artistpic = () => {
             <h2 className="title">Success!</h2>
             <p>Your token gated link has been created</p>
             <input
-              value={localStorage.getItem('link')}
+              value={localStorage.getItem("link")}
               className="form-control mb-3"
               type="text"
             />
-            
-            <button className="btn-gradiant" onClick={() => {
-              navigator.clipboard.writeText(localStorage.getItem('link'));
-              // saveMintgateLink(localStorage.getItem('link'))
-              saveInflowGatedLink(url, balance);
-              }}>Copy Link</button>
+
+            <button
+              className="btn-gradiant"
+              onClick={() => {
+                navigator.clipboard.writeText(localStorage.getItem("link"));
+                // saveMintgateLink(localStorage.getItem('link'))
+                saveInflowGatedLink(url, balance);
+              }}
+            >
+              Copy Link
+            </button>
           </div>
         </Modal.Body>
       </Modal>
-
     </div>
-
-    
   );
 };
 

@@ -1,11 +1,9 @@
-import React, { Component } from "react"
+import React, { Component } from "react";
 
 class Layout extends Component {
-    render(){
-        return(
-            <div>demo</div>
-        )
-    }
+  render() {
+    return <div>demo</div>;
+  }
 }
 
-export default Layout
+export default Layout;
