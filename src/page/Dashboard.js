@@ -225,7 +225,7 @@ const Dashboard = () => {
     if (walletProvider) {
       try {
         const provider = walletProvider;
-        const inflow = new Inflow((provider, 137));
+        const inflow = new Inflow(provider, 137);
 
         const singleTokenPrice = await inflow.getMintPriceSocial(
           token,
@@ -244,7 +244,7 @@ const Dashboard = () => {
       try {
         const signer = walletProvider.getSigner();
         const signerAddress = await signer.getAddress();
-        const inflow = new Inflow(walletProvider, 4);
+        const inflow = new Inflow(walletProvider, 137);
         const balance = await inflow.balanceOf(
           "SocialToken",
           signerAddress,

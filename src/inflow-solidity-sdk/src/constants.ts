@@ -25,9 +25,9 @@ export function getAddressesByChainId(
   addressesByChainId: AddressesByChainId,
   chainId: ChainId
 ): Addresses {
-  // console.log({ chainId })
+  console.log({ chainId })
   const addresses = addressesByChainId.get(chainId);
-  // console.log({ addresses });
+  console.log({ addresses });
   if (addresses === undefined) throw new Error("Addresses is undefined");
   return addresses;
 }

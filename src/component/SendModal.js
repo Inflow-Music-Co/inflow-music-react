@@ -12,6 +12,7 @@ import usdc from '../artifacts/contracts/token/erc20/usdc.json'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Swal from "sweetalert2";
 import { POLYGON_USDC } from "../utils/addresses";
+import { POLYGON_USDC_PROXY } from '../utils/addresses';
 import withReactContent from "sweetalert2-react-content";
 
 const useStyles = makeStyles({
@@ -80,28 +81,16 @@ const SendModal = ({ provider, tokenMappings, tokenSymbols, send, setSend, getTo
         } else {
             try {
                 const signer = provider.getSigner();
-                const amount = ethers.utils.parseUnits(amountToSend);
-                console.log({ tokenToSend })
-                if(tokenToSend === POLYGON_USDC){
-                  console.log('token is usdc')
-                  console.log(await signer.getAddress());
-                  const contract = new ethers.Contract(tokenToSend, usdc, signer);
-                  console.log({ contract });
-                  console.log(amountToSend)
-                  const transaction = await contract.transfer(recipientAddress, amount);  
-                  await transaction.wait();
-                  console.log(transaction);
-                } else {
-                  const contract = new ethers.Contract(tokenToSend, SocialToken.abi, signer);
-                  setLoading(true);
-                  const transaction = await contract.transfer(recipientAddress, amount);  
-                  await transaction.wait();
-                  console.log(transaction);
-                }
+                const amount = ethers.utils.parseUnits(amountToSend);                
+                const contract = new ethers.Contract(tokenToSend, SocialToken.abi, signer);
+                setLoading(true);
+                const transaction = await contract.transfer(recipientAddress, amount, {gasLimit: 250000});  
+                await transaction.wait();
                 setLoading(false);
                 setSuccessTransfer(true);
                 getTokensBalAndPrice();
             } catch (error) {
+                console.log(error);
                 alert(error)
                 setError(true)
             }  

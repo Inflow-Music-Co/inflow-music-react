@@ -34,6 +34,9 @@ const Artist = () => {
   const MySwal = withReactContent(Swal);
   const token = useSelector((state) => state.auth.token);
   const uid = useSelector((state) => state.auth.data._id);
+  const isArtist = useSelector((state) => state.auth.isArtist);
+  const isFan = useSelector((state) => state.auth.isFan);
+
   const { id } = useParams();
   const [artist, setArtist] = useState({});
   const [profileModel, setprofileModel] = useState(false);
@@ -67,6 +70,7 @@ const Artist = () => {
   const [notMinted, setNotMinted] = useState(false);
   const [connectedWallet, setConnectedWallet] = useState();
   const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
+  const [processing, setProcessing] = useState(false);
 
   useEffect(async () => {
 
@@ -87,13 +91,11 @@ const Artist = () => {
         console.log('isLoggedIn', isLoggedIn);
         const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
         const signer = provider.getSigner();
-        const address = await signer.getAddress();
         setProvider(provider);
         console.log('Provider', provider);
         setConnectedWallet(true); 
       } 
       
-
       if(data.artist.social_token_id === null){
         setNotMinted(true);
       } else if (data.artist) {
@@ -106,19 +108,16 @@ const Artist = () => {
         }
         
         fetchTokenPrice();
-        const res = await Axios.post(
-          `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
-          artist
-        );
+        const res = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,artist);
         setHistoricalData(res.data.priceHistory);
         getUserBalance();
         setLoading(false);
-        // const tokenPrice = setInterval(() => {
-        //   fetchTokenPrice();
-        // }, 10000);
-        // return () => {
-        //     clearInterval(tokenPrice);
-        // };
+        const tokenPrice = setInterval(() => {
+          fetchTokenPrice();
+        }, 10000);
+        return () => {
+            clearInterval(tokenPrice);
+        };
       }
 
       Axios.post(
@@ -270,10 +269,8 @@ const Artist = () => {
     try {
       if (connectedWallet) {
         const inflow = new Inflow(provider, 137);
-        const mintPrice = await inflow.getMintPriceSocial(
-          socialTokenAddress,
-          inflow.parseERC20("SocialToken", "1")
-        );
+        const mintPrice = await inflow.getMintPriceSocial(socialTokenAddress, inflow.parseERC20("SocialToken", "1"));
+        
         setMintPrice(mintPrice[0]);
       }
     } catch (err) {
@@ -315,15 +312,10 @@ const Artist = () => {
   }
 
   const buyTokens = async () => {
-    console.log(socialTokenAddress);
-    console.log("MAGIC PROVIDER ____", provider);
     if (!connectedWallet) {
       alert("Please log in");
       return;
-    }
-
-    if (connectedWallet) {
-      console.log("wallet provider is true");
+    }else if (connectedWallet) {
       try {
           const signer = provider.getSigner();
           const socialMinter = new Contract(
@@ -333,16 +325,16 @@ const Artist = () => {
           );
 
         const usdcMinter = new Contract(POLYGON_USDC, usdc, signer);
-        console.log({ usdcMinter });
 
-        // const usdcMinter = usdc.connect(signer);
+        //get USDC balance
         const inflow = new Inflow(provider, 137);
         setbuymodalloading(true);
         const signerAddress = await signer.getAddress();
         const usdcBalance = await inflow.balanceOf("USDC", signerAddress);
         console.log("usdc Balance", usdcBalance);
+        
         await fetchTokenPrice();
-        console.log("fetched token price");
+
         if (parseFloat(usdcBalance[0]) < parseFloat(totalmintprice)) {
           console.log("HELLO");
           setLoading(false);
@@ -358,26 +350,10 @@ const Artist = () => {
         console.log({ allowance });
         if (parseFloat(allowance) >= parseFloat(totalmintprice)) {
           console.log("ALLOWANCE GREATER SO MINTING DIRECTLY");
-          await (
-            await socialMinter.mint(
-              inflow.parseERC20("SocialToken", String(TokensToMint))
-            )
-          ).wait();
+          await (await socialMinter.mint(inflow.parseERC20("SocialToken", String(TokensToMint)))).wait();
           setLoading(false);
           setsuccessmint((successmint) => !successmint);
-          await Axios.post(
-            `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
-            { 
-              socialTokenAddress,
-              uid,
-              symbol : artistTokenSymbol 
-            })
-            .then((resp) => {
-              console.log(resp.data);
-            })
-            .catch((err) => {
-              console.error(err);
-            });
+          await updateDb();
           setInterval(() => {
             // window.location.reload();
             history.go(0);
@@ -398,19 +374,18 @@ const Artist = () => {
         ).wait();
         console.log("MINT SUCCESSFULL");
         console.log('ARTIST SYMBOL', artist.social_token_symbol)
+        
+        await updateDb();
+
         await Axios.post(
-          `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,
-          { 
+          `${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`,{ 
             socialTokenAddress, 
             uid,
             symbol : artistTokenSymbol,
             mintPrice :  MintPrice      
-           }
-        )
-          .then((resp) => {
+           }).then((resp) => {
             console.log(resp.data);
-          })
-          .catch((err) => {
+          }).catch((err) => {
             console.error(err);
           });
         console.log("added user token association to DB successfully");
@@ -445,6 +420,7 @@ const Artist = () => {
     if (provider) {
       try {
         setsellmodalloading(true);
+        setProcessing(true);
         
         const signer = provider.getSigner();
         const socialMinter = new Contract(
@@ -481,6 +457,7 @@ const Artist = () => {
         // getBalance();
       } catch (err) {
         setsellmodalloading(false);
+        // setProcessing(false);
         setfailureburn((failureburn) => !failureburn);
         setsell(false);
         // // console.log(err);
@@ -514,6 +491,32 @@ const Artist = () => {
       }
     }
   };
+
+  const updateDb = async () => {
+    if(isFan){
+      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/buytoken`, { 
+        socialTokenAddress,
+        uid,
+        symbol : artistTokenSymbol 
+      }).then((resp) => {
+        console.log(resp.data);
+      }).catch((err) => {
+        console.error(err);
+      });
+    } else if(isArtist){
+      await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/buytoken`, { 
+        socialTokenAddress,
+        uid,
+        symbol : artistTokenSymbol 
+      }).then((resp) => {
+        console.log(resp.data);
+      }).catch((err) => {
+        console.error(err);
+      });
+
+    }
+
+  }
 
   const fetchtotalmintprice = async () => {
     if (provider) {
@@ -737,27 +740,31 @@ const Artist = () => {
                 />
               </div>
 
-              <div className="sell-total-amount">
+              <div className="buy-total-amount">
                 {/* Amount you'll spend: ${totalmintprice} */}
-                Amount you'll spend: ${MintPrice * TokensToMint}
+                Amount you'll spend : <h5>${MintPrice * TokensToMint}</h5>
               </div>
             </>
           )}
           {buymodalloading && buyflag ? (
             <div className="d-flex justify-content-center align-items-center flex-column">
-              Processing Transaction, Please Wait
+              <p>
+              Processing Transaction, Please Wait <br></br>
+               This can sometimes take up to a minute
+              </p>
             </div>
           ) : null}
         </Modal.Body>
 
         <Modal.Footer>
-          <button
-            disabled={buymodalloading}
-            className="save-btn btn-gradiant"
-            onClick={buyflag ? buyTokens : fetchtotalmintprice}
-          >
-            {buyflag ? "Buy" : "Get Buying Price"}
-          </button>
+          
+            <button
+              disabled={buymodalloading}
+              className="save-btn btn-gradiant"
+              onClick={buyflag ? buyTokens : fetchtotalmintprice}
+            >
+              {buyflag ? "CONFIRM" : "BUY"}
+            </button>
         </Modal.Footer>
       </Modal>
 
@@ -792,7 +799,7 @@ const Artist = () => {
               </div>
 
               <div className="buy-total-amount">
-                Amount you'll earn: ${totalburnprice}
+                Amount you'll earn : <h5>${totalburnprice}</h5>
               </div>
             </>
           )}
