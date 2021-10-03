@@ -204,8 +204,8 @@ const Dashboard = () => {
         networks: 'polygon',
         walletAddress: userAddress, // Your customer's wallet address
         themeColor: '000001', // App theme color
-        fiatCurrency: 'GBP', // INR/GBP
-        email: 'r.v.melkonian@gmail.com', // Your customer's email address
+        fiatCurrency: 'USD', // INR/GBP
+        email: userEmail, // Your customer's email address
         redirectURL: '',
         hostURL: window.location.origin,
         widgetHeight: '550px',
