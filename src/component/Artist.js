@@ -59,7 +59,7 @@ const Artist = () => {
     const [socialTokenAddress, setSocialTokenAddress] = useState('');
     const [sellflag, setsellflag] = useState(false);
     const [buyflag, setbuyflag] = useState(false);
-    const [totalmintprice, settotalmintprice] = useState(0.0);
+    const [totalMintPrice, setTotalMintPrice] = useState(0.0);
     const [totalburnprice, settotalburnprice] = useState(0.0);
     const [buymodalloading, setbuymodalloading] = useState(false);
     const [sellmodalloading, setsellmodalloading] = useState(false);
@@ -114,12 +114,12 @@ const Artist = () => {
                 setHistoricalData(res.data.priceHistory);
                 getUserBalance();
                 setLoading(false);
-                const tokenPrice = setInterval(() => {
-                    fetchTokenPrice();
-                }, 10000);
-                return () => {
-                    clearInterval(tokenPrice);
-                };
+                // const tokenPrice = setInterval(() => {
+                //     fetchTokenPrice();
+                // }, 10000);
+                // return () => {
+                //     clearInterval(tokenPrice);
+                // };
             }
 
             Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`, {
@@ -334,7 +334,7 @@ const Artist = () => {
 
                 await fetchTokenPrice();
 
-                if (parseFloat(usdcBalance[0]) < parseFloat(totalmintprice)) {
+                if (parseFloat(usdcBalance[0]) < parseFloat(totalMintPrice)) {
                     console.log('HELLO');
                     setLoading(false);
                     setlessusdc((lessusdc) => !lessusdc);
@@ -347,7 +347,7 @@ const Artist = () => {
                     socialTokenAddress
                 );
                 console.log({ allowance });
-                if (parseFloat(allowance) >= parseFloat(totalmintprice)) {
+                if (parseFloat(allowance) >= parseFloat(totalMintPrice)) {
                     console.log('ALLOWANCE GREATER SO MINTING DIRECTLY');
                     await (
                         await socialMinter.mint(
@@ -373,6 +373,9 @@ const Artist = () => {
                 ).wait();
                 console.log('MINT SUCCESSFULL');
                 console.log('ARTIST SYMBOL', artist.social_token_symbol);
+                setbuymodalloading(false);
+                setsuccessmint((successmint) => !successmint);
+                setbuy(false);
 
                 await updateDb();
 
@@ -391,14 +394,14 @@ const Artist = () => {
                 console.log('added user token association to DB successfully');
 
                 await updatePriceHistory();
+                await updateArtistFeesEarned();
 
-                setbuymodalloading(false);
-                setsuccessmint((successmint) => !successmint);
-                // setInterval(() => {
-                //     window.location.reload();
-                // }, 2000)
-                // getBalance();
-                setbuy(false);
+                
+                setInterval(() => {
+                    window.location.reload();
+                }, 2000)
+                getBalance();
+                
             } catch (err) {
                 setbuymodalloading(false);
                 setfailuremint((failuremint) => !failuremint);
@@ -512,7 +515,24 @@ const Artist = () => {
         }
     };
 
-    const fetchtotalmintprice = async () => {
+    const updateArtistFeesEarned = async () => {
+        try{
+            await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/updatefeesearned`,{
+                social_token_id : socialTokenAddress,
+                totalMintPrice
+            })
+            .then((resp) => {
+                console.log(resp.data);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        } catch (error){
+
+        }
+    }
+
+    const fetchtotalMintPrice = async () => {
         if (provider) {
             try {
                 setbuymodalloading(true);
@@ -523,7 +543,7 @@ const Artist = () => {
                     socialTokenAddress,
                     inflow.parseERC20('SocialToken', String(TokensToMint))
                 );
-                settotalmintprice(mintPrice[0]);
+                setTotalMintPrice(mintPrice[0]);
                 setbuymodalloading(false);
                 setbuyflag(true);
                 // // console.log(`MINT PRICE: ${mintPrice[0]}`);
@@ -732,7 +752,7 @@ const Artist = () => {
                             </div>
 
                             <div className="buy-total-amount">
-                                {/* Amount you'll spend: ${totalmintprice} */}
+                                {/* Amount you'll spend: ${totalMintPrice} */}
                                 Amount you'll spend : <h5>${MintPrice * TokensToMint}</h5>
                             </div>
                         </>
@@ -751,7 +771,7 @@ const Artist = () => {
                     <button
                         disabled={buymodalloading}
                         className="save-btn btn-gradiant"
-                        onClick={buyflag ? buyTokens : fetchtotalmintprice}
+                        onClick={buyflag ? buyTokens : fetchtotalMintPrice}
                     >
                         {buyflag ? 'CONFIRM' : 'BUY'}
                     </button>

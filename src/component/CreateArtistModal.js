@@ -9,6 +9,12 @@ import Grid from '@material-ui/core/Grid';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { styled } from '@mui/material/styles';
 import { setUserData } from '../store/reducers/authSlice';
+import { Magic } from 'magic-sdk';
+import { OAuthExtension } from '@magic-ext/oauth';
+
+const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
+  extensions: [new OAuthExtension()]
+});
 
 const twitterRegex = /http(?:s)?:\/\/(?:www\.)?twitter\.com\/([a-zA-Z0-9_]+)/;
 const symbolRegex = /[A-Z]{3}/;
@@ -21,7 +27,8 @@ const CreateArtistModal = ({
     createArtistAccount,
     setCreateArtistAccount,
     userAddress,
-    userEmail
+    userEmail,
+    hasTwitter
 }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [errorFlg, setErrorFlg] = useState('');
@@ -39,6 +46,10 @@ const CreateArtistModal = ({
         symbol: '',
         profile: ''
     });
+
+    useEffect( async () => {
+     
+    })
 
     useEffect(() => {
         artistAccountCreated &&
@@ -116,6 +127,13 @@ const CreateArtistModal = ({
         setArtistData({ ...artistData, profile: e.target.files[0] });
     };
 
+    const twitterAuth = async (e) => {
+      await magic.oauth.loginWithRedirect({
+        provider: 'twitter',
+        redirectURI: `${window.location.origin}/dashboard`
+      });
+    }
+
     return (
         <div>
             <Modal
@@ -130,16 +148,17 @@ const CreateArtistModal = ({
                         <Grid item xs={12} style={{ paddingBottom: 30 }}>
                             <span className="login-title col-12"> create your artist profile</span>
                         </Grid>
-                        {/* <Grid item xs={12}>
+                        <Grid item xs={12}>
                 <Button
                     style={{backgroundColor: "#1DA1F2", color: "white", marginLeft: 5, borderRadius: 30}}
                     variant="contained"
                     size="large"
+                    onClick={twitterAuth}
                     >
                     connect your twitter&nbsp;&nbsp;
                     <TwitterIcon />
                 </Button>
-                </Grid> */}
+                </Grid>
                     </Grid>
                 </Modal.Header>
                 <Modal.Body>

@@ -58,6 +58,7 @@ const Artistpic = () => {
     const [artist, setArtist] = useState('');
     const [soundCloudLink, setSoundCloudLink] = useState('');
     const [hasActivated, setHasActivated] = useState();
+    const [totalFees, setTotalFees] = useState('');
 
     //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
     const [tokenfees, settokenfees] = useState(0.0);
@@ -85,6 +86,7 @@ const Artistpic = () => {
         console.log(data.artist.has_activated);
         setHasActivated(data.artist.has_activated);
         setSocialTokenAddress(data.artist.social_token_id);
+        setTotalFees(data.artist.total_fees_earned);
         setLoading(false);
     }, []);
 
@@ -169,19 +171,19 @@ const Artistpic = () => {
 
     return (
         <div className="dashboard-wrapper-main artist-management">
-            <div className="heading">Public Playlists</div>
+            <div className="heading">artist management</div>
             <div className="row">
                 <div className="col-lg-4 col-md-6">
                     <div className="card">
                         <div className="artist-title">
                             <div className="d-flex flex-row justify-content-between w-100">
-                                <span>Token Fees</span>
+                                <span>Fees Earned  </span>
                             </div>
+                            
                         </div>
+                        {totalFees? <span>{`$${totalFees}`}</span> : null}
                         <div className="artist-poll">
-                            <div className="poll-green">
-                                <img alt="" src={assetsImages.arrowup} />+ 3.10%
-                            </div>
+                            
                             <div className="dropdown"></div>
                             <div
                                 className="amount d-flex justify-content-center align-items-center text-wrap"
@@ -219,18 +221,13 @@ const Artistpic = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="footer-btn">
-                            <button className="btn-gradiant" onClick={claimTokenFees}>
-                                CASH OUT
-                            </button>
-                        </div>
                     </div>
                 </div>
 
-                <div className="col-lg-4 col-md-6 mt-4 mt-md-0">
+                {/* <div className="col-lg-4 col-md-6 mt-4 mt-md-0">
                     <div className="card">
                         <span>Royalties</span>
-                        {/* <div className="artist-title">
+                        <div className="artist-title">
               <div className="d-flex flex-row justify-content-between w-100">
                 <span>Royalties</span>
                 <a href="#">
@@ -254,11 +251,11 @@ const Artistpic = () => {
             </div>
             <div className="footer-btn">
               <button className="btn-gradiant">Manage Royalties</button>
-            </div> */}
+            </div>
                     </div>
-                </div>
+                </div> */}
 
-                <div className="col-lg-4 col-md-6 mt-4 mt-lg-0">
+                {/* <div className="col-lg-4 col-md-6 mt-4 mt-lg-0">
                     <div className="card">
                         <div className="artist-title">
                             <div className="d-flex flex-row justify-content-between w-100">
@@ -290,9 +287,9 @@ const Artistpic = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
-                <div className="col-lg-4 col-md-6 mt-4">
+                {/* <div className="col-lg-4 col-md-6 mt-4">
                     <div className="card button-card d-flex justify-content-between">
                         <div className="artist-title">
                             <div className="d-flex flex-row justify-content-between w-100">
@@ -312,7 +309,7 @@ const Artistpic = () => {
                             </a>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="col-lg-4 col-md-6 mt-4">
                     <div className="card button-card d-flex justify-content-between">
@@ -397,14 +394,14 @@ const Artistpic = () => {
                 onClick={() => setsuccess((success) => !success)}
             >
                 <Modal.Header closeButton>
-                    <span className="title">Location of next concert</span>
+                    <span className="title">Public Playlist</span>
                 </Modal.Header>
 
                 <Modal.Body>
                     <div className="success-popup-content">
                         <img alt="" src={assetsImages.success} />
                         <h2 className="title">Success!</h2>
-                        <p>Your poll has been created and is now live</p>
+                        <p>Your soundcloud playlist has been updated and is now live</p>
                     </div>
                 </Modal.Body>
 
@@ -456,6 +453,7 @@ const Artistpic = () => {
             >
                 <Modal.Header closeButton>
                     <span className="title">Create Token Gated Link</span>
+                    ;
                 </Modal.Header>
 
                 <Modal.Body>
@@ -499,7 +497,9 @@ const Artistpic = () => {
                             />
                             <button
                                 className="upload-profile btn-gradiant"
-                                onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
+                                onClick={() => {
+                                    saveInflowGatedLink(url, balance);
+                                    setLinkSuccess((linkSuccess) => !linkSuccess)}}
                                 type="submit"
                             >
                                 Created Token Gated Link
@@ -521,23 +521,16 @@ const Artistpic = () => {
                     <div className="success-popup-content">
                         <img alt="" src={assetsImages.success} />
                         <h2 className="title">Success!</h2>
-                        <p>Your token gated link has been created</p>
-                        <input
-                            value={localStorage.getItem('link')}
-                            className="form-control mb-3"
-                            type="text"
-                        />
-
-                        <button
+                        <p>Your token gated link has been created. It will now be on your artist page</p>
+                        {/* <button
                             className="btn-gradiant"
                             onClick={() => {
                                 navigator.clipboard.writeText(localStorage.getItem('link'));
-                                // saveMintgateLink(localStorage.getItem('link'))
-                                saveInflowGatedLink(url, balance);
+                                // saveMintgateLink(localStorage.getItem('link'));
                             }}
                         >
                             Copy Link
-                        </button>
+                        </button> */}
                     </div>
                 </Modal.Body>
             </Modal>

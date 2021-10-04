@@ -22,6 +22,7 @@ import '../component/Artist.css';
 import SendModal from '../component/SendModal';
 import Swal from 'sweetalert2';
 import { Magic } from 'magic-sdk';
+import { OAuthExtension } from '@magic-ext/oauth';
 import withReactContent from 'sweetalert2-react-content';
 import { updateActivePage } from '../store/reducers/appSlice';
 import IconButton from '@material-ui/core/IconButton';
@@ -34,7 +35,8 @@ const customNodeOptions = {
 };
 
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
-    network: customNodeOptions
+    network: customNodeOptions,
+    extensions: [new OAuthExtension()]
 });
 
 const Dashboard = () => {
@@ -61,8 +63,18 @@ const Dashboard = () => {
     const [addedUsdc, setAddedUsdc] = useState(false);
     const [userEmail, setUserEmail] = useState();
     const [createArtistAccount, setCreateArtistAccount] = useState(false);
+    const [hasTwitter, setHasTwitter] = useState(false);
 
     useEffect(async () => {
+
+        if(window.location.href !== 'http://localhost:3000/dashboard'){
+            setCreateArtistAccount(true);
+            setHasTwitter(true);
+            console.log('HAS TWITTER');
+            const result = await magic.oauth.getRedirectResult();
+            console.log({ result });
+        }
+
         const isLoggedIn = await magic.user.isLoggedIn();
         console.log('isLoggedIn', isLoggedIn);
 
@@ -611,6 +623,7 @@ const Dashboard = () => {
                         getTokensBalAndPrice={getTokensBalAndPrice}
                         addedUsdc={addedUsdc}
                         setAddedUsdc={setAddedUsdc}
+                        hasTwitter={hasTwitter}
                     />
                     <div className="card-heading">Processing Transaction Please Wait </div>
                 </div>

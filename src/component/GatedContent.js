@@ -15,7 +15,7 @@ const customNodeOptions = {
 };
 
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
-    network: customNodeOptions
+    network: customNodeOptions,
 });
 
 const GatedContent = (props) => {
@@ -40,7 +40,6 @@ const GatedContent = (props) => {
         } else {
             setConnectedWallet(false);
         }
-
         setSocialTokenAddress(props.location.address);
         setRequiredBalance(props.location.requiredBalance);
     }, []);
@@ -103,7 +102,7 @@ const GatedContent = (props) => {
         if (provider) {
             try {
                 const signer = provider.getSigner();
-                const inflow = new Inflow((provider, 137));
+                const inflow = new Inflow(provider, 137);
                 const signerAddress = await signer.getAddress();
                 let userBalance = await inflow.balanceOf(
                     'SocialToken',

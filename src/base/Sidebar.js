@@ -36,8 +36,7 @@ const Sidebar = () => {
                         </div>
                     </div>
                 </Link>
-
-                <Link to={'/labels'}>
+                {/* <Link to={'/labels'}>
                     <div
                         className={
                             activePage === 'labels' ? 'nav-link-main active' : 'nav-link-main'
@@ -49,26 +48,7 @@ const Sidebar = () => {
                             <span className="small-heading-sidebar">Labels</span>
                         </div>
                     </div>
-                </Link>
-
-                {token && (
-                    <Link to={'/dashboard'}>
-                        <div
-                            className={
-                                activePage === 'dashboard'
-                                    ? 'nav-link-main active'
-                                    : 'nav-link-main'
-                            }
-                            onClick={() => updatePage('dashboard')}
-                        >
-                            <img alt="" src={assetsImages.dashboard} />
-                            <div className="d-flex justify-content-center align-items-center mt-2">
-                                <span className="small-heading-sidebar">Dashboard</span>
-                            </div>
-                        </div>
-                    </Link>
-                )}
-
+                </Link> */}
                 {isArtist && (
                     <Link to={'/artistmanage'}>
                         <div
