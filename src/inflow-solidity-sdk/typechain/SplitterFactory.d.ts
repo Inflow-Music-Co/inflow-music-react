@@ -3,134 +3,131 @@
 /* eslint-disable */
 
 import {
-  ethers,
-  EventFilter,
-  Signer,
-  BigNumber,
-  BigNumberish,
-  PopulatedTransaction,
-  BaseContract,
-  ContractTransaction,
-  Overrides,
-  CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+    ethers,
+    EventFilter,
+    Signer,
+    BigNumber,
+    BigNumberish,
+    PopulatedTransaction,
+    BaseContract,
+    ContractTransaction,
+    Overrides,
+    CallOverrides
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface SplitterFactoryInterface extends ethers.utils.Interface {
-  functions: {
-    "create(address,address[],uint256[])": FunctionFragment;
-  };
+    functions: {
+        'create(address,address[],uint256[])': FunctionFragment;
+    };
 
-  encodeFunctionData(
-    functionFragment: "create",
-    values: [string, string[], BigNumberish[]]
-  ): string;
+    encodeFunctionData(
+        functionFragment: 'create',
+        values: [string, string[], BigNumberish[]]
+    ): string;
 
-  decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'create', data: BytesLike): Result;
 
-  events: {
-    "SplitterCreated(address,address)": EventFragment;
-  };
+    events: {
+        'SplitterCreated(address,address)': EventFragment;
+    };
 
-  getEvent(nameOrSignatureOrTopic: "SplitterCreated"): EventFragment;
+    getEvent(nameOrSignatureOrTopic: 'SplitterCreated'): EventFragment;
 }
 
 export class SplitterFactory extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+    connect(signerOrProvider: Signer | Provider | string): this;
+    attach(addressOrName: string): this;
+    deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
+    listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+    off<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    on<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    once<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    ): this;
 
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
+    listeners(eventName?: string): Array<Listener>;
+    off(eventName: string, listener: Listener): this;
+    on(eventName: string, listener: Listener): this;
+    once(eventName: string, listener: Listener): this;
+    removeListener(eventName: string, listener: Listener): this;
+    removeAllListeners(eventName?: string): this;
 
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+    queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+        event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        fromBlockOrBlockhash?: string | number | undefined,
+        toBlock?: string | number | undefined
+    ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: SplitterFactoryInterface;
+    interface: SplitterFactoryInterface;
 
-  functions: {
+    functions: {
+        create(
+            collateral: string,
+            accounts: string[],
+            shares: BigNumberish[],
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
+    };
+
     create(
-      collateral: string,
-      accounts: string[],
-      shares: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
+        collateral: string,
+        accounts: string[],
+        shares: BigNumberish[],
+        overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-  };
 
-  create(
-    collateral: string,
-    accounts: string[],
-    shares: BigNumberish[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    callStatic: {
+        create(
+            collateral: string,
+            accounts: string[],
+            shares: BigNumberish[],
+            overrides?: CallOverrides
+        ): Promise<void>;
+    };
 
-  callStatic: {
-    create(
-      collateral: string,
-      accounts: string[],
-      shares: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<void>;
-  };
+    filters: {
+        SplitterCreated(
+            splitter?: string | null,
+            creator?: string | null
+        ): TypedEventFilter<[string, string], { splitter: string; creator: string }>;
+    };
 
-  filters: {
-    SplitterCreated(
-      splitter?: string | null,
-      creator?: string | null
-    ): TypedEventFilter<
-      [string, string],
-      { splitter: string; creator: string }
-    >;
-  };
+    estimateGas: {
+        create(
+            collateral: string,
+            accounts: string[],
+            shares: BigNumberish[],
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
+    };
 
-  estimateGas: {
-    create(
-      collateral: string,
-      accounts: string[],
-      shares: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-  };
-
-  populateTransaction: {
-    create(
-      collateral: string,
-      accounts: string[],
-      shares: BigNumberish[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+    populateTransaction: {
+        create(
+            collateral: string,
+            accounts: string[],
+            shares: BigNumberish[],
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+    };
 }

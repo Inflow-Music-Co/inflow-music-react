@@ -3,309 +3,218 @@
 /* eslint-disable */
 
 import {
-  ethers,
-  EventFilter,
-  Signer,
-  BigNumber,
-  BigNumberish,
-  PopulatedTransaction,
-  BaseContract,
-  ContractTransaction,
-  Overrides,
-  CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+    ethers,
+    EventFilter,
+    Signer,
+    BigNumber,
+    BigNumberish,
+    PopulatedTransaction,
+    BaseContract,
+    ContractTransaction,
+    Overrides,
+    CallOverrides
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface USDCInterface extends ethers.utils.Interface {
-  functions: {
-    "allowance(address,address)": FunctionFragment;
-    "approve(address,uint256)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
-    "mint(uint256)": FunctionFragment;
-    "mintTo(address,uint256)": FunctionFragment;
-    "name()": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
-  };
+    functions: {
+        'allowance(address,address)': FunctionFragment;
+        'approve(address,uint256)': FunctionFragment;
+        'balanceOf(address)': FunctionFragment;
+        'decimals()': FunctionFragment;
+        'decreaseAllowance(address,uint256)': FunctionFragment;
+        'increaseAllowance(address,uint256)': FunctionFragment;
+        'mint(uint256)': FunctionFragment;
+        'mintTo(address,uint256)': FunctionFragment;
+        'name()': FunctionFragment;
+        'symbol()': FunctionFragment;
+        'totalSupply()': FunctionFragment;
+        'transfer(address,uint256)': FunctionFragment;
+        'transferFrom(address,address,uint256)': FunctionFragment;
+    };
 
-  encodeFunctionData(
-    functionFragment: "allowance",
-    values: [string, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "mint", values: [BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: "mintTo",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [string, string, BigNumberish]
-  ): string;
+    encodeFunctionData(functionFragment: 'allowance', values: [string, string]): string;
+    encodeFunctionData(functionFragment: 'approve', values: [string, BigNumberish]): string;
+    encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string;
+    encodeFunctionData(functionFragment: 'decimals', values?: undefined): string;
+    encodeFunctionData(
+        functionFragment: 'decreaseAllowance',
+        values: [string, BigNumberish]
+    ): string;
+    encodeFunctionData(
+        functionFragment: 'increaseAllowance',
+        values: [string, BigNumberish]
+    ): string;
+    encodeFunctionData(functionFragment: 'mint', values: [BigNumberish]): string;
+    encodeFunctionData(functionFragment: 'mintTo', values: [string, BigNumberish]): string;
+    encodeFunctionData(functionFragment: 'name', values?: undefined): string;
+    encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
+    encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string;
+    encodeFunctionData(functionFragment: 'transfer', values: [string, BigNumberish]): string;
+    encodeFunctionData(
+        functionFragment: 'transferFrom',
+        values: [string, string, BigNumberish]
+    ): string;
 
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
+    decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'decreaseAllowance', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'increaseAllowance', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'mintTo', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'transferFrom', data: BytesLike): Result;
 
-  events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
-  };
+    events: {
+        'Approval(address,address,uint256)': EventFragment;
+        'Transfer(address,address,uint256)': EventFragment;
+    };
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+    getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment;
+    getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment;
 }
 
 export class USDC extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+    connect(signerOrProvider: Signer | Provider | string): this;
+    attach(addressOrName: string): this;
+    deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
+    listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+    off<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    on<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    once<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    ): this;
 
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
+    listeners(eventName?: string): Array<Listener>;
+    off(eventName: string, listener: Listener): this;
+    on(eventName: string, listener: Listener): this;
+    once(eventName: string, listener: Listener): this;
+    removeListener(eventName: string, listener: Listener): this;
+    removeAllListeners(eventName?: string): this;
 
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+    queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+        event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        fromBlockOrBlockhash?: string | number | undefined,
+        toBlock?: string | number | undefined
+    ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: USDCInterface;
+    interface: USDCInterface;
 
-  functions: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    functions: {
+        allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+        approve(
+            spender: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+        balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    decimals(overrides?: CallOverrides): Promise<[number]>;
+        decimals(overrides?: CallOverrides): Promise<[number]>;
 
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+        decreaseAllowance(
+            spender: string,
+            subtractedValue: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+        increaseAllowance(
+            spender: string,
+            addedValue: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
 
-    mint(
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+        mint(
+            _amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
 
-    mintTo(
-      to: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+        mintTo(
+            to: string,
+            _amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
 
-    name(overrides?: CallOverrides): Promise<[string]>;
+        name(overrides?: CallOverrides): Promise<[string]>;
 
-    symbol(overrides?: CallOverrides): Promise<[string]>;
+        symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+        totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    transfer(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+        transfer(
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
 
-    transferFrom(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-  };
+        transferFrom(
+            sender: string,
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<ContractTransaction>;
+    };
 
-  allowance(
-    owner: string,
-    spender: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  approve(
-    spender: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  decimals(overrides?: CallOverrides): Promise<number>;
-
-  decreaseAllowance(
-    spender: string,
-    subtractedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  increaseAllowance(
-    spender: string,
-    addedValue: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  mint(
-    _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  mintTo(
-    to: string,
-    _amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  name(overrides?: CallOverrides): Promise<string>;
-
-  symbol(overrides?: CallOverrides): Promise<string>;
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  transfer(
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  transferFrom(
-    sender: string,
-    recipient: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  callStatic: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+        spender: string,
+        amount: BigNumberish,
+        overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+        spender: string,
+        subtractedValue: BigNumberish,
+        overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+        spender: string,
+        addedValue: BigNumberish,
+        overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-    mint(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    mint(
+        _amount: BigNumberish,
+        overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     mintTo(
-      to: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+        to: string,
+        _amount: BigNumberish,
+        overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -314,159 +223,196 @@ export class USDC extends BaseContract {
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+        recipient: string,
+        amount: BigNumberish,
+        overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     transferFrom(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-  };
+        sender: string,
+        recipient: string,
+        amount: BigNumberish,
+        overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
-  filters: {
-    Approval(
-      owner?: string | null,
-      spender?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { owner: string; spender: string; value: BigNumber }
-    >;
+    callStatic: {
+        allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    Transfer(
-      from?: string | null,
-      to?: string | null,
-      value?: null
-    ): TypedEventFilter<
-      [string, string, BigNumber],
-      { from: string; to: string; value: BigNumber }
-    >;
-  };
+        approve(spender: string, amount: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
 
-  estimateGas: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+        balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+        decimals(overrides?: CallOverrides): Promise<number>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+        decreaseAllowance(
+            spender: string,
+            subtractedValue: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<boolean>;
 
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+        increaseAllowance(
+            spender: string,
+            addedValue: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<boolean>;
 
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+        mint(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+        mintTo(to: string, _amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
-    mint(
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+        name(overrides?: CallOverrides): Promise<string>;
 
-    mintTo(
-      to: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+        symbol(overrides?: CallOverrides): Promise<string>;
 
-    name(overrides?: CallOverrides): Promise<BigNumber>;
+        totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+        transfer(
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<boolean>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+        transferFrom(
+            sender: string,
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<boolean>;
+    };
 
-    transfer(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    filters: {
+        Approval(
+            owner?: string | null,
+            spender?: string | null,
+            value?: null
+        ): TypedEventFilter<
+            [string, string, BigNumber],
+            { owner: string; spender: string; value: BigNumber }
+        >;
 
-    transferFrom(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-  };
+        Transfer(
+            from?: string | null,
+            to?: string | null,
+            value?: null
+        ): TypedEventFilter<
+            [string, string, BigNumber],
+            { from: string; to: string; value: BigNumber }
+        >;
+    };
 
-  populateTransaction: {
-    allowance(
-      owner: string,
-      spender: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    estimateGas: {
+        allowance(owner: string, spender: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    approve(
-      spender: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+        approve(
+            spender: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
 
-    balanceOf(
-      account: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+        balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+        decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    decreaseAllowance(
-      spender: string,
-      subtractedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+        decreaseAllowance(
+            spender: string,
+            subtractedValue: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
 
-    increaseAllowance(
-      spender: string,
-      addedValue: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+        increaseAllowance(
+            spender: string,
+            addedValue: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
 
-    mint(
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+        mint(
+            _amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
 
-    mintTo(
-      to: string,
-      _amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+        mintTo(
+            to: string,
+            _amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
 
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+        name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+        symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+        totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    transfer(
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+        transfer(
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
 
-    transferFrom(
-      sender: string,
-      recipient: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+        transferFrom(
+            sender: string,
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<BigNumber>;
+    };
+
+    populateTransaction: {
+        allowance(
+            owner: string,
+            spender: string,
+            overrides?: CallOverrides
+        ): Promise<PopulatedTransaction>;
+
+        approve(
+            spender: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+
+        balanceOf(account: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+        decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+        decreaseAllowance(
+            spender: string,
+            subtractedValue: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+
+        increaseAllowance(
+            spender: string,
+            addedValue: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+
+        mint(
+            _amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+
+        mintTo(
+            to: string,
+            _amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+
+        name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+        symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+        totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+        transfer(
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+
+        transferFrom(
+            sender: string,
+            recipient: string,
+            amount: BigNumberish,
+            overrides?: Overrides & { from?: string | Promise<string> }
+        ): Promise<PopulatedTransaction>;
+    };
 }

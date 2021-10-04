@@ -1,27 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const walletSlice = createSlice({
-  name: "wallet",
-  initialState: {
-    wallet_address: "",
-    wallet_connected: false,
-    provider: {},
-  },
-  reducers: {
-    connected: (state, action) => {
-      console.log({ action });
-      state.wallet_address = action.payload.address;
-      state.wallet_connected = true;
+    name: 'wallet',
+    initialState: {
+        wallet_address: '',
+        wallet_connected: false,
+        provider: {}
     },
-    disconnect: (state) => {
-      state.wallet_address = "";
-      state.wallet_connected = false;
-      state.provider = {};
-    },
-    setProvider: (state, action) => {
-      state.provider = action.payload;
-    },
-  },
+    reducers: {
+        connected: (state, action) => {
+            console.log({ action });
+            state.wallet_address = action.payload.address;
+            state.wallet_connected = true;
+        },
+        disconnect: (state) => {
+            state.wallet_address = '';
+            state.wallet_connected = false;
+            state.provider = {};
+        },
+        setProvider: (state, action) => {
+            state.provider = action.payload;
+        }
+    }
 });
 
 // Action creators are generated for each case reducer function

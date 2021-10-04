@@ -1,40 +1,40 @@
 .forgot-password {
-  font-size: 13px;
-  color: white;
+    font-size: 13px;
+    color: white;
 }
 
 .forgot-password:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .login-title {
-  font-size: 25px;
-  font-weight: 600;
-  margin-bottom: 30px;
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 30px;
 }
 
 .modal-body {
-  padding-bottom: 0px;
+    padding-bottom: 0px;
 }
 
 .modal-footer {
-  padding-top: 12px !important;
+    padding-top: 12px !important;
 }
 
 .login-type {
-  border: none;
-  background-color: transparent;
-  min-width: 100px;
-  color: white;
-  font-weight: 400;
-  font-family: "Rajdhani";
+    border: none;
+    background-color: transparent;
+    min-width: 100px;
+    color: white;
+    font-weight: 400;
+    font-family: 'Rajdhani';
 }
 
 .login-type:hover,
 .login-type-active:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .login-type-active {
-  border-bottom: 1px solid white;
+    border-bottom: 1px solid white;
 }

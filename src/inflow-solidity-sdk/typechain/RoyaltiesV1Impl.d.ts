@@ -3,194 +3,155 @@
 /* eslint-disable */
 
 import {
-  ethers,
-  EventFilter,
-  Signer,
-  BigNumber,
-  BigNumberish,
-  PopulatedTransaction,
-  BaseContract,
-  ContractTransaction,
-  CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+    ethers,
+    EventFilter,
+    Signer,
+    BigNumber,
+    BigNumberish,
+    PopulatedTransaction,
+    BaseContract,
+    ContractTransaction,
+    CallOverrides
+} from 'ethers';
+import { BytesLike } from '@ethersproject/bytes';
+import { Listener, Provider } from '@ethersproject/providers';
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons';
 
 interface RoyaltiesV1ImplInterface extends ethers.utils.Interface {
-  functions: {
-    "getFeeBps(uint256)": FunctionFragment;
-    "getFeeRecipients(uint256)": FunctionFragment;
-    "royalties(uint256,uint256)": FunctionFragment;
-  };
+    functions: {
+        'getFeeBps(uint256)': FunctionFragment;
+        'getFeeRecipients(uint256)': FunctionFragment;
+        'royalties(uint256,uint256)': FunctionFragment;
+    };
 
-  encodeFunctionData(
-    functionFragment: "getFeeBps",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getFeeRecipients",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "royalties",
-    values: [BigNumberish, BigNumberish]
-  ): string;
+    encodeFunctionData(functionFragment: 'getFeeBps', values: [BigNumberish]): string;
+    encodeFunctionData(functionFragment: 'getFeeRecipients', values: [BigNumberish]): string;
+    encodeFunctionData(functionFragment: 'royalties', values: [BigNumberish, BigNumberish]): string;
 
-  decodeFunctionResult(functionFragment: "getFeeBps", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getFeeRecipients",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "royalties", data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'getFeeBps', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'getFeeRecipients', data: BytesLike): Result;
+    decodeFunctionResult(functionFragment: 'royalties', data: BytesLike): Result;
 
-  events: {
-    "SecondarySaleFees(uint256,address[],uint256[])": EventFragment;
-  };
+    events: {
+        'SecondarySaleFees(uint256,address[],uint256[])': EventFragment;
+    };
 
-  getEvent(nameOrSignatureOrTopic: "SecondarySaleFees"): EventFragment;
+    getEvent(nameOrSignatureOrTopic: 'SecondarySaleFees'): EventFragment;
 }
 
 export class RoyaltiesV1Impl extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+    connect(signerOrProvider: Signer | Provider | string): this;
+    attach(addressOrName: string): this;
+    deployed(): Promise<this>;
 
-  listeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
-  off<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  on<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  once<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
-  removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
-    eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
+    listeners<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
+    ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+    off<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    on<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    once<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        listener: TypedListener<EventArgsArray, EventArgsObject>
+    ): this;
+    removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
+        eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
+    ): this;
 
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
+    listeners(eventName?: string): Array<Listener>;
+    off(eventName: string, listener: Listener): this;
+    on(eventName: string, listener: Listener): this;
+    once(eventName: string, listener: Listener): this;
+    removeListener(eventName: string, listener: Listener): this;
+    removeAllListeners(eventName?: string): this;
 
-  queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
-    event: TypedEventFilter<EventArgsArray, EventArgsObject>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+    queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
+        event: TypedEventFilter<EventArgsArray, EventArgsObject>,
+        fromBlockOrBlockhash?: string | number | undefined,
+        toBlock?: string | number | undefined
+    ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: RoyaltiesV1ImplInterface;
+    interface: RoyaltiesV1ImplInterface;
 
-  functions: {
-    getFeeBps(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
+    functions: {
+        getFeeBps(tokenId: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
-    getFeeRecipients(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string[]]>;
+        getFeeRecipients(tokenId: BigNumberish, overrides?: CallOverrides): Promise<[string[]]>;
+
+        royalties(
+            arg0: BigNumberish,
+            arg1: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<[string, BigNumber] & { account: string; value: BigNumber }>;
+    };
+
+    getFeeBps(tokenId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber[]>;
+
+    getFeeRecipients(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string[]>;
 
     royalties(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
+        arg0: BigNumberish,
+        arg1: BigNumberish,
+        overrides?: CallOverrides
     ): Promise<[string, BigNumber] & { account: string; value: BigNumber }>;
-  };
 
-  getFeeBps(
-    tokenId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
+    callStatic: {
+        getFeeBps(tokenId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber[]>;
 
-  getFeeRecipients(
-    tokenId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string[]>;
+        getFeeRecipients(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string[]>;
 
-  royalties(
-    arg0: BigNumberish,
-    arg1: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[string, BigNumber] & { account: string; value: BigNumber }>;
+        royalties(
+            arg0: BigNumberish,
+            arg1: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<[string, BigNumber] & { account: string; value: BigNumber }>;
+    };
 
-  callStatic: {
-    getFeeBps(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
+    filters: {
+        SecondarySaleFees(
+            tokenId?: null,
+            recipients?: null,
+            bps?: null
+        ): TypedEventFilter<
+            [BigNumber, string[], BigNumber[]],
+            { tokenId: BigNumber; recipients: string[]; bps: BigNumber[] }
+        >;
+    };
 
-    getFeeRecipients(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string[]>;
+    estimateGas: {
+        getFeeBps(tokenId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    royalties(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string, BigNumber] & { account: string; value: BigNumber }>;
-  };
+        getFeeRecipients(tokenId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-  filters: {
-    SecondarySaleFees(
-      tokenId?: null,
-      recipients?: null,
-      bps?: null
-    ): TypedEventFilter<
-      [BigNumber, string[], BigNumber[]],
-      { tokenId: BigNumber; recipients: string[]; bps: BigNumber[] }
-    >;
-  };
+        royalties(
+            arg0: BigNumberish,
+            arg1: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<BigNumber>;
+    };
 
-  estimateGas: {
-    getFeeBps(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    populateTransaction: {
+        getFeeBps(tokenId: BigNumberish, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getFeeRecipients(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+        getFeeRecipients(
+            tokenId: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<PopulatedTransaction>;
 
-    royalties(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-  };
-
-  populateTransaction: {
-    getFeeBps(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getFeeRecipients(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    royalties(
-      arg0: BigNumberish,
-      arg1: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-  };
+        royalties(
+            arg0: BigNumberish,
+            arg1: BigNumberish,
+            overrides?: CallOverrides
+        ): Promise<PopulatedTransaction>;
+    };
 }

@@ -1,111 +1,111 @@
-import React, { useEffect, useState } from "react";
-import "./base.css";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import './base.css';
+import { Link } from 'react-router-dom';
 // import settings from '../assets/images/settings.svg';
-import { assetsImages } from "../constants/images";
-import { useDispatch, useSelector } from "react-redux";
-import { updateActivePage } from "../store/reducers/appSlice";
+import { assetsImages } from '../constants/images';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateActivePage } from '../store/reducers/appSlice';
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
-  const activePage = useSelector((state) => state.app.activePage);
-  const token = useSelector((state) => state.auth.token);
-  const isArtist = useSelector((state) => state.auth.isArtist);
-  const isAdmin = useSelector((state) => state.auth.isAdmin);
-  const userData = useSelector((state) => state.auth.data);
+    const dispatch = useDispatch();
+    const activePage = useSelector((state) => state.app.activePage);
+    const token = useSelector((state) => state.auth.token);
+    const isArtist = useSelector((state) => state.auth.isArtist);
+    const isAdmin = useSelector((state) => state.auth.isAdmin);
+    const userData = useSelector((state) => state.auth.data);
 
-  const updatePage = (page) => {
-    dispatch(updateActivePage(page));
-  };
+    const updatePage = (page) => {
+        dispatch(updateActivePage(page));
+    };
 
-  console.log("IS ARTIST? ", isArtist);
+    console.log('IS ARTIST? ', isArtist);
 
-  return (
-    <div className="side-bar-main">
-      <div className="side-bar-navigation">
-        <Link to={"/"}>
-          <div
-            className={
-              activePage === "artist" ? "nav-link-main active" : "nav-link-main"
-            }
-            onClick={() => updatePage("artist")}
-          >
-            <img alt="" src={assetsImages.home} />
-            <div className="d-flex justify-content-center align-items-center mt-2">
-              <span className="small-heading-sidebar">Artists</span>
-            </div>
-          </div>
-        </Link>
+    return (
+        <div className="side-bar-main">
+            <div className="side-bar-navigation">
+                <Link to={'/'}>
+                    <div
+                        className={
+                            activePage === 'artist' ? 'nav-link-main active' : 'nav-link-main'
+                        }
+                        onClick={() => updatePage('artist')}
+                    >
+                        <img alt="" src={assetsImages.home} />
+                        <div className="d-flex justify-content-center align-items-center mt-2">
+                            <span className="small-heading-sidebar">Artists</span>
+                        </div>
+                    </div>
+                </Link>
 
-        <Link to={"/labels"}>
-          <div
-            className={
-              activePage === "labels" ? "nav-link-main active" : "nav-link-main"
-            }
-            onClick={() => updatePage("labels")}
-          >
-            <img alt="" src={assetsImages.inventory} />
-            <div className="d-flex justify-content-center align-items-center mt-2">
-              <span className="small-heading-sidebar">Labels</span>
-            </div>
-          </div>
-        </Link>
+                <Link to={'/labels'}>
+                    <div
+                        className={
+                            activePage === 'labels' ? 'nav-link-main active' : 'nav-link-main'
+                        }
+                        onClick={() => updatePage('labels')}
+                    >
+                        <img alt="" src={assetsImages.inventory} />
+                        <div className="d-flex justify-content-center align-items-center mt-2">
+                            <span className="small-heading-sidebar">Labels</span>
+                        </div>
+                    </div>
+                </Link>
 
-        {token && (
-          <Link to={"/dashboard"}>
-            <div
-              className={
-                activePage === "dashboard"
-                  ? "nav-link-main active"
-                  : "nav-link-main"
-              }
-              onClick={() => updatePage("dashboard")}
-            >
-              <img alt="" src={assetsImages.dashboard} />
-              <div className="d-flex justify-content-center align-items-center mt-2">
-                <span className="small-heading-sidebar">Dashboard</span>
-              </div>
-            </div>
-          </Link>
-        )}
+                {token && (
+                    <Link to={'/dashboard'}>
+                        <div
+                            className={
+                                activePage === 'dashboard'
+                                    ? 'nav-link-main active'
+                                    : 'nav-link-main'
+                            }
+                            onClick={() => updatePage('dashboard')}
+                        >
+                            <img alt="" src={assetsImages.dashboard} />
+                            <div className="d-flex justify-content-center align-items-center mt-2">
+                                <span className="small-heading-sidebar">Dashboard</span>
+                            </div>
+                        </div>
+                    </Link>
+                )}
 
-        {isArtist && (
-          <Link to={"/artistmanage"}>
-            <div
-              className={
-                activePage === "artistmanage"
-                  ? "nav-link-main active"
-                  : "nav-link-main"
-              }
-              onClick={() => updatePage("artistmanage")}
-            >
-              <img alt="" src={assetsImages.calendar} />
-              <div className="d-flex justify-content-center align-items-center mt-2">
-                <span className="small-heading-sidebar">Manage Artist</span>
-              </div>
-            </div>
-          </Link>
-        )}
+                {isArtist && (
+                    <Link to={'/artistmanage'}>
+                        <div
+                            className={
+                                activePage === 'artistmanage'
+                                    ? 'nav-link-main active'
+                                    : 'nav-link-main'
+                            }
+                            onClick={() => updatePage('artistmanage')}
+                        >
+                            <img alt="" src={assetsImages.calendar} />
+                            <div className="d-flex justify-content-center align-items-center mt-2">
+                                <span className="small-heading-sidebar">Manage Artist</span>
+                            </div>
+                        </div>
+                    </Link>
+                )}
 
-        {isAdmin && token && (
-          <Link to={"/adminpanel"}>
-            <div
-              className={
-                activePage === "adminpanel"
-                  ? "nav-link-main active"
-                  : "nav-link-main"
-              }
-              onClick={() => updatePage("adminpanel")}
-            >
-              <img alt="" src={assetsImages.orders} />
-              <div className="d-flex justify-content-center align-items-center mt-2">
-                <span className="small-heading-sidebar">Admin Panel</span>
-              </div>
-            </div>
-          </Link>
-        )}
+                {isAdmin && token && (
+                    <Link to={'/adminpanel'}>
+                        <div
+                            className={
+                                activePage === 'adminpanel'
+                                    ? 'nav-link-main active'
+                                    : 'nav-link-main'
+                            }
+                            onClick={() => updatePage('adminpanel')}
+                        >
+                            <img alt="" src={assetsImages.orders} />
+                            <div className="d-flex justify-content-center align-items-center mt-2">
+                                <span className="small-heading-sidebar">Admin Panel</span>
+                            </div>
+                        </div>
+                    </Link>
+                )}
 
-        {/* {token && (
+                {/* {token && (
           <Link to={"/accountsettings"}>
             <div
               className={
@@ -123,7 +123,7 @@ const Sidebar = () => {
           </Link>
         )} */}
 
-        {/* <Link to={"/news"}>
+                {/* <Link to={"/news"}>
           <div
             className={
               activePage === "demo1" ? "nav-link-main active" : "nav-link-main"
@@ -154,15 +154,15 @@ const Sidebar = () => {
         >
           <img alt="" src={assetsImages.settings} />
         </div> */}
-        {/* <Link onClick={() => {window.location.assign('https://inflowmusic.io/')}}>
+                {/* <Link onClick={() => {window.location.assign('https://inflowmusic.io/')}}>
         <img alt="" src={assetsImages.settings} />
               <div className="d-flex justify-content-center align-items-center mt-2">
                 <span className="small-heading-sidebar">Account</span>
               </div>
         </Link> */}
-      </div>
-    </div>
-  );
+            </div>
+        </div>
+    );
 };
 
 export default Sidebar;

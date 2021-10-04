@@ -1,241 +1,236 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useQuery, gql } from "@apollo/client";
-import "./component.css";
-import "./Artistmanagement.css";
-import { assetsImages } from "../constants/images";
+import React, { useState, useEffect, useContext } from 'react';
+import { useQuery, gql } from '@apollo/client';
+import './component.css';
+import './Artistmanagement.css';
+import { assetsImages } from '../constants/images';
 // import Customdropdown from "./Customdropdown";
-import Performbar from "./Performbar";
-import { useParams } from "react-router-dom";
-import { Contract, ethers } from "ethers";
+import Performbar from './Performbar';
+import { useParams } from 'react-router-dom';
+import { Contract, ethers } from 'ethers';
 // import ProgressBar from "react-bootstrap/ProgressBar";
-import { Modal } from "react-bootstrap";
-import SocialToken from "../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json";
+import { Modal } from 'react-bootstrap';
+import SocialToken from '../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json';
 // import Loader from "./Loader";
-import { Inflow } from "../inflow-solidity-sdk/src/Inflow";
-import Axios from "axios";
-import SmallLoader from "./SmallLoader";
-import { useSelector } from "react-redux";
-import { WalletProviderContext } from "../contexts/walletProviderContext";
-import SweetAlert from "react-bootstrap-sweetalert";
-import { CreateMintgateLink } from "../hooks/createMintGate";
-import Button from "@material-ui/core/Button";
-import { Magic } from "magic-sdk";
+import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
+import Axios from 'axios';
+import SmallLoader from './SmallLoader';
+import { useSelector } from 'react-redux';
+import { WalletProviderContext } from '../contexts/walletProviderContext';
+import SweetAlert from 'react-bootstrap-sweetalert';
+import { CreateMintgateLink } from '../hooks/createMintGate';
+import Button from '@material-ui/core/Button';
+import { Magic } from 'magic-sdk';
 
 const customNodeOptions = {
-  rpcUrl: "https://rpc-mainnet.maticvigil.com/", // Polygon RPC URL
-  chainId: 137, // Polygon chain id
+    rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
+    chainId: 137 // Polygon chain id
 };
 
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
-  network: customNodeOptions,
+    network: customNodeOptions
 });
 
 const Artistpic = () => {
-  //const { walletProvider } = useContext(WalletProviderContext);
-  // const [profileModel, setProfileModel] = useState(false);
-  const [walletProvider, setWalletProvider] = useState();
-  const [tokenfrees, settokenfrees] = useState(false);
-  const [newvote, setnewvote] = useState(false);
-  const [connectedWallet, setConnectedWallet] = useState(false);
-  const [signer, setSigner] = useState();
+    //const { walletProvider } = useContext(WalletProviderContext);
+    // const [profileModel, setProfileModel] = useState(false);
+    const [walletProvider, setWalletProvider] = useState();
+    const [tokenfrees, settokenfrees] = useState(false);
+    const [newvote, setnewvote] = useState(false);
+    const [connectedWallet, setConnectedWallet] = useState(false);
+    const [signer, setSigner] = useState();
 
-  /*MintGate Integration state*/
-  const [link, setLink] = useState(false);
-  const [url, setURL] = useState("");
-  const [linkTitle, setLinkTitle] = useState("");
-  const [tokenAddress, setTokenAddress] = useState("");
-  const [balance, setBalance] = useState("");
-  const [mintgateLink, setMintgateLink] = useState("");
-  const [linkSuccess, setLinkSuccess] = useState(false);
+    /*MintGate Integration state*/
+    const [link, setLink] = useState(false);
+    const [url, setURL] = useState('');
+    const [linkTitle, setLinkTitle] = useState('');
+    const [tokenAddress, setTokenAddress] = useState('');
+    const [balance, setBalance] = useState('');
+    const [mintgateLink, setMintgateLink] = useState('');
+    const [linkSuccess, setLinkSuccess] = useState(false);
 
-  const jwt = process.env.REACT_APP_MINTGATE_JWT;
+    const jwt = process.env.REACT_APP_MINTGATE_JWT;
 
-  const [success, setsuccess] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [connectedwallet, setconnectedwallet] = useState(true);
-  const uid = useSelector((state) => state.auth.data._id);
-  const [socialTokenAddress, setSocialTokenAddress] = useState();
-  const [artist, setArtist] = useState("");
-  const [soundCloudLink, setSoundCloudLink] = useState("");
-  const [hasActivated, setHasActivated] = useState();
+    const [success, setsuccess] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [connectedwallet, setconnectedwallet] = useState(true);
+    const uid = useSelector((state) => state.auth.data._id);
+    const [socialTokenAddress, setSocialTokenAddress] = useState();
+    const [artist, setArtist] = useState('');
+    const [soundCloudLink, setSoundCloudLink] = useState('');
+    const [hasActivated, setHasActivated] = useState();
 
-  //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
-  const [tokenfees, settokenfees] = useState(0.0);
+    //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
+    const [tokenfees, settokenfees] = useState(0.0);
 
-  console.log({ socialTokenAddress });
+    console.log({ socialTokenAddress });
 
-  useEffect(async () => {
-    const isLoggedIn = await magic.user.isLoggedIn();
-    console.log("isLoggedIn", isLoggedIn);
+    useEffect(async () => {
+        const isLoggedIn = await magic.user.isLoggedIn();
+        console.log('isLoggedIn', isLoggedIn);
 
-    if (isLoggedIn) {
-      const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-      const signer = provider.getSigner();
-      setWalletProvider(provider);
-      setSigner(signer);
-      //dispatch(setProvider(provider));
-      setConnectedWallet(true);
-    } else {
-      setConnectedWallet(false);
-    }
-    const id = uid;
-    const { data } = await Axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
-      { id }
-    );
-    console.log(data.artist.has_activated);
-    setHasActivated(data.artist.has_activated);
-    setSocialTokenAddress(data.artist.social_token_id);
-    setLoading(false);
-  }, []);
-
-  const formatAndSetTokenFees = async (value) => {
-    const inflow = new Inflow((walletProvider, 137));
-    const tokenfees = inflow.formatERC20("USDC", String(value));
-    settokenfees(tokenfees);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
-  };
-
-  const saveInflowGatedLink = async (url) => {
-    console.log("savedLink!!!!", url);
-    // await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { url } )
-    await Axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/v1/artist/updateinflowgatedurls`,
-      { inflowGatedUrl: url, balance }
-    );
-  };
-
-  const changeOwner = async () => {
-    const id = uid;
-
-    console.log({ signer });
-    const socialToken = new Contract(
-      socialTokenAddress,
-      SocialToken.abi,
-      signer
-    );
-
-    try {
-      const transaction = await socialToken.transferOwnership(
-        "0x76aB04F8Adb222C7Bbc27991A82498906954dEae"
-      );
-      transaction.wait();
-      Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, {
-        id,
-      })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const uploadSoundCloudLink = async () => {
-    setsuccess((success) => !success);
-
-    if (soundCloudLink) {
-      console.log(soundCloudLink, uid);
-
-      await Axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadsoundcloud`,
-        {
-          soundcloud_embed: soundCloudLink,
-          id: uid,
+        if (isLoggedIn) {
+            const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+            const signer = provider.getSigner();
+            setWalletProvider(provider);
+            setSigner(signer);
+            //dispatch(setProvider(provider));
+            setConnectedWallet(true);
+        } else {
+            setConnectedWallet(false);
         }
-      )
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
+        const id = uid;
+        const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, {
+            id
         });
-    } else {
-      alert("please add a soundcloud embed link");
-    }
-  };
+        console.log(data.artist.has_activated);
+        setHasActivated(data.artist.has_activated);
+        setSocialTokenAddress(data.artist.social_token_id);
+        setLoading(false);
+    }, []);
 
-  const claimTokenFees = async () => {
-    console.log("claim Token Fees");
-    settokenfrees((tokenfrees) => !tokenfrees);
-    const address = await signer.getAddress();
+    const formatAndSetTokenFees = async (value) => {
+        const inflow = new Inflow((walletProvider, 137));
+        const tokenfees = inflow.formatERC20('USDC', String(value));
+        settokenfees(tokenfees);
+    };
 
-    const contract = new Contract(socialTokenAddress, SocialToken.abi, signer);
-    const transaction = await contract.claimCreatorFee(
-      address,
-      ethers.utils.parseEther(String(0.00001))
-    );
-    await transaction.wait();
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // await CreateMintgateLink(url, linkTitle, tokenAddress, balance, jwt);
+    };
 
-  return (
-    <div className="dashboard-wrapper-main artist-management">
-      <div className="heading">Public Playlists</div>
-      <div className="row">
-        <div className="col-lg-4 col-md-6">
-          <div className="card">
-            <div className="artist-title">
-              <div className="d-flex flex-row justify-content-between w-100">
-                <span>Token Fees</span>
-              </div>
-            </div>
-            <div className="artist-poll">
-              <div className="poll-green">
-                <img alt="" src={assetsImages.arrowup} />+ 3.10%
-              </div>
-              <div className="dropdown"></div>
-              <div
-                className="amount d-flex justify-content-center align-items-center text-wrap"
-                style={{ wordWrap: "break-word" }}
-              >
-                {loading ? <SmallLoader /> : null}
-              </div>
-            </div>
-            <div className="first-row-main-dash">
-              <div className="left-col">
-                <div className="below-row">
-                  {socialTokenAddress ? (
-                    <>
-                      {hasActivated ? (
-                        <Button
-                          variant="disabled"
-                          style={{
-                            height: "100px",
-                            width: "100px",
-                            color: "grey",
-                          }}
-                        >
-                          TOKEN LAUNCHED
-                        </Button>
-                      ) : (
-                        <button className="btn-gradiant" onClick={changeOwner}>
-                          LAUNCH TOKEN
-                        </button>
-                      )}{" "}
-                    </>
-                  ) : null}
+    const saveInflowGatedLink = async (url) => {
+        console.log('savedLink!!!!', url);
+        // await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { url } )
+        await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/updateinflowgatedurls`, {
+            inflowGatedUrl: url,
+            balance
+        });
+    };
+
+    const changeOwner = async () => {
+        const id = uid;
+
+        console.log({ signer });
+        const socialToken = new Contract(socialTokenAddress, SocialToken.abi, signer);
+
+        try {
+            const transaction = await socialToken.transferOwnership(
+                '0x76aB04F8Adb222C7Bbc27991A82498906954dEae'
+            );
+            transaction.wait();
+            Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/activatetrue`, {
+                id
+            })
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const uploadSoundCloudLink = async () => {
+        setsuccess((success) => !success);
+
+        if (soundCloudLink) {
+            console.log(soundCloudLink, uid);
+
+            await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadsoundcloud`, {
+                soundcloud_embed: soundCloudLink,
+                id: uid
+            })
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+            alert('please add a soundcloud embed link');
+        }
+    };
+
+    const claimTokenFees = async () => {
+        console.log('claim Token Fees');
+        settokenfrees((tokenfrees) => !tokenfrees);
+        const address = await signer.getAddress();
+
+        const contract = new Contract(socialTokenAddress, SocialToken.abi, signer);
+        const transaction = await contract.claimCreatorFee(
+            address,
+            ethers.utils.parseEther(String(0.00001))
+        );
+        await transaction.wait();
+    };
+
+    return (
+        <div className="dashboard-wrapper-main artist-management">
+            <div className="heading">Public Playlists</div>
+            <div className="row">
+                <div className="col-lg-4 col-md-6">
+                    <div className="card">
+                        <div className="artist-title">
+                            <div className="d-flex flex-row justify-content-between w-100">
+                                <span>Token Fees</span>
+                            </div>
+                        </div>
+                        <div className="artist-poll">
+                            <div className="poll-green">
+                                <img alt="" src={assetsImages.arrowup} />+ 3.10%
+                            </div>
+                            <div className="dropdown"></div>
+                            <div
+                                className="amount d-flex justify-content-center align-items-center text-wrap"
+                                style={{ wordWrap: 'break-word' }}
+                            >
+                                {loading ? <SmallLoader /> : null}
+                            </div>
+                        </div>
+                        <div className="first-row-main-dash">
+                            <div className="left-col">
+                                <div className="below-row">
+                                    {socialTokenAddress ? (
+                                        <>
+                                            {hasActivated ? (
+                                                <Button
+                                                    variant="disabled"
+                                                    style={{
+                                                        height: '100px',
+                                                        width: '100px',
+                                                        color: 'grey'
+                                                    }}
+                                                >
+                                                    TOKEN LAUNCHED
+                                                </Button>
+                                            ) : (
+                                                <button
+                                                    className="btn-gradiant"
+                                                    onClick={changeOwner}
+                                                >
+                                                    LAUNCH TOKEN
+                                                </button>
+                                            )}{' '}
+                                        </>
+                                    ) : null}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="footer-btn">
+                            <button className="btn-gradiant" onClick={claimTokenFees}>
+                                CASH OUT
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div className="footer-btn">
-              <button className="btn-gradiant" onClick={claimTokenFees}>
-                CASH OUT
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <div className="col-lg-4 col-md-6 mt-4 mt-md-0">
-          <div className="card">
-            <span>Royalties</span>
-            {/* <div className="artist-title">
+                <div className="col-lg-4 col-md-6 mt-4 mt-md-0">
+                    <div className="card">
+                        <span>Royalties</span>
+                        {/* <div className="artist-title">
               <div className="d-flex flex-row justify-content-between w-100">
                 <span>Royalties</span>
                 <a href="#">
@@ -260,298 +255,294 @@ const Artistpic = () => {
             <div className="footer-btn">
               <button className="btn-gradiant">Manage Royalties</button>
             </div> */}
-          </div>
-        </div>
-
-        <div className="col-lg-4 col-md-6 mt-4 mt-lg-0">
-          <div className="card">
-            <div className="artist-title">
-              <div className="d-flex flex-row justify-content-between w-100">
-                <span>Top Fans</span>
-                <a href="#">
-                  <img alt="" src={assetsImages.filter} />
-                </a>
-              </div>
-            </div>
-            <div className="fans-list">
-              <ul>
-                {[1, 2, 3, 4, 5, 6].map((fan) => (
-                  <li key={fan}>
-                    <div className="fan-profile">
-                      <img alt="" src={assetsImages.artist} />
                     </div>
-                    <div className="fan-details">
-                      <div className="fan-details-content">
-                        <span className="name">Bob Smith</span>
-                        <span className="content">...d95f3</span>
-                      </div>
-                      <div className="donate-amount">1,500 INF</div>
+                </div>
+
+                <div className="col-lg-4 col-md-6 mt-4 mt-lg-0">
+                    <div className="card">
+                        <div className="artist-title">
+                            <div className="d-flex flex-row justify-content-between w-100">
+                                <span>Top Fans</span>
+                                <a href="#">
+                                    <img alt="" src={assetsImages.filter} />
+                                </a>
+                            </div>
+                        </div>
+                        <div className="fans-list">
+                            <ul>
+                                {[1, 2, 3, 4, 5, 6].map((fan) => (
+                                    <li key={fan}>
+                                        <div className="fan-profile">
+                                            <img alt="" src={assetsImages.artist} />
+                                        </div>
+                                        <div className="fan-details">
+                                            <div className="fan-details-content">
+                                                <span className="name">Bob Smith</span>
+                                                <span className="content">...d95f3</span>
+                                            </div>
+                                            <div className="donate-amount">1,500 INF</div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className="footer-btn d-flex flex-row justify-content-between">
+                                <button className="btn-gradiant">See More</button>
+                            </div>
+                        </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="footer-btn d-flex flex-row justify-content-between">
-                <button className="btn-gradiant">See More</button>
-              </div>
+                </div>
+
+                <div className="col-lg-4 col-md-6 mt-4">
+                    <div className="card button-card d-flex justify-content-between">
+                        <div className="artist-title">
+                            <div className="d-flex flex-row justify-content-between w-100">
+                                <span>Drop NFT</span>
+                                <a href="#">
+                                    <img alt="" src={assetsImages.filter} />
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="footer-btn d-flex flex-row justify-content-between">
+                            <a href="/createcollectible/single">
+                                <button className="btn-gradiant">Single</button>
+                            </a>
+                            <a href="/createcollectible/multiple">
+                                <button className="btn-gradiant">Multiple</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-lg-4 col-md-6 mt-4">
+                    <div className="card button-card d-flex justify-content-between">
+                        <div className="artist-title">
+                            <div className="d-flex flex-row justify-content-between w-100">
+                                <span>Public Playlists</span>
+                                <a href="#">
+                                    <img alt="" src={assetsImages.filter} />
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="footer-btn">
+                            <button
+                                className="btn-gradiant"
+                                type="button"
+                                onClick={() => setnewvote((newvote) => !newvote)}
+                            >
+                                Add Playlist
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="col-lg-4 col-md-6 mt-4">
+                    <div className="card button-card d-flex justify-content-between">
+                        <div className="artist-title d-flex flex-column align-items-center">
+                            <div className="d-flex flex-row justify-content-between w-100">
+                                <span>Private Links</span>
+                                <a href="#">
+                                    <img alt="" src={assetsImages.filter} />
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="footer-btn">
+                            <button
+                                className="btn-gradiant"
+                                onClick={() => setLink((link) => !link)}
+                            >
+                                Create URL
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <div className="col-lg-4 col-md-6 mt-4">
-          <div className="card button-card d-flex justify-content-between">
-            <div className="artist-title">
-              <div className="d-flex flex-row justify-content-between w-100">
-                <span>Drop NFT</span>
-                <a href="#">
-                  <img alt="" src={assetsImages.filter} />
-                </a>
-              </div>
-            </div>
-
-            <div className="footer-btn d-flex flex-row justify-content-between">
-              <a href="/createcollectible/single">
-                <button className="btn-gradiant">Single</button>
-              </a>
-              <a href="/createcollectible/multiple">
-                <button className="btn-gradiant">Multiple</button>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-lg-4 col-md-6 mt-4">
-          <div className="card button-card d-flex justify-content-between">
-            <div className="artist-title">
-              <div className="d-flex flex-row justify-content-between w-100">
-                <span>Public Playlists</span>
-                <a href="#">
-                  <img alt="" src={assetsImages.filter} />
-                </a>
-              </div>
-            </div>
-
-            <div className="footer-btn">
-              <button
-                className="btn-gradiant"
-                type="button"
-                onClick={() => setnewvote((newvote) => !newvote)}
-              >
-                Add Playlist
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-lg-4 col-md-6 mt-4">
-          <div className="card button-card d-flex justify-content-between">
-            <div className="artist-title d-flex flex-column align-items-center">
-              <div className="d-flex flex-row justify-content-between w-100">
-                <span>Private Links</span>
-                <a href="#">
-                  <img alt="" src={assetsImages.filter} />
-                </a>
-              </div>
-            </div>
-
-            <div className="footer-btn">
-              <button
-                className="btn-gradiant"
-                onClick={() => setLink((link) => !link)}
-              >
-                Create URL
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Modal
-        show={newvote}
-        className="edit-profile-modal newvote"
-        onHide={() => setnewvote((newvote) => !newvote)}
-      >
-        <Modal.Header closeButton>
-          <span className="title">New Vote</span>
-        </Modal.Header>
-
-        <Modal.Body>
-          <div className="form-group">
-            <label>Sound Cloud Embed Link</label>
-            <input
-              className="form-control mb-3"
-              type="text"
-              placeholder="playlist embed link"
-              onChange={(e) => setSoundCloudLink(e.target.value)}
-            />
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <button
-            className="save-btn btn-gradiant"
-            onClick={() => uploadSoundCloudLink()}
-          >
-            Upload Playlist
-          </button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal
-        show={success}
-        className="edit-profile-modal success"
-        onClick={() => setsuccess((success) => !success)}
-      >
-        <Modal.Header closeButton>
-          <span className="title">Location of next concert</span>
-        </Modal.Header>
-
-        <Modal.Body>
-          <div className="success-popup-content">
-            <img alt="" src={assetsImages.success} />
-            <h2 className="title">Success!</h2>
-            <p>Your poll has been created and is now live</p>
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <button className="save-btn btn-gradiant">View Poll</button>
-        </Modal.Footer>
-      </Modal>
-      <SweetAlert
-        danger
-        show={!connectedwallet}
-        title="Please Connect Wallet"
-        style={{ color: "#000" }}
-        onConfirm={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-        onCancel={() => {
-          setconnectedwallet((connectedwallet) => !connectedwallet);
-        }}
-      ></SweetAlert>
-
-      <Modal
-        show={tokenfrees}
-        className="edit-profile-modal sell"
-        onHide={() => settokenfrees((tokenfrees) => !tokenfrees)}
-      >
-        <Modal.Header closeButton>
-          <span className="title">Token Fees</span>
-        </Modal.Header>
-
-        <Modal.Body>
-          <div className="form-group">
-            <input className="form-control" type="text" placeholder="Amount" />
-          </div>
-
-          <div className="form-group">
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Wallet address"
-            />
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <button className="save-btn btn-gradiant">Cash Out</button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal
-        show={link}
-        className="edit-profile-modal link"
-        onHide={() => setLink((link) => !link)}
-      >
-        <Modal.Header closeButton>
-          <span className="title">Create Token Gated Link</span>
-        </Modal.Header>
-
-        <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Original Content Url</label>
-              <input
-                id="url"
-                onChange={(e) => setURL(e.target.value)}
-                className="form-control mb-3"
-                type="text"
-                placeholder="Example: https://youtube.com"
-              />
-              <label>Link Title</label>
-              <input
-                id="title"
-                onChange={(e) => setLinkTitle(e.target.value)}
-                className="form-control mb-3 mt-3"
-                type="text"
-                placeholder="Link Title"
-              />
-
-              <label>Select Token</label>
-              <select
-                id="tokenAddress"
-                onChange={(e) => setTokenAddress(e.target.value)}
-                className="form-control mb-3 mt-3"
-              >
-                <option>Select Token</option>
-                <option value={`${socialTokenAddress}`}>
-                  {socialTokenAddress}
-                </option>
-              </select>
-              <label>Amount of Tokens Required</label>
-              <input
-                id="balance"
-                onChange={(e) => setBalance(e.target.value)}
-                className="form-control mb-3 mt-4"
-                type="number"
-                placeholder="ex. 100"
-              />
-              <button
-                className="upload-profile btn-gradiant"
-                onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
-                type="submit"
-              >
-                Created Token Gated Link
-              </button>
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
-
-      <Modal show={linkSuccess} className="edit-profile-modal success">
-        <Modal.Header
-          closeButton
-          onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
-        >
-          <span className="title">Your Token Gated Link</span>
-        </Modal.Header>
-
-        <Modal.Body>
-          <div className="success-popup-content">
-            <img alt="" src={assetsImages.success} />
-            <h2 className="title">Success!</h2>
-            <p>Your token gated link has been created</p>
-            <input
-              value={localStorage.getItem("link")}
-              className="form-control mb-3"
-              type="text"
-            />
-
-            <button
-              className="btn-gradiant"
-              onClick={() => {
-                navigator.clipboard.writeText(localStorage.getItem("link"));
-                // saveMintgateLink(localStorage.getItem('link'))
-                saveInflowGatedLink(url, balance);
-              }}
+            <Modal
+                show={newvote}
+                className="edit-profile-modal newvote"
+                onHide={() => setnewvote((newvote) => !newvote)}
             >
-              Copy Link
-            </button>
-          </div>
-        </Modal.Body>
-      </Modal>
-    </div>
-  );
+                <Modal.Header closeButton>
+                    <span className="title">New Vote</span>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <div className="form-group">
+                        <label>Sound Cloud Embed Link</label>
+                        <input
+                            className="form-control mb-3"
+                            type="text"
+                            placeholder="playlist embed link"
+                            onChange={(e) => setSoundCloudLink(e.target.value)}
+                        />
+                    </div>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <button
+                        className="save-btn btn-gradiant"
+                        onClick={() => uploadSoundCloudLink()}
+                    >
+                        Upload Playlist
+                    </button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={success}
+                className="edit-profile-modal success"
+                onClick={() => setsuccess((success) => !success)}
+            >
+                <Modal.Header closeButton>
+                    <span className="title">Location of next concert</span>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <div className="success-popup-content">
+                        <img alt="" src={assetsImages.success} />
+                        <h2 className="title">Success!</h2>
+                        <p>Your poll has been created and is now live</p>
+                    </div>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <button className="save-btn btn-gradiant">View Poll</button>
+                </Modal.Footer>
+            </Modal>
+            <SweetAlert
+                danger
+                show={!connectedwallet}
+                title="Please Connect Wallet"
+                style={{ color: '#000' }}
+                onConfirm={() => {
+                    setconnectedwallet((connectedwallet) => !connectedwallet);
+                }}
+                onCancel={() => {
+                    setconnectedwallet((connectedwallet) => !connectedwallet);
+                }}
+            ></SweetAlert>
+
+            <Modal
+                show={tokenfrees}
+                className="edit-profile-modal sell"
+                onHide={() => settokenfrees((tokenfrees) => !tokenfrees)}
+            >
+                <Modal.Header closeButton>
+                    <span className="title">Token Fees</span>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <div className="form-group">
+                        <input className="form-control" type="text" placeholder="Amount" />
+                    </div>
+
+                    <div className="form-group">
+                        <input className="form-control" type="text" placeholder="Wallet address" />
+                    </div>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <button className="save-btn btn-gradiant">Cash Out</button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={link}
+                className="edit-profile-modal link"
+                onHide={() => setLink((link) => !link)}
+            >
+                <Modal.Header closeButton>
+                    <span className="title">Create Token Gated Link</span>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Original Content Url</label>
+                            <input
+                                id="url"
+                                onChange={(e) => setURL(e.target.value)}
+                                className="form-control mb-3"
+                                type="text"
+                                placeholder="Example: https://youtube.com"
+                            />
+                            <label>Link Title</label>
+                            <input
+                                id="title"
+                                onChange={(e) => setLinkTitle(e.target.value)}
+                                className="form-control mb-3 mt-3"
+                                type="text"
+                                placeholder="Link Title"
+                            />
+
+                            <label>Select Token</label>
+                            <select
+                                id="tokenAddress"
+                                onChange={(e) => setTokenAddress(e.target.value)}
+                                className="form-control mb-3 mt-3"
+                            >
+                                <option>Select Token</option>
+                                <option value={`${socialTokenAddress}`}>
+                                    {socialTokenAddress}
+                                </option>
+                            </select>
+                            <label>Amount of Tokens Required</label>
+                            <input
+                                id="balance"
+                                onChange={(e) => setBalance(e.target.value)}
+                                className="form-control mb-3 mt-4"
+                                type="number"
+                                placeholder="ex. 100"
+                            />
+                            <button
+                                className="upload-profile btn-gradiant"
+                                onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
+                                type="submit"
+                            >
+                                Created Token Gated Link
+                            </button>
+                        </div>
+                    </form>
+                </Modal.Body>
+            </Modal>
+
+            <Modal show={linkSuccess} className="edit-profile-modal success">
+                <Modal.Header
+                    closeButton
+                    onClick={() => setLinkSuccess((linkSuccess) => !linkSuccess)}
+                >
+                    <span className="title">Your Token Gated Link</span>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <div className="success-popup-content">
+                        <img alt="" src={assetsImages.success} />
+                        <h2 className="title">Success!</h2>
+                        <p>Your token gated link has been created</p>
+                        <input
+                            value={localStorage.getItem('link')}
+                            className="form-control mb-3"
+                            type="text"
+                        />
+
+                        <button
+                            className="btn-gradiant"
+                            onClick={() => {
+                                navigator.clipboard.writeText(localStorage.getItem('link'));
+                                // saveMintgateLink(localStorage.getItem('link'))
+                                saveInflowGatedLink(url, balance);
+                            }}
+                        >
+                            Copy Link
+                        </button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </div>
+    );
 };
 
 export default Artistpic;
