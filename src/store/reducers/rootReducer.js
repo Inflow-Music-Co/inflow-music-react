@@ -2,11 +2,11 @@ import { combineReducers } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import passwordSlice from './passwordSlice';
 import authReducer from './authSlice';
 import walletSlice from './walletSlice';
 import appSlice from './appSlice';
-import { createTransform } from 'redux-persist';
-import JSOG from 'jsog';
+
 
 const persistConfig = {
     key: 'root',
@@ -16,7 +16,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     auth: authReducer,
     wallet: walletSlice,
-    app: appSlice
+    app: appSlice,
+    password: passwordSlice
 });
 
 export default persistReducer(persistConfig, rootReducer);

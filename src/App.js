@@ -1,12 +1,13 @@
 /* eslint-disable */
 /* exported global_var */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppRoutes } from './route/AppRoutes';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './utils/axios';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import PasswordProtect from './component/PasswordProtect';
+import { useSelector } from 'react-redux';
 // const { store, persistor } = configureStore();
 import Header from '../src/base/Header';
 import Sidebar from '../src/base/Sidebar';
@@ -22,10 +23,11 @@ const theme = createTheme({
 
 function App() {
     const [walletProvider, setWalletProvider] = useState(null);
-    const [correctPassword, setCorrectPassword] = useState(false);
-    const [password, setPassword] = useState('');
-
-    // const clienturl = useSelector((state) => state.graphql.clienturl);
+    const [passwordUpdated, setPasswordUpdated] = useState(false)
+    const correctPassword = useSelector((state) => state.password.passwordIs);
+    
+    console.log('password is ', correctPassword)
+    
     const clienturl = 'https://api.studio.thegraph.com/query/6287/inflow-rinkeby/0.0.1';
 
     const client = new ApolloClient({
@@ -42,11 +44,7 @@ function App() {
                             <AppRoutes />
                         </Router>
                     ) : (
-                        <PasswordProtect 
-                            setCorrectPassword={setCorrectPassword}
-                            setPassword={setPassword}
-                            password={password}
-                            />
+                        <PasswordProtect setPasswordUpdated={setPasswordUpdated}/>
                     )}
                 </ApolloProvider>
             </WalletProviderContext.Provider>

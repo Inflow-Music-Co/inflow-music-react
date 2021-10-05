@@ -3,12 +3,12 @@ import { createSlice } from '@reduxjs/toolkit';
 export const appSlice = createSlice({
     name: 'app',
     initialState: {
-        activePage: 'artist'
+        activePage: 'artist',
     },
     reducers: {
         updateActivePage: (state, action) => {
             state.activePage = action.payload;
-        }
+        },
     }
 });
 

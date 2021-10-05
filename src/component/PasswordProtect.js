@@ -2,17 +2,25 @@ import { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { setCorrectPassword } from '../store/reducers/passwordSlice';
+import { useDispatch } from 'react-redux';
 
-const PasswordProtect = ({ setCorrectPassword, setPassword, password}) => {
+
+const PasswordProtect = ({ setPasswordUpdated }) => {
+
+    const [input, setInput] = useState('');
+
+    const dispatch = useDispatch();
     
-
     const handlePassword = (e) => {
-        setPassword(e.target.value);
+        setInput(e.target.value);
     };
 
     const checkPassword = () => {
-        if (password === 'br3aK!inGChang£s') {
-            setCorrectPassword(true);
+        if (input === 'br3aK!inGChang£s') {
+            dispatch(setCorrectPassword(true));
+            setPasswordUpdated(true);
+            
         } else {
             alert('wrong password');
         }

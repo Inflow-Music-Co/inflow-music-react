@@ -47,7 +47,7 @@ export const authSlice = createSlice({
         },
         setArtist: (state, action) => {
             state.isArtist = action.payload.isArtist;
-        }
+        },
     }
 });
 
