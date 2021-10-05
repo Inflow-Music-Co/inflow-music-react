@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './utils/axios';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
-
+import PasswordProtect from './component/PasswordProtect';
 // const { store, persistor } = configureStore();
 import Header from '../src/base/Header';
 import Sidebar from '../src/base/Sidebar';
@@ -22,6 +22,8 @@ const theme = createTheme({
 
 function App() {
     const [walletProvider, setWalletProvider] = useState(null);
+    const [correctPassword, setCorrectPassword] = useState(false);
+    const [password, setPassword] = useState('');
 
     // const clienturl = useSelector((state) => state.graphql.clienturl);
     const clienturl = 'https://api.studio.thegraph.com/query/6287/inflow-rinkeby/0.0.1';
@@ -35,9 +37,17 @@ function App() {
         <MuiThemeProvider theme={theme}>
             <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
                 <ApolloProvider client={client}>
-                    <Router>
-                        <AppRoutes />
-                    </Router>
+                    {correctPassword ? (
+                        <Router>
+                            <AppRoutes />
+                        </Router>
+                    ) : (
+                        <PasswordProtect 
+                            setCorrectPassword={setCorrectPassword}
+                            setPassword={setPassword}
+                            password={password}
+                            />
+                    )}
                 </ApolloProvider>
             </WalletProviderContext.Provider>
         </MuiThemeProvider>
