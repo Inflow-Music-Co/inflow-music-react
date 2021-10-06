@@ -40,11 +40,11 @@ function App() {
             <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
                 <ApolloProvider client={client}>
                     {correctPassword ? ( 
-                        <PasswordProtect setPasswordUpdated={setPasswordUpdated}/>
-                    ) : (
                         <Router>
                             <AppRoutes />
                         </Router>
+                    ) : (
+                        <PasswordProtect setPasswordUpdated={setPasswordUpdated}/>
                     )}
                 </ApolloProvider>
             </WalletProviderContext.Provider>
