@@ -64,6 +64,7 @@ const Dashboard = () => {
     const [userEmail, setUserEmail] = useState();
     const [createArtistAccount, setCreateArtistAccount] = useState(false);
     const [hasTwitter, setHasTwitter] = useState(false);
+    const [twitterAuth, setTwitterAuth] = useState();
 
     useEffect(async () => {
 
@@ -72,6 +73,7 @@ const Dashboard = () => {
             setHasTwitter(true);
             console.log('HAS TWITTER');
             const result = await magic.oauth.getRedirectResult();
+            setTwitterAuth(result);
             console.log({ result });
         }
 
@@ -84,6 +86,7 @@ const Dashboard = () => {
             setUserAddress(publicAddress);
             setUserEmail(email);
             dispatch(connected({ address: publicAddress }));
+            dispatch(connected({ email }));
             setWalletProvider(provider);
             dispatch(setProvider(provider));
             setConnectedWallet(true);
@@ -94,6 +97,8 @@ const Dashboard = () => {
             setConnectedWallet(false);
         }
     }, []);
+
+    console.log({userEmail})
 
     useEffect(async () => {
         formatAddress();
@@ -410,6 +415,7 @@ const Dashboard = () => {
                     setCreateArtistAccount={setCreateArtistAccount}
                     userEmail={userEmail}
                     userAddress={userAddress}
+                    twitterAuth={twitterAuth}
                 />
             ) : null}
             <div className="first-row-main-dash">

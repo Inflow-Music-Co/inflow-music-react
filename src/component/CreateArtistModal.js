@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
 import { setUserData } from '../store/reducers/authSlice';
 import { Magic } from 'magic-sdk';
 import { OAuthExtension } from '@magic-ext/oauth';
+import { useSelector } from 'react-redux';
 
 const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
   extensions: [new OAuthExtension()]
@@ -28,6 +29,7 @@ const CreateArtistModal = ({
     setCreateArtistAccount,
     userAddress,
     userEmail,
+    twitterAuth,
     hasTwitter
 }) => {
     const [errorMessage, setErrorMessage] = useState('');
@@ -36,6 +38,7 @@ const CreateArtistModal = ({
     const [errSymbol, setErrSymbol] = useState(false);
     const [errArtistName, setErrArtistName] = useState(false);
     const [errUpload, setErrUpload] = useState(false);
+    const email = useSelector((state) => state.wallet_email)
     const [errSocialTokenName, setErrSocialTokenName] = useState(false);
     const [artistAccountCreated, setArtistAccountCreated] = useState(false);
     const MySwal = withReactContent(Swal);
@@ -65,7 +68,7 @@ const CreateArtistModal = ({
     const createArtist = async (e) => {
         e.preventDefault();
 
-        if (!twitterRegex.test(String(artistData.twitterUrl).toLowerCase())) {
+        if (!twitterAuth) {
             setErrTwitter(true);
             alert('twitter error');
         } else if (!artistData.artistName) {
@@ -81,8 +84,12 @@ const CreateArtistModal = ({
             setErrUpload(true);
             alert('file upload error');
         } else {
+            console.log(twitterAuth)
             const data = new FormData();
             data.append('instagram_url', artistData.twitterUrl);
+            data.append('twitter_userhandle', twitterAuth.oauth.userHandle);
+            data.append('twitter_username', twitterAuth.oauth.userInfo.preferredUsername);
+            data.append('twitter_locale', twitterAuth.oauth.userInfo.locale);
             data.append('first_name', artistData.artistName);
             data.append('social_token_name', artistData.socialTokenName);
             data.append('social_token_symbol', artistData.symbol);
@@ -127,7 +134,7 @@ const CreateArtistModal = ({
         setArtistData({ ...artistData, profile: e.target.files[0] });
     };
 
-    const twitterAuth = async (e) => {
+    const twitterAuthenticate = async (e) => {
       await magic.oauth.loginWithRedirect({
         provider: 'twitter',
         redirectURI: `${window.location.origin}/dashboard`
@@ -153,7 +160,7 @@ const CreateArtistModal = ({
                     style={{backgroundColor: "#1DA1F2", color: "white", marginLeft: 5, borderRadius: 30}}
                     variant="contained"
                     size="large"
-                    onClick={twitterAuth}
+                    onClick={twitterAuthenticate}
                     >
                     connect your twitter&nbsp;&nbsp;
                     <TwitterIcon />

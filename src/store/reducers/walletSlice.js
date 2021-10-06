@@ -4,6 +4,7 @@ export const walletSlice = createSlice({
     name: 'wallet',
     initialState: {
         wallet_address: '',
+        wallet_email: '',
         wallet_connected: false,
         provider: {}
     },
@@ -11,6 +12,7 @@ export const walletSlice = createSlice({
         connected: (state, action) => {
             console.log({ action });
             state.wallet_address = action.payload.address;
+            state.wallet_email = action.payload.email;
             state.wallet_connected = true;
         },
         disconnect: (state) => {
