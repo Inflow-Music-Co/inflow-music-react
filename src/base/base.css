@@ -71,6 +71,10 @@
     max-height: 80px !important;
 }
 
+.logo-main-image-password {
+  max-height: 300px !important;
+}
+
 .side-bar-main .side-bar-navigation {
     overflow-y: auto;
     /* padding-top: 20px; */

@@ -47,8 +47,10 @@ import circle from '../assets/images/circle.svg';
 import graphicConstant from '../assets/images/graphic-constant.svg';
 import graphicLinear from '../assets/images/graphic-linear.svg';
 import graphicSigmoid from '../assets/images/graphic-sigmoid.svg';
+import homeLogo from '../assets/images/logo-main-5685a494df74d5445c28a27119e5a0a1.png'
 
 export const assetsImages = {
+    homeLogo: homeLogo,
     logo: logo,
     wallet: wallet,
     settings: settings,

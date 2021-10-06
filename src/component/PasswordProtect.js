@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { setCorrectPassword } from '../store/reducers/passwordSlice';
 import { useDispatch } from 'react-redux';
+import { assetsImages } from '../constants/images';
 
 
 const PasswordProtect = ({ setPasswordUpdated }) => {
@@ -35,8 +36,8 @@ const PasswordProtect = ({ setPasswordUpdated }) => {
             justify="center"
             style={{ minHeight: '100vh' }}
         >
-            <Grid item xs={3} style={{ margin: 25 }}>
-                <h2 className="headings">INFLOW MUSIC</h2>
+        <img alt="" src={assetsImages.homeLogo} className="logo-main-image-password"/>
+            <Grid item xs={3} style={{ margin: 25 }}>                
             </Grid>
             <Grid item xs={3}>
                 <Grid container direction="row">
