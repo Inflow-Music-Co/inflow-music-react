@@ -39,7 +39,7 @@ function App() {
         <MuiThemeProvider theme={theme}>
             <WalletProviderContext.Provider value={{ walletProvider, setWalletProvider }}>
                 <ApolloProvider client={client}>
-                    {correctPassword ? (
+                    {correctPassword ? ( 
                         <Router>
                             <AppRoutes />
                         </Router>
