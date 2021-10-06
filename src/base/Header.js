@@ -61,6 +61,14 @@ const Header = () => {
                 </Link>
             </div>
             <div className="left-col-main"></div>
+            <Button
+                    variant="outlined"
+                    size="large"
+                    color="secondary"
+                    style={{ marginLeft: 10, borderRadius: 40, color: 'white' }}
+                    onClick={() => window.location.href = 'https://inflowsocial.io/'}
+                    >ABOUT
+                </Button>
             {token ? (
                 <Button
                     className={classes.button}

@@ -65,7 +65,11 @@ const PasswordProtect = ({ setPasswordUpdated }) => {
             </Grid>
             <Grid item xs={1}></Grid>
             <Grid item xs={3}>
-                <Button variant="outlined" color="primary" style={{ margin: 50, color: 'white' }}>
+                <Button 
+                    variant="outlined" 
+                        color="primary"
+                        onClick={() => window.location.href = 'https://inflowsocial.io/'}     
+                        style={{ margin: 50, color: 'white' }}>
                     about
                 </Button>
             </Grid>
