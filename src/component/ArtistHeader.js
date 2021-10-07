@@ -1,13 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid'
 
-const AritstHeader = ({
+const ArtistHeader = ({
     artist,
     requiredBalance,
     inflowGatedUrl,
     socialTokenAddress,
-    encodedUrl
+    encodedUrl,
+    mp3RequiredBalance,
+    mp3Url
 }) => {
     return (
         <div className="artist-main">
@@ -63,23 +66,43 @@ const AritstHeader = ({
                         </div>
                     </div>
                 </div>
-                <div className="artist-tag">
-                    {requiredBalance ? (
-                        <Link
-                            to={{
-                                pathname: `/${inflowGatedUrl}`,
-                                requiredBalance: requiredBalance,
-                                address: socialTokenAddress,
-                                encodedUrl: encodedUrl
-                            }}
-                        >
-                            <button className="tag-button">UNRELEASED MUSIC VIDEO </button>
-                        </Link>
-                    ) : null}
-                </div>
+                <Grid container direction="row">
+                    <Grid item xs={2}>
+                    <div className="artist-tag">
+                        {requiredBalance ? (
+                            <Link
+                                to={{
+                                    pathname: `/${inflowGatedUrl}`,
+                                    requiredBalance: requiredBalance,
+                                    address: socialTokenAddress,
+                                    encodedUrl: encodedUrl
+                                }}
+                            >
+                                <button className="tag-button"> UNRELEASED VIDEOS </button>
+                            </Link>
+                        ) : null}
+                    </div>
+                    </Grid>
+                    <Grid item xs={2}>
+                    <div className="artist-tag">
+                        {requiredBalance ? (
+                            <Link
+                                to={{
+                                    pathname: `/${inflowGatedUrl}`,
+                                    requiredBalance: requiredBalance,
+                                    address: socialTokenAddress,
+                                    encodedUrl: encodedUrl
+                                }}
+                            >
+                                <button className="tag-button"> UNRELEASED MUSIC </button>
+                            </Link>
+                        ) : null}
+                    </div>
+                    </Grid>
+                </Grid>
             </div>
         </div>
     );
 };
 
-export default AritstHeader;
+export default ArtistHeader;

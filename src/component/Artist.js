@@ -16,7 +16,7 @@ import { Magic } from 'magic-sdk';
 import { POLYGON_USDC } from '../utils/addresses';
 import { useSelector } from 'react-redux';
 import ArtistTransact from './ArtistTransact';
-import ArtistHeader from './AritstHeader';
+import ArtistHeader from './ArtistHeader';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -74,53 +74,52 @@ const Artist = () => {
     const [artistTokenSymbol, setArtistTokenSymbol] = useState('');
     const [processing, setProcessing] = useState(false);
 
+    const [mp3Url, setMp3Url] = useState('');
+    const [mp3RequiredBalance, setMp3RequiredBalance] = useState();
+
     useEffect(async () => {
         const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, {
             id
         });
 
+        console.log({ data });
+
         if (balance !== '') {
             console.log(balance);
             getUserBalance();
         }
-
-        const init = async () => {
-            if (!connectedWallet) {
-                const isLoggedIn = await magic.user.isLoggedIn();
-                console.log('isLoggedIn', isLoggedIn);
-                const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-                const signer = provider.getSigner();
-                setProvider(provider);
-                console.log('Provider', provider);
-                setConnectedWallet(true);
+        if (!connectedWallet) {
+            const isLoggedIn = await magic.user.isLoggedIn();
+            console.log('isLoggedIn', isLoggedIn);
+            const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+            const signer = provider.getSigner();
+            setProvider(provider);
+            console.log('Provider', provider);
+            setConnectedWallet(true);
+        }
+        if (data) {
+            setArtist(data.artist);
+            setSocialTokenAddress(data.artist.social_token_id);
+            setArtistTokenSymbol(data.artist.social_token_symbol);
+            if (data.artist.soundcloud_playlist_id) {
+                console.log(data.artist.soundcloud_playlist_id);
+                setPlaylistID(data.artist.soundcloud_playlist_id);
             }
 
-            if (data.artist.social_token_id === null) {
-                setNotMinted(true);
-            } else if (data.artist) {
-                setArtist(data.artist);
-                setSocialTokenAddress(data.artist.social_token_id);
-                setArtistTokenSymbol(data.artist.social_token_symbol);
-                if (data.artist.soundcloud_playlist_id) {
-                    console.log(data.artist.soundcloud_playlist_id);
-                    setPlaylistID(data.artist.soundcloud_playlist_id);
-                }
-
-                fetchTokenPrice();
-                const res = await Axios.post(
-                    `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
-                    artist
-                );
-                setHistoricalData(res.data.priceHistory);
-                getUserBalance();
-                setLoading(false);
-                // const tokenPrice = setInterval(() => {
-                //     fetchTokenPrice();
-                // }, 10000);
-                // return () => {
-                //     clearInterval(tokenPrice);
-                // };
-            }
+            fetchTokenPrice();
+            const res = await Axios.post(
+                `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
+                artist
+            );
+            setHistoricalData(res.data.priceHistory);
+            getUserBalance();
+            setLoading(false);
+            // const tokenPrice = setInterval(() => {
+            //     fetchTokenPrice();
+            // }, 10000);
+            // return () => {
+            //     clearInterval(tokenPrice);
+            // };
 
             Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`, {
                 id
@@ -129,15 +128,12 @@ const Artist = () => {
                     setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
                     setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
                     setRequiredBalance(response.data.inflowGatedUrls[0].balance);
+                    if (response.data.mp3) {
+                        setMp3Url(response.data.mp3s[0].url);
+                        setMp3RequiredBalance(response.data.mp3s[0].balance);
+                    }
                 }
             });
-        };
-
-        if (uid) {
-            return init();
-        } else {
-            console.log('NOT LOGGED IN');
-            setconnectedwallet(false);
         }
     }, [socialTokenAddress]);
 
@@ -396,12 +392,10 @@ const Artist = () => {
                 await updatePriceHistory();
                 await updateArtistFeesEarned();
 
-                
                 setInterval(() => {
                     window.location.reload();
-                }, 2000)
+                }, 2000);
                 getBalance();
-                
             } catch (err) {
                 setbuymodalloading(false);
                 setfailuremint((failuremint) => !failuremint);
@@ -516,21 +510,19 @@ const Artist = () => {
     };
 
     const updateArtistFeesEarned = async () => {
-        try{
-            await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/updatefeesearned`,{
-                social_token_id : socialTokenAddress,
+        try {
+            await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/updatefeesearned`, {
+                social_token_id: socialTokenAddress,
                 totalMintPrice
             })
-            .then((resp) => {
-                console.log(resp.data);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-        } catch (error){
-
-        }
-    }
+                .then((resp) => {
+                    console.log(resp.data);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        } catch (error) {}
+    };
 
     const fetchtotalMintPrice = async () => {
         if (provider) {
@@ -568,98 +560,104 @@ const Artist = () => {
     };
 
     return (
-        <div className="artist-background">
-            <ArtistHeader
-                artist={artist}
-                requiredBalance={requiredBalance}
-                inflowGatedUrl={inflowGatedUrl}
-                socialTokenAddress={socialTokenAddress}
-                encodedUrl={encodedUrl}
-            />
-            <div className="dashboard-wrapper-main artist-main-wrapper">
-                <ArtistTransact
-                    artist={artist}
-                    MintPrice={MintPrice}
-                    historicalData={historicalData}
-                    token={token}
-                    provider={provider}
-                    setsell={setsell}
-                    setbuy={setbuy}
-                    setconnectedwallet={setconnectedwallet}
-                    balance={balance}
-                />
+        <>
+            {artist ? (
+                <div className="artist-background">
+                    <ArtistHeader
+                        artist={artist}
+                        requiredBalance={requiredBalance}
+                        inflowGatedUrl={inflowGatedUrl}
+                        socialTokenAddress={socialTokenAddress}
+                        encodedUrl={encodedUrl}
+                        mp3Url={mp3Url}
+                        mp3RequiredBalance={mp3RequiredBalance}
+                    />
+                    <div className="dashboard-wrapper-main artist-main-wrapper">
+                        <ArtistTransact
+                            artist={artist}
+                            MintPrice={MintPrice}
+                            historicalData={historicalData}
+                            token={token}
+                            provider={provider}
+                            setsell={setsell}
+                            setbuy={setbuy}
+                            setconnectedwallet={setconnectedwallet}
+                            balance={balance}
+                        />
 
-                <div className="poll-play-song-details">
-                    <div className="row">
-                        <div className="col-lg-6">
-                            <div className="poll-details">
-                                <iframe
-                                    width="100%"
-                                    height="100%"
-                                    scrolling="no"
-                                    frameBorder="no"
-                                    allow="autoplay"
-                                    src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/${playlistID}&color=%237d2add&auto_play=false&visual=true`}
-                                ></iframe>
-                            </div>
-                        </div>
-                        <div className="col-lg-6">
-                            <div className="song-play-list">
-                                <div className="playlist-header">
-                                    <span className="like">
-                                        <img alt="" src={assetsImages.like} />
-                                        557
-                                    </span>
-                                    <button className="limited-song-btn">
-                                        <img alt="" src={assetsImages.verifed} />
-                                        Limited
-                                    </button>
-                                </div>
-
-                                <div className="playlist-details">
-                                    <div className="playlist-price">
-                                        <span>$</span>37.99
-                                    </div>
-                                    <div className="img-wrapper">
-                                        <img
-                                            alt=""
-                                            src={
-                                                artist.profile_image
-                                                    ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
-                                                    : null
-                                            }
-                                        />
-                                    </div>
-                                    <div className="album-title">{artist.first_name} NFT</div>
-                                    <div className="playlist-start">
-                                        <span>Tier:</span>
-                                        <ul>
-                                            <li>
-                                                <img alt="" src={assetsImages.star} />
-                                            </li>
-                                            <li>
-                                                <img alt="" src={assetsImages.star} />
-                                            </li>
-                                            <li>
-                                                <img alt="" src={assetsImages.star} />
-                                            </li>
-                                            <li>
-                                                <img alt="" src={assetsImages.star} />
-                                            </li>
-                                            <li>
-                                                <img alt="" src={assetsImages.starwhite} />
-                                            </li>
-                                        </ul>
+                        <div className="poll-play-song-details">
+                            <div className="row">
+                                <div className="col-lg-6">
+                                    <div className="poll-details">
+                                        <iframe
+                                            width="100%"
+                                            height="100%"
+                                            scrolling="no"
+                                            frameBorder="no"
+                                            allow="autoplay"
+                                            src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/${playlistID}&color=%237d2add&auto_play=false&visual=true`}
+                                        ></iframe>
                                     </div>
                                 </div>
+                                <div className="col-lg-6">
+                                    <div className="song-play-list">
+                                        <div className="playlist-header">
+                                            <span className="like">
+                                                <img alt="" src={assetsImages.like} />
+                                                557
+                                            </span>
+                                            <button className="limited-song-btn">
+                                                <img alt="" src={assetsImages.verifed} />
+                                                Limited
+                                            </button>
+                                        </div>
+
+                                        <div className="playlist-details">
+                                            <div className="playlist-price">
+                                                <span>$</span>37.99
+                                            </div>
+                                            <div className="img-wrapper">
+                                                <img
+                                                    alt=""
+                                                    src={
+                                                        artist.profile_image
+                                                            ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
+                                                            : null
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="album-title">
+                                                {artist.first_name} NFT
+                                            </div>
+                                            <div className="playlist-start">
+                                                <span>Tier:</span>
+                                                <ul>
+                                                    <li>
+                                                        <img alt="" src={assetsImages.star} />
+                                                    </li>
+                                                    <li>
+                                                        <img alt="" src={assetsImages.star} />
+                                                    </li>
+                                                    <li>
+                                                        <img alt="" src={assetsImages.star} />
+                                                    </li>
+                                                    <li>
+                                                        <img alt="" src={assetsImages.star} />
+                                                    </li>
+                                                    <li>
+                                                        <img alt="" src={assetsImages.starwhite} />
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                {/* -----------My-NFTs----------------------- */}
+                        {/* -----------My-NFTs----------------------- */}
 
-                {/* <div className="mynfts-row-main">
+                        {/* <div className="mynfts-row-main">
                     <div className="second-col">
                         <Mynftdropdown />
                     </div>
@@ -684,153 +682,155 @@ const Artist = () => {
                     <Song />
                     <Song />
                 </div> */}
-            </div>
-
-            <Modal
-                show={profileModel}
-                className="edit-profile-modal"
-                onHide={() => setprofileModel((profileModel) => !profileModel)}
-            >
-                <Modal.Header closeButton>
-                    <span className="title">Edit Profile</span>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <div className="form-group">
-                        <label>Name</label>
-                        <input className="form-control" type="text" placeholder="" />
                     </div>
 
-                    <div className="user-profile">
-                        <img alt="" src={assetsImages.artist} />
-                        <button className="upload-profile btn-gradiant">
-                            Upload New Profile Picture
-                        </button>
-                    </div>
-
-                    <div className="user-profile-background">
-                        <img alt="" src={assetsImages.artistbg} />
-                        <button className="upload-profile-background btn-gradiant">
-                            Upload New Background Picture
-                        </button>
-                    </div>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <button className="save-btn btn-gradiant">Save Edits</button>
-                </Modal.Footer>
-            </Modal>
-
-            <Modal
-                show={buy}
-                className="edit-profile-modal sell"
-                onHide={() => setbuy((buy) => !buy)}
-            >
-                <Modal.Header closeButton>
-                    <span className="title">Buy {artist.social_token_symbol} Token</span>
-                </Modal.Header>
-
-                <Modal.Body>
-                    {buymodalloading ? (
-                        <div className="d-flex justify-content-center align-items-center flex-column">
-                            <SmallLoader />
-                        </div>
-                    ) : (
-                        <>
-                            <div className="form-group">
-                                <label>Number of Tokens</label>
-                                <input
-                                    className="form-control"
-                                    type="number"
-                                    value={TokensToMint}
-                                    placeholder=""
-                                    onChange={(e) => {
-                                        setTokensToMint(e.target.value);
-                                        setbuyflag(false);
-                                    }}
-                                />
-                            </div>
-
-                            <div className="buy-total-amount">
-                                {/* Amount you'll spend: ${totalMintPrice} */}
-                                Amount you'll spend : <h5>${MintPrice * TokensToMint}</h5>
-                            </div>
-                        </>
-                    )}
-                    {buymodalloading && buyflag ? (
-                        <div className="d-flex justify-content-center align-items-center flex-column">
-                            <p>
-                                Processing Transaction, Please Wait <br></br>
-                                This can sometimes take up to a minute
-                            </p>
-                        </div>
-                    ) : null}
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <button
-                        disabled={buymodalloading}
-                        className="save-btn btn-gradiant"
-                        onClick={buyflag ? buyTokens : fetchtotalMintPrice}
+                    <Modal
+                        show={profileModel}
+                        className="edit-profile-modal"
+                        onHide={() => setprofileModel((profileModel) => !profileModel)}
                     >
-                        {buyflag ? 'CONFIRM' : 'BUY'}
-                    </button>
-                </Modal.Footer>
-            </Modal>
+                        <Modal.Header closeButton>
+                            <span className="title">Edit Profile</span>
+                        </Modal.Header>
 
-            <Modal
-                show={sell}
-                className="edit-profile-modal buy"
-                onHide={() => setsell((sell) => !sell)}
-            >
-                <Modal.Header closeButton>
-                    <span className="title">Sell {artist.social_token_symbol} Token</span>
-                </Modal.Header>
-
-                <Modal.Body>
-                    {sellmodalloading ? (
-                        <div className="d-flex justify-content-center align-items-center flex-column">
-                            <SmallLoader />
-                        </div>
-                    ) : (
-                        <>
+                        <Modal.Body>
                             <div className="form-group">
-                                <label>Number of Tokens</label>
-                                <input
-                                    className="form-control"
-                                    type="number"
-                                    value={TokensToBurn}
-                                    placeholder=""
-                                    onChange={(e) => {
-                                        setTokensToBurn(e.target.value);
-                                        setsellflag(false);
-                                    }}
-                                />
+                                <label>Name</label>
+                                <input className="form-control" type="text" placeholder="" />
                             </div>
 
-                            <div className="buy-total-amount">
-                                Amount you'll earn : <h5>${totalburnprice}</h5>
+                            <div className="user-profile">
+                                <img alt="" src={assetsImages.artist} />
+                                <button className="upload-profile btn-gradiant">
+                                    Upload New Profile Picture
+                                </button>
                             </div>
-                        </>
-                    )}
-                    {sellmodalloading && sellflag ? (
-                        <div className="d-flex justify-content-center align-items-center flex-column">
-                            Processing Transaction Please Wait
-                        </div>
-                    ) : null}
-                </Modal.Body>
 
-                <Modal.Footer>
-                    <button
-                        disabled={sellmodalloading}
-                        className="save-btn btn-gradiant"
-                        onClick={sellflag ? sellTokens : fetchtotalburnprice}
+                            <div className="user-profile-background">
+                                <img alt="" src={assetsImages.artistbg} />
+                                <button className="upload-profile-background btn-gradiant">
+                                    Upload New Background Picture
+                                </button>
+                            </div>
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <button className="save-btn btn-gradiant">Save Edits</button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal
+                        show={buy}
+                        className="edit-profile-modal sell"
+                        onHide={() => setbuy((buy) => !buy)}
                     >
-                        {sellflag ? 'Sell' : 'Get Selling Price'}
-                    </button>
-                </Modal.Footer>
-            </Modal>
-        </div>
+                        <Modal.Header closeButton>
+                            <span className="title">Buy {artist.social_token_symbol} Token</span>
+                        </Modal.Header>
+
+                        <Modal.Body>
+                            {buymodalloading ? (
+                                <div className="d-flex justify-content-center align-items-center flex-column">
+                                    <SmallLoader />
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="form-group">
+                                        <label>Number of Tokens</label>
+                                        <input
+                                            className="form-control"
+                                            type="number"
+                                            value={TokensToMint}
+                                            placeholder=""
+                                            onChange={(e) => {
+                                                setTokensToMint(e.target.value);
+                                                setbuyflag(false);
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="buy-total-amount">
+                                        {/* Amount you'll spend: ${totalMintPrice} */}
+                                        Amount you'll spend : <h5>${MintPrice * TokensToMint}</h5>
+                                    </div>
+                                </>
+                            )}
+                            {buymodalloading && buyflag ? (
+                                <div className="d-flex justify-content-center align-items-center flex-column">
+                                    <p>
+                                        Processing Transaction, Please Wait <br></br>
+                                        This can sometimes take up to a minute
+                                    </p>
+                                </div>
+                            ) : null}
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <button
+                                disabled={buymodalloading}
+                                className="save-btn btn-gradiant"
+                                onClick={buyflag ? buyTokens : fetchtotalMintPrice}
+                            >
+                                {buyflag ? 'CONFIRM' : 'BUY'}
+                            </button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal
+                        show={sell}
+                        className="edit-profile-modal buy"
+                        onHide={() => setsell((sell) => !sell)}
+                    >
+                        <Modal.Header closeButton>
+                            <span className="title">Sell {artist.social_token_symbol} Token</span>
+                        </Modal.Header>
+
+                        <Modal.Body>
+                            {sellmodalloading ? (
+                                <div className="d-flex justify-content-center align-items-center flex-column">
+                                    <SmallLoader />
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="form-group">
+                                        <label>Number of Tokens</label>
+                                        <input
+                                            className="form-control"
+                                            type="number"
+                                            value={TokensToBurn}
+                                            placeholder=""
+                                            onChange={(e) => {
+                                                setTokensToBurn(e.target.value);
+                                                setsellflag(false);
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="buy-total-amount">
+                                        Amount you'll earn : <h5>${totalburnprice}</h5>
+                                    </div>
+                                </>
+                            )}
+                            {sellmodalloading && sellflag ? (
+                                <div className="d-flex justify-content-center align-items-center flex-column">
+                                    Processing Transaction Please Wait
+                                </div>
+                            ) : null}
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <button
+                                disabled={sellmodalloading}
+                                className="save-btn btn-gradiant"
+                                onClick={sellflag ? sellTokens : fetchtotalburnprice}
+                            >
+                                {sellflag ? 'Sell' : 'Get Selling Price'}
+                            </button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
+            ) : null}
+        </>
     );
 };
 

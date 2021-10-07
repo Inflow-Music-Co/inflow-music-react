@@ -20,7 +20,7 @@ import SweetAlert from 'react-bootstrap-sweetalert';
 import { CreateMintgateLink } from '../hooks/createMintGate';
 import Button from '@material-ui/core/Button';
 import { Magic } from 'magic-sdk';
-import Grid from '@material-ui/core/Grid'
+import Grid from '@material-ui/core/Grid';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 
@@ -34,8 +34,8 @@ const magic = new Magic(process.env.REACT_APP_MAGIC_PUBLISHABLE_KEY, {
 });
 
 const Input = styled('input')({
-    display: 'none',
-  });
+    display: 'none'
+});
 
 const Artistpic = () => {
     //const { walletProvider } = useContext(WalletProviderContext);
@@ -61,7 +61,7 @@ const Artistpic = () => {
     const [loading, setLoading] = useState(true);
     const [connectedwallet, setconnectedwallet] = useState(true);
     const uid = useSelector((state) => state.auth.data._id);
-    const [socialTokenAddress, setSocialTokenAddress] = useState();
+    const socialTokenAddress = useSelector((state) => state.auth.data.wallet_id);
     const [artist, setArtist] = useState('');
     const [soundCloudLink, setSoundCloudLink] = useState('');
     const [hasActivated, setHasActivated] = useState();
@@ -72,7 +72,6 @@ const Artistpic = () => {
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
     const [uploaded, setUploaded] = useState(false);
     const [id, setId] = useState('');
-
 
     //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
     const [tokenfees, settokenfees] = useState(0.0);
@@ -90,18 +89,20 @@ const Artistpic = () => {
             setSigner(signer);
             //dispatch(setProvider(provider));
             setConnectedWallet(true);
+            setId(uid);
+            const { data } = await Axios.post(
+                `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
+                {
+                    uid
+                }
+            );
+            console.log(data.artist.has_activated);
+            setHasActivated(data.artist.has_activated);
+            setTotalFees(data.artist.total_fees_earned);
+            setLoading(false);
         } else {
             setConnectedWallet(false);
         }
-        setId(uid)
-        const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, {
-            id
-        });
-        console.log(data.artist.has_activated);
-        setHasActivated(data.artist.has_activated);
-        setSocialTokenAddress(data.artist.social_token_id);
-        setTotalFees(data.artist.total_fees_earned);
-        setLoading(false);
     }, []);
 
     const formatAndSetTokenFees = async (value) => {
@@ -184,44 +185,44 @@ const Artistpic = () => {
     };
 
     const handleUpload = (e) => {
-        console.log('handleUpload fired')
+        console.log('handleUpload fired');
         setMp3File(e.target.files[0]);
         // setUploaded(true);
-      }
-    
-      const handleFileName = (e) => {
-        setMp3FileName(e.target.value);
-      }
-    
-      const uploadMp3 = async () => {
-          console.log('uploadMp3 fired')
-        if(!mp3File){
-          alert('please upload a valid .mp3 file');
-        } else if (!mp3FileName){
-          alert('please add a file name');
-        } else {
-          const data = new FormData();
-    
-          data.append("mp3_name", mp3FileName);
-          data.append("mp3_file", mp3File);
-          data.append("balance", balance);
-          data.append("id", id);
+    };
 
-          //console log data
-          for (var pair of data.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
+    const handleFileName = (e) => {
+        setMp3FileName(e.target.value);
+    };
+
+    const uploadMp3 = async () => {
+        console.log('uploadMp3 fired');
+        if (!mp3File) {
+            alert('please upload a valid .mp3 file');
+        } else if (!mp3FileName) {
+            alert('please add a file name');
+        } else {
+            const data = new FormData();
+
+            data.append('mp3_name', mp3FileName);
+            data.append('mp3_file', mp3File);
+            data.append('balance', balance);
+            data.append('id', id);
+
+            //console log data
+            for (var pair of data.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
+
+            await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data)
+                .then((res) => {
+                    console.log(res);
+                    setMp3Uploaded(true);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
-    
-          await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data)
-          .then((res) => {
-            console.log(res);
-            setMp3Uploaded(true);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        }
-      }
+    };
 
     return (
         <div className="dashboard-wrapper-main artist-management">
@@ -231,13 +232,11 @@ const Artistpic = () => {
                     <div className="card">
                         <div className="artist-title">
                             <div className="d-flex flex-row justify-content-between w-100">
-                                <span>Fees Earned  </span>
+                                <span>Fees Earned </span>
                             </div>
-                            
                         </div>
-                        {totalFees? <span>{`$${totalFees}`}</span> : null}
+                        {totalFees ? <span>{`$${totalFees}`}</span> : null}
                         <div className="artist-poll">
-                            
                             <div className="dropdown"></div>
                             <div
                                 className="amount d-flex justify-content-center align-items-center text-wrap"
@@ -402,8 +401,9 @@ const Artistpic = () => {
                             <button
                                 className="btn-gradiant"
                                 onClick={() => {
-                            setMp3Link((mp3Link) => !mp3Link)
-                            }}>
+                                    setMp3Link((mp3Link) => !mp3Link);
+                                }}
+                            >
                                 mp3 files
                             </button>
                         </div>
@@ -506,8 +506,7 @@ const Artistpic = () => {
                 onHide={() => setLink((link) => !link)}
             >
                 <Modal.Header closeButton>
-                    <span className="title">Create Token Gated Link</span>
-                    ;
+                    <span className="title">Create Token Gated Link</span>;
                 </Modal.Header>
 
                 <Modal.Body>
@@ -553,7 +552,8 @@ const Artistpic = () => {
                                 className="upload-profile btn-gradiant"
                                 onClick={() => {
                                     saveInflowGatedLink(url, balance);
-                                    setLinkSuccess((linkSuccess) => !linkSuccess)}}
+                                    setLinkSuccess((linkSuccess) => !linkSuccess);
+                                }}
                                 type="submit"
                             >
                                 Created Token Gated Link
@@ -575,7 +575,10 @@ const Artistpic = () => {
                     <div className="success-popup-content">
                         <img alt="" src={assetsImages.success} />
                         <h2 className="title">Success!</h2>
-                        <p>Your token gated link has been created. It will now be on your artist page</p>
+                        <p>
+                            Your token gated link has been created. It will now be on your artist
+                            page
+                        </p>
                         {/* <button
                             className="btn-gradiant"
                             onClick={() => {
@@ -589,84 +592,100 @@ const Artistpic = () => {
                 </Modal.Body>
             </Modal>
 
-            <Modal 
-        show={mp3Link}
-        className="edit-profile-modal success"
-        onHide={() => {
-          setMp3Link((mp3Link) => !mp3Link);
-          }}>
-          <Modal.Header >
-          <Grid container style={{flexGrow: 1}}>
-          <Grid item xs={12} style={{paddingBottom: 30}}>
-                <span className="login-title col-12"> upload your mp3</span>
-                </Grid>
-          </Grid>
-          </Modal.Header>
-          <Modal.Body>
-              <Grid container direction="row">
-              <Grid item xs={9}>
-              <label>Track Name </label>
-                <div className="comman-row-input">
-                          <input
-                          placeholder="track name"
-                          type="text"
-                          name="twitter url"
-                          onChange={handleFileName}
-                          />
-                      </div>
-              </Grid>
-              <Grid item xs={3}>
-                  {uploaded? 
-                    <Button 
-                      variant="disabled" 
-                      size="large"  
-                      style={{marginLeft: 20, marginTop: 31, backgroundColor: 'grey'}}
-                      component="span"> 
-                      UPLOAD 
-                    </Button> 
-                  :  
-                  <label htmlFor="contained-button-file">
-                  <Input id="contained-button-file" multiple type="file" onChange={handleUpload}/>
-                  <Button 
-                      variant="contained" 
-                      size="large" 
-                      color="secondary" 
-                      style={{marginLeft: 20, marginTop: 31}}
-                      component="span"> 
-                      UPLOAD 
-                    </Button>
-                    </label>}
-              </Grid>
-              </Grid>
-              <Grid container direction ="column">
-                    <Grid item xs={12}>
-                      <label>Select Token</label>  
-                      <select id="tokenAddress"
-                          onChange={(e) => setTokenAddress(e.target.value)}
-                          className="form-control mb-3 mt-3">
-                          <option>Select Token</option>
-                          <option value={`${socialTokenAddress}`}>{socialTokenAddress}</option>
-                        </select>
+            <Modal
+                show={mp3Link}
+                className="edit-profile-modal success"
+                onHide={() => {
+                    setMp3Link((mp3Link) => !mp3Link);
+                }}
+            >
+                <Modal.Header>
+                    <Grid container style={{ flexGrow: 1 }}>
+                        <Grid item xs={12} style={{ paddingBottom: 30 }}>
+                            <span className="login-title col-12"> upload your mp3</span>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <label>Amount of Tokens Required</label>
-                      <input
-                        id="balance"
-                        onChange={(e) => setBalance(e.target.value)}
-                        className="form-control mb-3 mt-4"
-                        type="number"
-                        placeholder="ex. 100"
-                      />
-                      </Grid>
-              </Grid>
-              <Modal.Footer>
-                <button className="btn-gradiant m-1" onClick={uploadMp3}>
-                    CREATE
-                </button>
-            </Modal.Footer>
-          </Modal.Body>
-        </Modal>
-
+                </Modal.Header>
+                <Modal.Body>
+                    <Grid container direction="row">
+                        <Grid item xs={9}>
+                            <label>Track Name </label>
+                            <div className="comman-row-input">
+                                <input
+                                    placeholder="track name"
+                                    type="text"
+                                    name="twitter url"
+                                    onChange={handleFileName}
+                                />
+                            </div>
+                        </Grid>
+                        <Grid item xs={3}>
+                            {uploaded ? (
+                                <Button
+                                    variant="disabled"
+                                    size="large"
+                                    style={{
+                                        marginLeft: 20,
+                                        marginTop: 31,
+                                        backgroundColor: 'grey'
+                                    }}
+                                    component="span"
+                                >
+                                    UPLOAD
+                                </Button>
+                            ) : (
+                                <label htmlFor="contained-button-file">
+                                    <Input
+                                        id="contained-button-file"
+                                        multiple
+                                        type="file"
+                                        onChange={handleUpload}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        size="large"
+                                        color="secondary"
+                                        style={{ marginLeft: 20, marginTop: 31 }}
+                                        component="span"
+                                    >
+                                        UPLOAD
+                                    </Button>
+                                </label>
+                            )}
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="column">
+                        <Grid item xs={12}>
+                            <label>Select Token</label>
+                            <select
+                                id="tokenAddress"
+                                onChange={(e) => setTokenAddress(e.target.value)}
+                                className="form-control mb-3 mt-3"
+                            >
+                                <option>Select Token</option>
+                                <option value={`${socialTokenAddress}`}>
+                                    {socialTokenAddress}
+                                </option>
+                            </select>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <label>Amount of Tokens Required</label>
+                            <input
+                                id="balance"
+                                onChange={(e) => setBalance(e.target.value)}
+                                className="form-control mb-3 mt-4"
+                                type="number"
+                                placeholder="ex. 100"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Modal.Footer>
+                        <button className="btn-gradiant m-1" onClick={uploadMp3}>
+                            CREATE
+                        </button>
+                    </Modal.Footer>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };
