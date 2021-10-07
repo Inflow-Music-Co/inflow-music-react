@@ -44,6 +44,8 @@ const Dashboard = () => {
     // const { walletProvider } = useContext(WalletProviderContext);
     const MySwal = withReactContent(Swal);
     const uid = useSelector((state) => state.auth.data._id);
+    const email = useSelector((state) => state.auth.data.email);
+    const address = useSelector((state) => state.auth.wallet_id)
     const isArtist = useSelector((state) => state.auth.isArtist);
     const [walletProvider, setWalletProvider] = useState();
     const [connectedWallet, setConnectedWallet] = useState(true);
@@ -66,6 +68,8 @@ const Dashboard = () => {
     const [hasTwitter, setHasTwitter] = useState(false);
     const [twitterAuth, setTwitterAuth] = useState();
 
+    console.log('email', email)
+
     useEffect(async () => {
 
         if(window.location.href !== 'http://localhost:3000/dashboard'){
@@ -82,11 +86,9 @@ const Dashboard = () => {
 
         if (isLoggedIn) {
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-            const { email, publicAddress } = await magic.user.getMetadata();
-            setUserAddress(publicAddress);
+            
+            setUserAddress(address);
             setUserEmail(email);
-            dispatch(connected({ address: publicAddress }));
-            dispatch(connected({ email }));
             setWalletProvider(provider);
             dispatch(setProvider(provider));
             setConnectedWallet(true);
