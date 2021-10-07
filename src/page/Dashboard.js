@@ -44,8 +44,8 @@ const Dashboard = () => {
     // const { walletProvider } = useContext(WalletProviderContext);
     const MySwal = withReactContent(Swal);
     const uid = useSelector((state) => state.auth.data._id);
-    const email = useSelector((state) => state.auth.data.email);
-    const address = useSelector((state) => state.auth.wallet_id)
+    const userEmail = useSelector((state) => state.auth.data.email);
+    const userAddress = useSelector((state) => state.auth.data.wallet_id)
     const isArtist = useSelector((state) => state.auth.isArtist);
     const [walletProvider, setWalletProvider] = useState();
     const [connectedWallet, setConnectedWallet] = useState(true);
@@ -56,19 +56,19 @@ const Dashboard = () => {
     const [totalValues, setTotalValues] = useState([]);
     const [tokenSymbols, setTokenSymbols] = useState([]);
     const [tokenMappings, setTokenMappings] = useState();
-    const [userAddress, setUserAddress] = useState();
     const [send, setSend] = useState(false);
     const [copied, setCopied] = useState(false);
     const [usdcBalance, setUsdcBalance] = useState();
     const [formattedAddress, setFormattedAddress] = useState();
     const [recieve, setRecieve] = useState(false);
     const [addedUsdc, setAddedUsdc] = useState(false);
-    const [userEmail, setUserEmail] = useState();
+
     const [createArtistAccount, setCreateArtistAccount] = useState(false);
     const [hasTwitter, setHasTwitter] = useState(false);
     const [twitterAuth, setTwitterAuth] = useState();
 
-    console.log('email', email)
+    console.log('user email', userEmail)
+    console.log('user address', userAddress);
 
     useEffect(async () => {
 
@@ -80,23 +80,15 @@ const Dashboard = () => {
             setTwitterAuth(result);
             console.log({ result });
         }
-
-        const isLoggedIn = await magic.user.isLoggedIn();
-        console.log('isLoggedIn', isLoggedIn);
-
-        if (isLoggedIn) {
+        if(userAddress){
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-            
-            setUserAddress(address);
-            setUserEmail(email);
             setWalletProvider(provider);
-            dispatch(setProvider(provider));
             setConnectedWallet(true);
             setSend(false);
             dispatch(updateActivePage('dashboard'));
             await getTokensOwnedByUser();
         } else {
-            setConnectedWallet(false);
+        setConnectedWallet(false);
         }
     }, []);
 
