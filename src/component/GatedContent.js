@@ -30,6 +30,8 @@ const GatedContent = (props) => {
     const [viewable, setViewable] = useState(false);
     const renderCount = useRef(0);
 
+    console.log('GATED VIDEO CONTENT');
+
     useEffect(async () => {
         const isLoggedIn = await magic.user.isLoggedIn();
         console.log('isLoggedIn', isLoggedIn);

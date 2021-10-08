@@ -185,6 +185,8 @@ const Streamer = ({ encodedUrl }) => {
         volume
     } = state;
 
+    console.log('VIDEO STREAMER');
+
     useEffect(() => {
         setDecodedlUrl(cryptr.decrypt(encodedUrl));
     }, []);

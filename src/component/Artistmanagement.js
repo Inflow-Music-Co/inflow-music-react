@@ -93,9 +93,10 @@ const Artistpic = () => {
             const { data } = await Axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
                 {
-                    uid
+                    id
                 }
             );
+            console.log(data)
             console.log(data.artist.has_activated);
             setHasActivated(data.artist.has_activated);
             setTotalFees(data.artist.total_fees_earned);

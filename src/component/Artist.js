@@ -88,6 +88,8 @@ const Artist = () => {
             setArtistTokenSymbol(response.data.artist.social_token_symbol);
             setHistoricalData(response.data.artist.mint_price_history);
             if (response.data.artist.soundcloud_playlist_id) {
+                console.log('HAS SOUNDCLOUD ID')
+                console.log(response.data.artist.soundcloud_playlist_id)
                 setPlaylistID(response.data.artist.soundcloud_playlist_id);
             } 
             if (response.data.artist.inflowgated_urls) {
@@ -579,7 +581,8 @@ const Artist = () => {
                             <div className="row">
                                 <div className="col-lg-6">
                                     <div className="poll-details">
-                                        <iframe
+                                        {playlistID ? 
+                                            <iframe
                                             width="100%"
                                             height="100%"
                                             scrolling="no"
@@ -587,6 +590,8 @@ const Artist = () => {
                                             allow="autoplay"
                                             src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/${playlistID}&color=%237d2add&auto_play=false&visual=true`}
                                         ></iframe>
+                                        : null}
+                                        
                                     </div>
                                 </div>
                                 <div className="col-lg-6">

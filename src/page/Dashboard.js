@@ -72,7 +72,8 @@ const Dashboard = () => {
 
     useEffect(async () => {
 
-        if(window.location.href !== 'http://localhost:3000/dashboard'){
+        if(window.location.href !== 'http://localhost:3000/dashboard' 
+        || window.location.href !== 'https://www.inflowmusic.io/dashboard'){
             setCreateArtistAccount(true);
             setHasTwitter(true);
             console.log('HAS TWITTER');

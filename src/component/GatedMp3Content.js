@@ -5,7 +5,7 @@ import { Contract, ethers } from 'ethers';
 import SocialToken from '../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
-import Streamer from './Streamer';
+import AudioStreamer from './Streamer';
 import SmallLoader from './SmallLoader';
 import { Magic } from 'magic-sdk';
 
@@ -29,6 +29,8 @@ const GatedMp3Content = (props) => {
     const [connectedWallet, setConnectedWallet] = useState(false);
     const [viewable, setViewable] = useState(false);
     const renderCount = useRef(0);
+
+    console.log('GATED MP3 CONTENT');
 
     useEffect(async () => {
         const isLoggedIn = await magic.user.isLoggedIn();
@@ -131,7 +133,7 @@ const GatedMp3Content = (props) => {
     return (
         <div className="dashboard-wrapper-main">
             {viewable ? (
-                <Streamer encodedUrl={props.location.encodedUrl} />
+                <AudioStreamer encodedUrl={props.location.mp3Url} />
             ) : (
                 <div className="card-heading">
                     <SmallLoader />
