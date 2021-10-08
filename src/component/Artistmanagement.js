@@ -100,6 +100,7 @@ const Artistpic = () => {
             console.log(data.artist.has_activated);
             setHasActivated(data.artist.has_activated);
             setTotalFees(data.artist.total_fees_earned);
+            console.log('total fees', totalFees);
             setLoading(false);
         } else {
             setConnectedWallet(false);

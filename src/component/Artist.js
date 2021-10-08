@@ -504,7 +504,7 @@ const Artist = () => {
         try {
             await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/updatefeesearned`, {
                 social_token_id: socialTokenAddress,
-                totalMintPrice
+                total_mint_price: totalMintPrice
             })
                 .then((resp) => {
                     console.log(resp.data);
