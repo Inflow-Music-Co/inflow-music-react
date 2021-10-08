@@ -76,13 +76,33 @@ const Artist = () => {
 
     const [mp3Url, setMp3Url] = useState('');
     const [mp3RequiredBalance, setMp3RequiredBalance] = useState();
+    const [mp3Id, setMp3Id] = useState('');
 
     useEffect(async () => {
         const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, {
             id
-        });
+        }).then((response) => {
+            setArtist(response.data.artist);
+            setSocialTokenAddress(response.data.artist.social_token_id);
+            setArtistTokenSymbol(response.data.artist.social_token_symbol);
+            setHistoricalData(response.data.artist.mint_price_history);
+            if (response.data.artist.soundcloud_playlist_id) {
+                console.log(response.data.artist.soundcloud_playlist_id);
+                setPlaylistID(response.data.artist.soundcloud_playlist_id);
+            } if (response.data.inflowGatedUrls[0]) {
+                setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
+                setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
+                setRequiredBalance(response.data.inflowGatedUrls[0].balance);
+                if (response.data.mp3) {
+                    setMp3Url(response.data.mp3s[0].url);
+                    setMp3RequiredBalance(response.data.mp3s[0].balance);
+                    setMp3Id(response.data.mp3s[0]._id)
+                }
+            }
 
-        console.log({ data });
+        }).catch((error) => {
+            console.log(error)
+        })
 
         if (balance !== '') {
             console.log(balance);
@@ -98,20 +118,7 @@ const Artist = () => {
             setConnectedWallet(true);
         }
         if (data) {
-            setArtist(data.artist);
-            setSocialTokenAddress(data.artist.social_token_id);
-            setArtistTokenSymbol(data.artist.social_token_symbol);
-            if (data.artist.soundcloud_playlist_id) {
-                console.log(data.artist.soundcloud_playlist_id);
-                setPlaylistID(data.artist.soundcloud_playlist_id);
-            }
-
             fetchTokenPrice();
-            const res = await Axios.post(
-                `${process.env.REACT_APP_SERVER_URL}/v1/artist/gettxhistorybyartist`,
-                artist
-            );
-            setHistoricalData(res.data.priceHistory);
             getUserBalance();
             setLoading(false);
             // const tokenPrice = setInterval(() => {
@@ -120,21 +127,8 @@ const Artist = () => {
             // return () => {
             //     clearInterval(tokenPrice);
             // };
-
-            Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getinflowgatedurlsbyid`, {
-                id
-            }).then((response) => {
-                if (response.data.inflowGatedUrls[0]) {
-                    setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
-                    setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
-                    setRequiredBalance(response.data.inflowGatedUrls[0].balance);
-                    if (response.data.mp3) {
-                        setMp3Url(response.data.mp3s[0].url);
-                        setMp3RequiredBalance(response.data.mp3s[0].balance);
-                    }
-                }
-            });
         }
+
     }, [socialTokenAddress]);
 
     useEffect(() => {
@@ -614,41 +608,16 @@ const Artist = () => {
 
                                         <div className="playlist-details">
                                             <div className="playlist-price">
-                                                <span>$</span>37.99
                                             </div>
-                                            <div className="img-wrapper">
                                                 <img
                                                     alt=""
+                                                    width="400"
                                                     src={
                                                         artist.profile_image
                                                             ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
                                                             : null
                                                     }
                                                 />
-                                            </div>
-                                            <div className="album-title">
-                                                {artist.first_name} NFT
-                                            </div>
-                                            <div className="playlist-start">
-                                                <span>Tier:</span>
-                                                <ul>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.starwhite} />
-                                                    </li>
-                                                </ul>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
