@@ -24,7 +24,7 @@ const ArtistTransact = ({
                 </div>
             );
         } else {
-            return <SmallLoader />;
+            return <SmallLoader />
         }
     };
 
@@ -41,7 +41,7 @@ const ArtistTransact = ({
                 </div>
             );
         } else {
-            return <SmallLoader />;
+            return <div>loading balance ..</div>
         }
     };
 

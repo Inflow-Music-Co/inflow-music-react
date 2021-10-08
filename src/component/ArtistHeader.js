@@ -10,7 +10,8 @@ const ArtistHeader = ({
     socialTokenAddress,
     encodedUrl,
     mp3RequiredBalance,
-    mp3Url
+    mp3Url,
+    mp3Id
 }) => {
     return (
         <div className="artist-main">
@@ -88,10 +89,10 @@ const ArtistHeader = ({
                         {requiredBalance ? (
                             <Link
                                 to={{
-                                    pathname: `/${inflowGatedUrl}`,
-                                    requiredBalance: requiredBalance,
+                                    pathname: `/${mp3Id}`,
+                                    requiredBalance: mp3RequiredBalance,
                                     address: socialTokenAddress,
-                                    encodedUrl: encodedUrl
+                                    mp3Url: mp3Url
                                 }}
                             >
                                 <button className="tag-button"> UNRELEASED MUSIC </button>

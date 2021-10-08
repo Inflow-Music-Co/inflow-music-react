@@ -79,57 +79,55 @@ const Artist = () => {
     const [mp3Id, setMp3Id] = useState('');
 
     useEffect(async () => {
-        const { data } = await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, {
+        await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, {
             id
-        }).then((response) => {
+        }).then(async (response) => {
+            console.log({ response} )
             setArtist(response.data.artist);
             setSocialTokenAddress(response.data.artist.social_token_id);
             setArtistTokenSymbol(response.data.artist.social_token_symbol);
             setHistoricalData(response.data.artist.mint_price_history);
             if (response.data.artist.soundcloud_playlist_id) {
-                console.log(response.data.artist.soundcloud_playlist_id);
                 setPlaylistID(response.data.artist.soundcloud_playlist_id);
-            } if (response.data.inflowGatedUrls[0]) {
-                setEncodedUrl(response.data.inflowGatedUrls[0].encodedOrignalUrl);
-                setInflowGatedUrl(response.data.inflowGatedUrls[0].randomString);
-                setRequiredBalance(response.data.inflowGatedUrls[0].balance);
-                if (response.data.mp3) {
-                    setMp3Url(response.data.mp3s[0].url);
-                    setMp3RequiredBalance(response.data.mp3s[0].balance);
-                    setMp3Id(response.data.mp3s[0]._id)
+            } if (response.data.artist.inflowGatedUrls) {
+                setEncodedUrl(response.data.artist.inflowGatedUrls[0].encodedOrignalUrl);
+                setInflowGatedUrl(response.data.artist.inflowGatedUrls[0].randomString);
+                setRequiredBalance(response.data.artist.inflowGatedUrls[0].balance);
+                if (response.data.artist.mp3s) {
+                    setMp3Url(response.data.artist.mp3s[0].url);
+                    setMp3RequiredBalance(response.data.artist.data.mp3s[0].balance);
+                    setMp3Id(response.data.artist.mp3s[0]._id)
                 }
             }
-
+            
+        setLoading(false);
         }).catch((error) => {
             console.log(error)
         })
 
-        if (balance !== '') {
-            console.log(balance);
-            getUserBalance();
-        }
         if (!connectedWallet) {
             const isLoggedIn = await magic.user.isLoggedIn();
             console.log('isLoggedIn', isLoggedIn);
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-            const signer = provider.getSigner();
             setProvider(provider);
             console.log('Provider', provider);
             setConnectedWallet(true);
-        }
-        if (data) {
-            fetchTokenPrice();
-            getUserBalance();
-            setLoading(false);
-            // const tokenPrice = setInterval(() => {
-            //     fetchTokenPrice();
-            // }, 10000);
-            // return () => {
-            //     clearInterval(tokenPrice);
-            // };
+            
         }
 
-    }, [socialTokenAddress]);
+        // const tokenPrice = setInterval(() => {
+        //     fetchTokenPrice();
+        // }, 10000);
+        // return () => {
+        //     clearInterval(tokenPrice);
+        // };
+
+    }, []);
+
+    useEffect(async() => {
+        await fetchTokenPrice();
+        await getUserBalance();
+    },[provider])
 
     useEffect(() => {
         notMinted &&
@@ -256,22 +254,17 @@ const Artist = () => {
     }, [successmint]);
 
     const fetchTokenPrice = async () => {
+        console.log('fetchTokenPrice fired')
         try {
-            if (connectedWallet) {
-                const inflow = new Inflow(provider, 137);
-                const mintPrice = await inflow.getMintPriceSocial(
-                    socialTokenAddress,
-                    inflow.parseERC20('SocialToken', '1')
-                );
-
-                setMintPrice(mintPrice[0]);
-            }
+            const inflow = new Inflow(provider, 137);
+            const mintPrice = await inflow.getMintPriceSocial(
+                socialTokenAddress,
+                inflow.parseERC20('SocialToken', '1')
+            );
+            setMintPrice(mintPrice[0]);
+            console.log({ mintPrice });
         } catch (err) {
-            if (errcode === -32002) {
-                errcode = '';
-                history.go(0);
-            }
-            errcode = err.code;
+            console.log('fetch Token Price error : ', err)
         }
     };
 
@@ -564,6 +557,7 @@ const Artist = () => {
                         socialTokenAddress={socialTokenAddress}
                         encodedUrl={encodedUrl}
                         mp3Url={mp3Url}
+                        mp3Id={mp3Id}
                         mp3RequiredBalance={mp3RequiredBalance}
                     />
                     <div className="dashboard-wrapper-main artist-main-wrapper">
