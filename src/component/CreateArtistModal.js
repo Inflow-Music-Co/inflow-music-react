@@ -50,10 +50,6 @@ const CreateArtistModal = ({
         profile: ''
     });
 
-    useEffect( async () => {
-     
-    })
-
     useEffect(() => {
         artistAccountCreated &&
             MySwal.fire({

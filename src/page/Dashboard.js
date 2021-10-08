@@ -69,18 +69,20 @@ const Dashboard = () => {
 
     console.log('user email', userEmail)
     console.log('user address', userAddress);
+    console.log(createArtistAccount);
 
     useEffect(async () => {
 
-        if(window.location.href !== 'http://localhost:3000/dashboard' 
-        || window.location.href !== 'https://www.inflowmusic.io/dashboard'){
+        if(window.location.href !== 'https://www.inflowmusic.io/dashboard'){
+            console.log('redirect from twitter')
             setCreateArtistAccount(true);
             setHasTwitter(true);
             console.log('HAS TWITTER');
             const result = await magic.oauth.getRedirectResult();
             setTwitterAuth(result);
             console.log({ result });
-        }
+        } 
+       
         if(userAddress){
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
             setWalletProvider(provider);
