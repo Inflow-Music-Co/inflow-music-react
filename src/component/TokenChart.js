@@ -21,7 +21,7 @@ const TokenChart = (props) => {
                 let tempvalues = [];
                 historicalData.forEach((item) => {
                     delete item._id;
-                    item.price = parseFloat(item.price, 10).toFixed(2);
+                    item.price = parseFloat(item.price, 10).toFixed(9);
                     console.log(item);
                     const curDate = new Date(item.timestamp);
 
