@@ -18,7 +18,7 @@ const PasswordProtect = ({ setPasswordUpdated }) => {
     };
 
     const checkPassword = () => {
-        if (input === 'br3aK!inGChang£s') {
+        if (input === 'inflowgo') {
             dispatch(setCorrectPassword(true));
             setPasswordUpdated(true);
             

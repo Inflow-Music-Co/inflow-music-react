@@ -5,7 +5,7 @@ import { Contract, ethers } from 'ethers';
 import SocialToken from '../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
-import AudioStreamer from './Streamer';
+import AudioStreamer from './AudioStreamer';
 import SmallLoader from './SmallLoader';
 import { Magic } from 'magic-sdk';
 
@@ -122,7 +122,6 @@ const GatedMp3Content = (props) => {
 
     const hasEnoughTokens = () => {
         console.log('hasEnoughTokens fired');
-
         if (availableBalance !== null && availableBalance >= requiredBalance) {
             setSufficientBalance(true);
         } else if (availableBalance !== null && availableBalance < requiredBalance) {
@@ -133,7 +132,7 @@ const GatedMp3Content = (props) => {
     return (
         <div className="dashboard-wrapper-main">
             {viewable ? (
-                <AudioStreamer encodedUrl={props.location.mp3Url} />
+                <AudioStreamer mp3Url={props.location.mp3Url} />
             ) : (
                 <div className="card-heading">
                     <SmallLoader />

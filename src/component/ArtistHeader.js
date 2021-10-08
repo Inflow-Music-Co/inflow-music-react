@@ -13,7 +13,7 @@ const ArtistHeader = ({
     mp3Url,
     mp3Id
 }) => {
-    
+        
     return (
         <div className="artist-main">
             <div className="background">
@@ -93,7 +93,7 @@ const ArtistHeader = ({
                                     pathname: `/mp3s/${mp3Id}`,
                                     requiredBalance: mp3RequiredBalance,
                                     address: socialTokenAddress,
-                                    mp3Url: mp3Url
+                                    mp3Url
                                 }}
                             >
                                 <button className="tag-button"> UNRELEASED MUSIC </button>

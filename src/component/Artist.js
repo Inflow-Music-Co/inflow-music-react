@@ -547,6 +547,8 @@ const Artist = () => {
         });
     };
 
+    
+
     return (
         <>
             {artist ? (
