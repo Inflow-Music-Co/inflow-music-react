@@ -96,10 +96,12 @@ const Artist = () => {
                 setRequiredBalance(response.data.artist.inflowgated_urls[0].balance);
                 
             }
-            if (response.data.artist.mp3s) {
+            if (response.data.artist.mp3s[0]) {
+                console.log('HAS MP3s', response.data.artist.mp3s[0])
                 setMp3Url(response.data.artist.mp3s[0].url);
-                setMp3RequiredBalance(response.data.artist.data.mp3s[0].balance);
-                setMp3Id(response.data.artist.mp3s[0]._id)
+                setMp3RequiredBalance(response.data.artist.mp3s[0].balance);
+                setMp3Id(response.data.artist.mp3s[0]._id);
+                console.log({ mp3Id });
             }
             
         setLoading(false);
@@ -107,15 +109,12 @@ const Artist = () => {
             console.log(error)
         })
 
-        if (!connectedWallet) {
-            const isLoggedIn = await magic.user.isLoggedIn();
-            console.log('isLoggedIn', isLoggedIn);
-            const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
-            setProvider(provider);
-            console.log('Provider', provider);
+        const isLoggedIn = await magic.user.isLoggedIn();
+        if(isLoggedIn) {
+            const magicLinkProvider = new ethers.providers.Web3Provider(magic.rpcProvider);
+            setProvider(magicLinkProvider);
             setConnectedWallet(true);
-            
-        }
+        }    
 
         // const tokenPrice = setInterval(() => {
         //     fetchTokenPrice();
@@ -126,7 +125,8 @@ const Artist = () => {
 
     }, []);
 
-    useEffect(async() => {
+    useEffect(async () => {
+        console.log({ provider });
         await fetchTokenPrice();
         await getUserBalance();
     },[provider])
@@ -271,7 +271,7 @@ const Artist = () => {
     };
 
     const getUserBalance = async () => {
-        if (connectedWallet) {
+        if(provider){
             const signer = provider.getSigner();
             const inflow = new Inflow(provider, 137);
             const signerAddress = await signer.getAddress();

@@ -18,6 +18,7 @@ import ArtistRoutes from './ArtistRoutes';
 // import Artistpic from '../component/Artistpic';
 import Artist from '../component/Artist';
 import GatedContent from '../component/GatedContent';
+import GatedMp3Content from '../component/GatedMp3Content'
 import Artistmanagement from '../component/Artistmanagement';
 import ApproveArtist from '../page/ApproveArtist';
 import CreateSocialToken from '../page/CreateSocialToken';
@@ -65,6 +66,7 @@ export const AppRoutes = () => {
             <PublicRoutes path="/labels/:labelid" component={LabelArtists} exact />
             <PublicRoutes path="/artist/:id" component={Artist} exact />
             <PublicRoutes path="/:inflowGatedUrl" component={GatedContent} exact />
+            <PublicRoutes path="/mp3s/:mp3Id" component={GatedMp3Content} exact />
             <PublicRoutes path="/artist" component={Artist} exact />
             {/* <PrivateRoutes path="/demo" component={DemoPage} exact /> */}
             {/* <PrivateRoutes path="/login" component={Login} exact /> */}

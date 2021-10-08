@@ -15,6 +15,8 @@ const ArtistTransact = ({
 }) => {
     const history = useHistory();
 
+    console.log({ balance });
+
     const displayTokenPrice = () => {
         if (MintPrice && MintPrice !== '') {
             // const converted = Number(MintPrice).toFixed(4);
@@ -35,8 +37,8 @@ const ArtistTransact = ({
             return (
                 <div className="dollar-price">
                     {balance
-                        ? `${balance} ${artist.social_token_symbol}
-              \u00A0\u00A0\u00A0($${balanceInUSD})`
+                        ? `${artist.social_token_symbol} ${balance} 
+              \u00A0 = \u00A0($${balanceInUSD})`
                         : `0.0 ${artist.social_token_symbol}`}
                 </div>
             );
