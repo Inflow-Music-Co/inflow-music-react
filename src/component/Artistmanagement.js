@@ -93,7 +93,7 @@ const Artistpic = () => {
             const { data } = await Axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
                 {
-                    id
+                    id : uid
                 }
             );
             console.log(data)
