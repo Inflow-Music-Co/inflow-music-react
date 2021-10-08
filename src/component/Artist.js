@@ -372,21 +372,18 @@ const Artist = () => {
                     symbol: artistTokenSymbol,
                     mintPrice: MintPrice
                 })
-                    .then((resp) => {
-                        console.log(resp.data);
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    });
-                console.log('added user token association to DB successfully');
+                .then((resp) => {
+                    console.log(resp.data);
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
 
                 await updatePriceHistory();
                 await updateArtistFeesEarned();
-
                 setInterval(() => {
                     window.location.reload();
                 }, 2000);
-                getBalance();
             } catch (err) {
                 setbuymodalloading(false);
                 setfailuremint((failuremint) => !failuremint);
