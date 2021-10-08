@@ -89,15 +89,17 @@ const Artist = () => {
             setHistoricalData(response.data.artist.mint_price_history);
             if (response.data.artist.soundcloud_playlist_id) {
                 setPlaylistID(response.data.artist.soundcloud_playlist_id);
-            } if (response.data.artist.inflowGatedUrls) {
-                setEncodedUrl(response.data.artist.inflowGatedUrls[0].encodedOrignalUrl);
-                setInflowGatedUrl(response.data.artist.inflowGatedUrls[0].randomString);
-                setRequiredBalance(response.data.artist.inflowGatedUrls[0].balance);
-                if (response.data.artist.mp3s) {
-                    setMp3Url(response.data.artist.mp3s[0].url);
-                    setMp3RequiredBalance(response.data.artist.data.mp3s[0].balance);
-                    setMp3Id(response.data.artist.mp3s[0]._id)
-                }
+            } 
+            if (response.data.artist.inflowgated_urls) {
+                setEncodedUrl(response.data.artist.inflowgated_urls[0].encodedOrignalUrl);
+                setInflowGatedUrl(response.data.artist.inflowgated_urls[0].randomString);
+                setRequiredBalance(response.data.artist.inflowgated_urls[0].balance);
+                
+            }
+            if (response.data.artist.mp3s) {
+                setMp3Url(response.data.artist.mp3s[0].url);
+                setMp3RequiredBalance(response.data.artist.data.mp3s[0].balance);
+                setMp3Id(response.data.artist.mp3s[0]._id)
             }
             
         setLoading(false);
