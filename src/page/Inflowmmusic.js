@@ -19,8 +19,9 @@ const Inflowmusic = () => {
     useEffect(() => {
         getArtists();
         if(process.env.NODE_ENV ==='development'){
-            console.log('set redux store to local host url')
             dispatch(setBaseUrl('http://localhost:3000'));
+        } else {
+            dispatch(setBaseUrl('https://www.inflowmusic.io'));
         }
     }, []);
 
