@@ -5,16 +5,23 @@ import Artistpic from '../component/Artistpic';
 import Song from '../component/Song';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
+import { useDispatch } from 'react-redux'
+import { setBaseUrl } from '../store/reducers/appSlice'
 import Loader from '../component/Loader';
 import { assetsImages } from '../constants/images';
 
 const Inflowmusic = () => {
+    const dispatch = useDispatch();
     const [artists, setArtists] = useState();
     const [loading, setloading] = useState(false);
     const [imagesUrl, setImagesUrl] = useState();
 
     useEffect(() => {
         getArtists();
+        if(process.env.NODE_ENV ==='development'){
+            console.log('set redux store to local host url')
+            dispatch(setBaseUrl('http://localhost:3000'));
+        }
     }, []);
 
     const getArtists = async () => {

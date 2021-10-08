@@ -47,6 +47,7 @@ const Dashboard = () => {
     const userEmail = useSelector((state) => state.auth.data.email);
     const userAddress = useSelector((state) => state.auth.data.wallet_id)
     const isArtist = useSelector((state) => state.auth.isArtist);
+    const baseUrl = useSelector((state) => state.app.baseUrl)
     const [walletProvider, setWalletProvider] = useState();
     const [connectedWallet, setConnectedWallet] = useState(true);
     const [isFetched, setIsFetched] = useState(false);
@@ -67,13 +68,11 @@ const Dashboard = () => {
     const [hasTwitter, setHasTwitter] = useState(false);
     const [twitterAuth, setTwitterAuth] = useState();
 
-    console.log('user email', userEmail)
-    console.log('user address', userAddress);
+    console.log('baseUrl', baseUrl);
 
     useEffect(async () => {
 
-        if(window.location.href !== 'http://localhost:3000/dashboard' 
-        || window.location.href !== 'https://www.inflowmusic.io/dashboard'){
+        if(window.location.href !== `${baseUrl}/dashboard`){
             setCreateArtistAccount(true);
             setHasTwitter(true);
             console.log('HAS TWITTER');
