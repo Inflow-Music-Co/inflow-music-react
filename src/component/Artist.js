@@ -614,41 +614,16 @@ const Artist = () => {
 
                                         <div className="playlist-details">
                                             <div className="playlist-price">
-                                                <span>$</span>37.99
                                             </div>
-                                            <div className="img-wrapper">
                                                 <img
                                                     alt=""
+                                                    width="400"
                                                     src={
                                                         artist.profile_image
                                                             ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
                                                             : null
                                                     }
                                                 />
-                                            </div>
-                                            <div className="album-title">
-                                                {artist.first_name} NFT
-                                            </div>
-                                            <div className="playlist-start">
-                                                <span>Tier:</span>
-                                                <ul>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.star} />
-                                                    </li>
-                                                    <li>
-                                                        <img alt="" src={assetsImages.starwhite} />
-                                                    </li>
-                                                </ul>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
