@@ -23,6 +23,8 @@ import { Magic } from 'magic-sdk';
 import Grid from '@material-ui/core/Grid';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
+import IconButton from '@material-ui/core/IconButton'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -72,6 +74,7 @@ const Artistpic = () => {
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
     const [uploaded, setUploaded] = useState(false);
     const [id, setId] = useState('');
+    const [playlistName, setPlaylistName] = useState('')
 
     //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
     const [tokenfees, settokenfees] = useState(0.0);
@@ -380,7 +383,7 @@ const Artistpic = () => {
                                 type="button"
                                 onClick={() => setnewvote((newvote) => !newvote)}
                             >
-                                add playlist
+                                soundcloud playlist
                             </button>
                         </div>
                     </div>
@@ -406,7 +409,7 @@ const Artistpic = () => {
                                     setMp3Link((mp3Link) => !mp3Link);
                                 }}
                             >
-                                mp3 files
+                                mp3 playlists
                             </button>
                         </div>
                     </div>
@@ -604,11 +607,23 @@ const Artistpic = () => {
                 <Modal.Header>
                     <Grid container style={{ flexGrow: 1 }}>
                         <Grid item xs={12} style={{ paddingBottom: 30 }}>
-                            <span className="login-title col-12"> upload your mp3</span>
+                            <span className="login-title col-12"> create your playlist</span>
                         </Grid>
                     </Grid>
                 </Modal.Header>
                 <Modal.Body>
+                <Grid container direction="column">
+                    <Grid item xs={12}>
+                        <label>Playlist Name</label>
+                            <input
+                                id="balance"
+                                onChange={(e) => setPlaylistName(e.target.value)}
+                                className="form-control mb-3 mt-4"
+                                type="number"
+                                placeholder="ex. my awesome private playlist"
+                            />
+                    </Grid>
+                </Grid>
                     <Grid container direction="row">
                         <Grid item xs={9}>
                             <label>Track Name </label>
@@ -655,21 +670,15 @@ const Artistpic = () => {
                                 </label>
                             )}
                         </Grid>
+                        <Grid container item direction="row" justify="flex-end">
+                            <Grid item xs={3} container direction="row" justify="flex-end">
+                                <IconButton color="primary">
+                                    <AddCircleOutlineIcon fontSize="large"/>
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid container direction="column">
-                        <Grid item xs={12}>
-                            <label>Select Token</label>
-                            <select
-                                id="tokenAddress"
-                                onChange={(e) => setTokenAddress(e.target.value)}
-                                className="form-control mb-3 mt-3"
-                            >
-                                <option>Select Token</option>
-                                <option value={`${socialTokenAddress}`}>
-                                    {socialTokenAddress}
-                                </option>
-                            </select>
-                        </Grid>
                         <Grid item xs={12}>
                             <label>Amount of Tokens Required</label>
                             <input
@@ -679,6 +688,28 @@ const Artistpic = () => {
                                 type="number"
                                 placeholder="ex. 100"
                             />
+                        </Grid>
+                        <Grid container direction="row">
+                            <Grid item xs={9} alignItems={"center"} style={{paddingTop:35}}>
+                                <label>Upload Your Playlist Image</label>
+                            </Grid>
+                            <Grid item xs={3}>
+                            <Input
+                            id="contained-button-file"
+                            multiple
+                            type="file"
+                            onChange={handleUpload}
+                            />
+                            <Button
+                            variant="contained"
+                            size="large"
+                            color="secondary"
+                            style={{ marginLeft: 20, marginTop: 31 }}
+                            component="span"
+                            >
+                            UPLOAD
+                            </Button>
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Modal.Footer>

@@ -90,7 +90,7 @@ const ArtistHeader = ({
                         {requiredBalance ? (
                             <Link
                                 to={{
-                                    pathname: `/mp3s/${mp3Id}`,
+                                    pathname: `/mp3s/${artist._id}/${mp3Id}`,
                                     requiredBalance: mp3RequiredBalance,
                                     address: socialTokenAddress,
                                     mp3Url

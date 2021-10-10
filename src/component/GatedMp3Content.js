@@ -5,7 +5,7 @@ import { Contract, ethers } from 'ethers';
 import SocialToken from '../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
-import AudioStreamer from './AudioStreamer';
+import AudioStreamer from './AudioStreamer/AudioStreamer';
 import SmallLoader from './SmallLoader';
 import { Magic } from 'magic-sdk';
 
