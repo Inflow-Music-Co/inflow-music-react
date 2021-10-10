@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import './component.css';
 import './Artistmanagement.css';
@@ -25,6 +25,7 @@ import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import IconButton from '@material-ui/core/IconButton'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddTrackField from './AddTrackField';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -68,22 +69,27 @@ const Artistpic = () => {
     const [soundCloudLink, setSoundCloudLink] = useState('');
     const [hasActivated, setHasActivated] = useState();
     const [totalFees, setTotalFees] = useState('');
-    const [mp3File, setMp3File] = useState('');
+  
     const [mp3Link, setMp3Link] = useState(false);
-    const [mp3FileName, setMp3FileName] = useState('');
+    const [mp3Data, setMp3Data] = useState([{
+        mp3Name : '',
+        mp3File : ''
+    }]);
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
-    const [uploaded, setUploaded] = useState(false);
+    const [uploaded, setMp3Fileed] = useState(false);
     const [id, setId] = useState('');
     const [playlistName, setPlaylistName] = useState('')
-
-    //const { loading, data } = useQuery(GET_TOKEN_FEES); Cannot useQuery as subgraph not deployed
     const [tokenfees, settokenfees] = useState(0.0);
+    const [numberOfTracks, setNumberOfTracks] = useState(0);
+    const [mp3Name, setMp3Name] = useState();
+    const [mp3File, setMp3File] = useState();
+    const [addTrack, setAddTrack] = useState(false);
 
     console.log({ socialTokenAddress });
 
     useEffect(async () => {
+        
         const isLoggedIn = await magic.user.isLoggedIn();
-        console.log('isLoggedIn', isLoggedIn);
 
         if (isLoggedIn) {
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
@@ -176,39 +182,16 @@ const Artistpic = () => {
         }
     };
 
-    const claimTokenFees = async () => {
-        console.log('claim Token Fees');
-        settokenfrees((tokenfrees) => !tokenfrees);
-        const address = await signer.getAddress();
-
-        const contract = new Contract(socialTokenAddress, SocialToken.abi, signer);
-        const transaction = await contract.claimCreatorFee(
-            address,
-            ethers.utils.parseEther(String(0.00001))
-        );
-        await transaction.wait();
-    };
-
-    const handleUpload = (e) => {
-        console.log('handleUpload fired');
-        setMp3File(e.target.files[0]);
-        // setUploaded(true);
-    };
-
-    const handleFileName = (e) => {
-        setMp3FileName(e.target.value);
-    };
-
     const uploadMp3 = async () => {
         console.log('uploadMp3 fired');
         if (!mp3File) {
             alert('please upload a valid .mp3 file');
-        } else if (!mp3FileName) {
+        } else if (!mp3Data) {
             alert('please add a file name');
         } else {
             const data = new FormData();
 
-            data.append('mp3_name', mp3FileName);
+            data.append('mp3_names', mp3Data);
             data.append('mp3_file', mp3File);
             data.append('balance', balance);
             data.append('id', id);
@@ -228,6 +211,27 @@ const Artistpic = () => {
                 });
         }
     };
+
+    const renderAddField = () => {
+
+        setMp3Data(stateData => [...stateData, { mp3Name, mp3File }]);
+        setAddTrack((addTrack) => !addTrack);
+
+        console.log({ mp3Data });
+        
+        return (
+            <div>
+            {mp3Data.mp3File ? 
+            <AddTrackField
+                    setMp3Name={setMp3Name}
+                    setMp3File={setMp3File}
+                    uploaded={uploaded}
+                /> 
+                : alert('please upload a file before adding a new track')}
+                
+            </div>
+        )
+    }
 
     return (
         <div className="dashboard-wrapper-main artist-management">
@@ -401,7 +405,7 @@ const Artistpic = () => {
                                 className="btn-gradiant"
                                 onClick={() => setLink((link) => !link)}
                             >
-                                video links
+                                upload song
                             </button>
                             <button
                                 className="btn-gradiant"
@@ -409,7 +413,7 @@ const Artistpic = () => {
                                     setMp3Link((mp3Link) => !mp3Link);
                                 }}
                             >
-                                mp3 playlists
+                                upload mixtape
                             </button>
                         </div>
                     </div>
@@ -624,60 +628,25 @@ const Artistpic = () => {
                             />
                     </Grid>
                 </Grid>
-                    <Grid container direction="row">
-                        <Grid item xs={9}>
-                            <label>Track Name </label>
-                            <div className="comman-row-input">
-                                <input
-                                    placeholder="track name"
-                                    type="text"
-                                    name="twitter url"
-                                    onChange={handleFileName}
-                                />
-                            </div>
-                        </Grid>
-                        <Grid item xs={3}>
-                            {uploaded ? (
-                                <Button
-                                    variant="disabled"
-                                    size="large"
-                                    style={{
-                                        marginLeft: 20,
-                                        marginTop: 31,
-                                        backgroundColor: 'grey'
-                                    }}
-                                    component="span"
-                                >
-                                    UPLOAD
-                                </Button>
-                            ) : (
-                                <label htmlFor="contained-button-file">
-                                    <Input
-                                        id="contained-button-file"
-                                        multiple
-                                        type="file"
-                                        onChange={handleUpload}
-                                    />
-                                    <Button
-                                        variant="contained"
-                                        size="large"
-                                        color="secondary"
-                                        style={{ marginLeft: 20, marginTop: 31 }}
-                                        component="span"
-                                    >
-                                        UPLOAD
-                                    </Button>
-                                </label>
-                            )}
-                        </Grid>
+                
+                    <AddTrackField 
+                        setMp3Name={setMp3Name}
+                        setMp3File={setMp3File}
+                        setAddTrack={setAddTrack}
+                        uploaded={uploaded}
+                    />
+                        {addTrack && renderAddField()}
                         <Grid container item direction="row" justify="flex-end">
                             <Grid item xs={3} container direction="row" justify="flex-end">
-                                <IconButton color="primary">
+                                <IconButton color="primary" onClick={() => {
+                                    setNumberOfTracks((number) => number += 1);
+                                    setAddTrack(true);
+                                    renderAddField();
+                                    }}>
                                     <AddCircleOutlineIcon fontSize="large"/>
                                 </IconButton>
                             </Grid>
                         </Grid>
-                    </Grid>
                     <Grid container direction="column">
                         <Grid item xs={12}>
                             <label>Amount of Tokens Required</label>
@@ -695,18 +664,18 @@ const Artistpic = () => {
                             </Grid>
                             <Grid item xs={3}>
                             <Input
-                            id="contained-button-file"
-                            multiple
-                            type="file"
-                            onChange={handleUpload}
-                            />
+                                id="contained-button-file"
+                                multiple
+                                type="file"
+                                // onChange={handleUpload} //upload handle for image
+                                />
                             <Button
-                            variant="contained"
-                            size="large"
-                            color="secondary"
-                            style={{ marginLeft: 20, marginTop: 31 }}
-                            component="span"
-                            >
+                                variant="contained"
+                                size="large"
+                                color="secondary"
+                                style={{ marginLeft: 20, marginTop: 31 }}
+                                component="span"
+                                >
                             UPLOAD
                             </Button>
                             </Grid>

@@ -64,7 +64,7 @@ const Inflowmusic = () => {
             <Banner />
             <div className="dashboard-wrapper-main inner-music-wrapper">
                 <div className="artist-heading">Featured Artists</div>
-                <div className="grid-for-artist">{artists ? displayArtists() : null}</div>
+                <div className="grid-for-artist">{artists && displayArtists()}</div>
                 <div className="see-all-artist">
                     <a href="#">See All Artists</a>
                 </div>
