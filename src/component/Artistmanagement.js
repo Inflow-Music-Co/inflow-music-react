@@ -80,7 +80,7 @@ const Artistpic = () => {
     const [id, setId] = useState('');
     const [playlistName, setPlaylistName] = useState('')
     const [tokenfees, settokenfees] = useState(0.0);
-    const [numberOfTracks, setNumberOfTracks] = useState(0);
+    const [numberOfTracks, setNumberOfTracks] = useState([]);
     const [mp3Name, setMp3Name] = useState();
     const [mp3File, setMp3File] = useState();
     const [addTrack, setAddTrack] = useState(false);
@@ -214,25 +214,23 @@ const Artistpic = () => {
 
     const renderAddField = () => {
 
-        setMp3Data(stateData => [...stateData, { mp3Name, mp3File }]);
-        setAddTrack((addTrack) => !addTrack);
-
-        console.log({ mp3Data });
+        console.log(numberOfTracks);
         
         return (
             <div>
-            {mp3Data.mp3File ? 
-            <AddTrackField
+                {mp3Data.map((data, index) => 
+                    <AddTrackField
                     setMp3Name={setMp3Name}
                     setMp3File={setMp3File}
                     uploaded={uploaded}
-                /> 
-                : alert('please upload a file before adding a new track')}
-                
+                    key={index}
+                    />
+                )}  
             </div>
         )
     }
 
+    console.log({ addTrack })
     return (
         <div className="dashboard-wrapper-main artist-management">
             <div className="heading">artist management</div>
@@ -639,7 +637,7 @@ const Artistpic = () => {
                         <Grid container item direction="row" justify="flex-end">
                             <Grid item xs={3} container direction="row" justify="flex-end">
                                 <IconButton color="primary" onClick={() => {
-                                    setNumberOfTracks((number) => number += 1);
+                                    setMp3Data(stateData => [...stateData, { mp3Name, mp3File }]);
                                     setAddTrack(true);
                                     renderAddField();
                                     }}>
