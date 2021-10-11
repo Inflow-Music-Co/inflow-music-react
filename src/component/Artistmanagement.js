@@ -27,7 +27,6 @@ import IconButton from '@material-ui/core/IconButton'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddTrackField from './AddTrackField';
-import { set } from 'immer/dist/internal';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -264,10 +263,13 @@ const Artistpic = () => {
     }
 
     const handleImageUpload = (e) => {
-        //setImage(e.target.files[0]);
+        console.log(e.target.files[0]);
+        setImage(e.target.files[0]);
+        setImageRender(URL.createObjectURL(e.target.files[0]))
     }
 
     console.log({ mp3Data });
+
 
     return (
         <div className="dashboard-wrapper-main artist-management">
@@ -690,7 +692,7 @@ const Artistpic = () => {
                         </Grid>
                     <Grid container direction="column">
                         <Grid item xs={12}>
-                            <label>Amount of Tokens Required To Access</label>
+                            <label>Tokens Required To Access</label>
                             <input
                                 id="balance"
                                 onChange={(e) => setBalance(e.target.value)}
@@ -716,17 +718,17 @@ const Artistpic = () => {
                                     accept="image/*"
                                     id="image-upload"
                                     type="file"
-                                    // onChange={handleImageUpload}
+                                    onChange={handleImageUpload}
                                 />     
                                 </Button>
                             </Grid>
                         </Grid>
-                        {/* {imageRender && 
-                        <Grid container direction="column">
-                            <Grid item xs={12}>
-                                <img src={imageRender} alt="playlist image " />
+                        {imageRender && 
+                        <Grid container direction="column" alignItems="center" justify="center">
+                            <Grid item xs={12} style={{margin : 10}}>
+                                <img src={imageRender} alt="playlist image " height="300"/>
                             </Grid>
-                        </Grid>} */}
+                        </Grid>}
                     </Grid>
                     <Modal.Footer>
                         <button className="btn-gradiant m-1" onClick={uploadMp3}>
