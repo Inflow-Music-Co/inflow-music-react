@@ -25,7 +25,9 @@ import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import IconButton from '@material-ui/core/IconButton'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddTrackField from './AddTrackField';
+import { set } from 'immer/dist/internal';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -72,18 +74,22 @@ const Artistpic = () => {
   
     const [mp3Link, setMp3Link] = useState(false);
     const [mp3Data, setMp3Data] = useState([{
-        mp3Name : '',
-        mp3File : ''
+        name : '',
+        file : ''
     }]);
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
     const [uploaded, setMp3Fileed] = useState(false);
     const [id, setId] = useState('');
     const [playlistName, setPlaylistName] = useState('')
     const [tokenfees, settokenfees] = useState(0.0);
-    const [numberOfTracks, setNumberOfTracks] = useState([]);
-    const [mp3Name, setMp3Name] = useState();
-    const [mp3File, setMp3File] = useState();
+    const [mp3Name, setMp3Name] = useState('');
+    const [mp3File, setMp3File] = useState('');
     const [addTrack, setAddTrack] = useState(false);
+
+    const [image, setImage] = useState({});
+    const [imageRender, setImageRender] = useState('');
+
+    const numberOfTracks = useRef(0)
 
     console.log({ socialTokenAddress });
 
@@ -189,10 +195,17 @@ const Artistpic = () => {
         } else if (!mp3Data) {
             alert('please add a file name');
         } else {
+
+             //make all data is added
+            setMp3Data(stateData => [...stateData, { mp3Name, mp3File }]);
+
             const data = new FormData();
 
-            data.append('mp3_names', mp3Data);
-            data.append('mp3_file', mp3File);
+            mp3Data.forEach(item => {
+                data.append('mp3_name', item.name);
+                data.append('mp3_file', item.file);
+            })
+
             data.append('balance', balance);
             data.append('id', id);
 
@@ -212,25 +225,50 @@ const Artistpic = () => {
         }
     };
 
-    const renderAddField = () => {
+    const handleAddTrack = () => {
+        if(mp3Name === ''){
+            alert('please add a name before adding a new track')
+        } else if(mp3File === ''){
+            alert('please upload a file before adding a new track')
+        } else {
+            setAddTrack(true);
+            numberOfTracks.current > 0 ? setMp3Data(stateData => [...stateData, { mp3Name, mp3File }])
+            : setMp3Data([{name : mp3Name, file : mp3File}])
 
-        console.log(numberOfTracks);
-        
-        return (
-            <div>
-                {mp3Data.map((data, index) => 
-                    <AddTrackField
-                    setMp3Name={setMp3Name}
-                    setMp3File={setMp3File}
-                    uploaded={uploaded}
-                    key={index}
-                    />
-                )}  
-            </div>
-        )
+            setMp3Name(''); setMp3Name(''); //set back to default
+            numberOfTracks.current += 1;
+        }
     }
 
-    console.log({ addTrack })
+    const handleRemoveTrack = () => {
+        console.log('handleRemoveTrack fired')
+        const toRemove = mp3Data[numberOfTracks.current - 1]
+        console.log({ toRemove })
+        setMp3Data(mp3Data.filter(item => item !== toRemove))
+    }
+
+    const renderAddTrackField = () => { 
+        //numberOfTracks.current -= 1;       
+            return (
+                <div>
+                    {mp3Data.map((data, index) => 
+                        <AddTrackField
+                        setMp3Name={setMp3Name}
+                        setMp3File={setMp3File}
+                        uploaded={uploaded}
+                        key={index}
+                        />
+                    )}  
+                </div>
+            )
+    }
+
+    const handleImageUpload = (e) => {
+        //setImage(e.target.files[0]);
+    }
+
+    console.log({ mp3Data });
+
     return (
         <div className="dashboard-wrapper-main artist-management">
             <div className="heading">artist management</div>
@@ -618,10 +656,10 @@ const Artistpic = () => {
                     <Grid item xs={12}>
                         <label>Playlist Name</label>
                             <input
-                                id="balance"
+                                id="playlist name"
                                 onChange={(e) => setPlaylistName(e.target.value)}
                                 className="form-control mb-3 mt-4"
-                                type="number"
+                                type="text"
                                 placeholder="ex. my awesome private playlist"
                             />
                     </Grid>
@@ -633,21 +671,26 @@ const Artistpic = () => {
                         setAddTrack={setAddTrack}
                         uploaded={uploaded}
                     />
-                        {addTrack && renderAddField()}
+                        {addTrack && renderAddTrackField()}
                         <Grid container item direction="row" justify="flex-end">
-                            <Grid item xs={3} container direction="row" justify="flex-end">
-                                <IconButton color="primary" onClick={() => {
-                                    setMp3Data(stateData => [...stateData, { mp3Name, mp3File }]);
-                                    setAddTrack(true);
-                                    renderAddField();
+                            <Grid item xs={2} container direction="row" justify="flex-end">
+                                <IconButton color="warning" onClick={() => {
+                                    handleRemoveTrack();
                                     }}>
-                                    <AddCircleOutlineIcon fontSize="large"/>
+                                    <RemoveCircleOutlineIcon color="warning" fontSize="large"/>
+                                </IconButton>
+                            </Grid>
+                            <Grid item xs={1} container direction="row" justify="flex-end" style={{paddingLeft: 40}}>
+                                <IconButton onClick={() => {
+                                    handleAddTrack();
+                                    }}>
+                                    <AddCircleOutlineIcon fontSize="large" style={{color: "green"}}/>
                                 </IconButton>
                             </Grid>
                         </Grid>
                     <Grid container direction="column">
                         <Grid item xs={12}>
-                            <label>Amount of Tokens Required</label>
+                            <label>Amount of Tokens Required To Access</label>
                             <input
                                 id="balance"
                                 onChange={(e) => setBalance(e.target.value)}
@@ -661,23 +704,29 @@ const Artistpic = () => {
                                 <label>Upload Your Playlist Image</label>
                             </Grid>
                             <Grid item xs={3}>
-                            <Input
-                                id="contained-button-file"
-                                multiple
-                                type="file"
-                                // onChange={handleUpload} //upload handle for image
-                                />
                             <Button
-                                variant="contained"
-                                size="large"
-                                color="secondary"
-                                style={{ marginLeft: 20, marginTop: 31 }}
-                                component="span"
-                                >
-                            UPLOAD
-                            </Button>
+                                    variant="contained"
+                                    size="large"
+                                    color="secondary"
+                                    style={{ marginLeft: 20, marginTop: 31 }}
+                                    component="label"
+                                    >
+                                    UPLOAD
+                                <Input
+                                    accept="image/*"
+                                    id="image-upload"
+                                    type="file"
+                                    // onChange={handleImageUpload}
+                                />     
+                                </Button>
                             </Grid>
                         </Grid>
+                        {/* {imageRender && 
+                        <Grid container direction="column">
+                            <Grid item xs={12}>
+                                <img src={imageRender} alt="playlist image " />
+                            </Grid>
+                        </Grid>} */}
                     </Grid>
                     <Modal.Footer>
                         <button className="btn-gradiant m-1" onClick={uploadMp3}>

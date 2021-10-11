@@ -49,7 +49,7 @@ const AddTrackField = ({ setMp3Name, setMp3File, uploaded }) => {
                             id="contained-button-file"
                             hidden
                             type="file"
-                            onChange={(e) => setMp3File(e.target.files[0])}
+                            onChange={(e) => setMp3File(e.target.files[0])}   
                         />
                         </Button>
                     </label>
