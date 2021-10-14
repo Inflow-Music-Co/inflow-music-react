@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import AudioControls from "./AudioControls";
-import Backdrop from "./Backdrop";
 import "./AudioStreamer.css";
 import tracks from "./tracks";
 import axios from 'axios';
@@ -150,11 +149,6 @@ const AudioStreamer = ({ mp3Url }) => {
           style={{ background: trackStyling }}
         />
       </div>
-      <Backdrop
-        trackIndex={trackIndex}
-        activeColor={color}
-        isPlaying={isPlaying}
-      />
     </div>
   );
 }

@@ -19,7 +19,7 @@ import ArtistRoutes from './ArtistRoutes';
 import Artist from '../component/Artist';
 import GatedContent from '../component/GatedContent';
 import GatedMp3Content from '../component/GatedMp3Content'
-import Artistmanagement from '../component/Artistmanagement';
+import Artistmanagement from '../component/ArtistManagement/Artistmanagement';
 import ApproveArtist from '../page/ApproveArtist';
 import CreateSocialToken from '../page/CreateSocialToken';
 import GetMintPrice from '../page/GetMintPrice';

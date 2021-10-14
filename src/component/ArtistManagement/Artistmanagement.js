@@ -1,32 +1,22 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useQuery, gql } from '@apollo/client';
-import './component.css';
+import '../component.css';
 import './Artistmanagement.css';
-import { assetsImages } from '../constants/images';
-// import Customdropdown from "./Customdropdown";
-import Performbar from './Performbar';
+import { assetsImages } from '../../constants/images';
+import Performbar from '../Performbar';
 import { useParams } from 'react-router-dom';
 import { Contract, ethers } from 'ethers';
-// import ProgressBar from "react-bootstrap/ProgressBar";
 import { Modal } from 'react-bootstrap';
-import SocialToken from '../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json';
-// import Loader from "./Loader";
-import { Inflow } from '../inflow-solidity-sdk/src/Inflow';
+import SocialToken from '../../artifacts/contracts/token/social/SocialToken.sol/SocialToken.json';
+import { Inflow } from '../../inflow-solidity-sdk/src/Inflow';
 import Axios from 'axios';
-import SmallLoader from './SmallLoader';
+import SmallLoader from '../SmallLoader';
 import { useSelector } from 'react-redux';
-import { WalletProviderContext } from '../contexts/walletProviderContext';
+import { WalletProviderContext } from '../../contexts/walletProviderContext';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import { CreateMintgateLink } from '../hooks/createMintGate';
 import Button from '@material-ui/core/Button';
 import { Magic } from 'magic-sdk';
-import Grid from '@material-ui/core/Grid';
 import { styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import IconButton from '@material-ui/core/IconButton'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import AddTrackField from './AddTrackField';
+import CreatePlaylist from './CreatePlaylist';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -45,7 +35,6 @@ const Artistpic = () => {
     //const { walletProvider } = useContext(WalletProviderContext);
     // const [profileModel, setProfileModel] = useState(false);
     const [walletProvider, setWalletProvider] = useState();
-    const [tokenfrees, settokenfrees] = useState(false);
     const [newvote, setnewvote] = useState(false);
     const [connectedWallet, setConnectedWallet] = useState(false);
     const [signer, setSigner] = useState();
@@ -56,10 +45,7 @@ const Artistpic = () => {
     const [linkTitle, setLinkTitle] = useState('');
     const [tokenAddress, setTokenAddress] = useState('');
     const [balance, setBalance] = useState('');
-    const [mintgateLink, setMintgateLink] = useState('');
     const [linkSuccess, setLinkSuccess] = useState(false);
-
-    const jwt = process.env.REACT_APP_MINTGATE_JWT;
 
     const [success, setsuccess] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -70,30 +56,13 @@ const Artistpic = () => {
     const [soundCloudLink, setSoundCloudLink] = useState('');
     const [hasActivated, setHasActivated] = useState();
     const [totalFees, setTotalFees] = useState('');
-  
-    const [mp3Link, setMp3Link] = useState(false);
-    const [mp3Data, setMp3Data] = useState([{
-        name : '',
-        file : ''
-    }]);
-    const [mp3Uploaded, setMp3Uploaded] = useState(false);
-    const [uploaded, setMp3Fileed] = useState(false);
+    const [mp3Link, setMp3Link] = useState('');
     const [id, setId] = useState('');
-    const [playlistName, setPlaylistName] = useState('')
-    const [tokenfees, settokenfees] = useState(0.0);
-    const [mp3Name, setMp3Name] = useState('');
-    const [mp3File, setMp3File] = useState('');
-    const [addTrack, setAddTrack] = useState(false);
-
-    const [image, setImage] = useState({});
-    const [imageRender, setImageRender] = useState('');
-
-    const numberOfTracks = useRef(0)
+    const [showPlaylistModal, setShowPlaylistModal] = useState(false);
 
     console.log({ socialTokenAddress });
 
     useEffect(async () => {
-        
         const isLoggedIn = await magic.user.isLoggedIn();
 
         if (isLoggedIn) {
@@ -107,10 +76,10 @@ const Artistpic = () => {
             const { data } = await Axios.post(
                 `${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`,
                 {
-                    id : uid
+                    id: uid
                 }
             );
-            console.log(data)
+            console.log(data);
             console.log(data.artist.has_activated);
             setHasActivated(data.artist.has_activated);
             setTotalFees(data.artist.total_fees_earned);
@@ -121,11 +90,6 @@ const Artistpic = () => {
         }
     }, []);
 
-    const formatAndSetTokenFees = async (value) => {
-        const inflow = new Inflow((walletProvider, 137));
-        const tokenfees = inflow.formatERC20('USDC', String(value));
-        settokenfees(tokenfees);
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -134,7 +98,6 @@ const Artistpic = () => {
 
     const saveInflowGatedLink = async (url) => {
         console.log('savedLink!!!!', url);
-        // await Axios.post( `${process.env.REACT_APP_SERVER_URL}/v1/artist/updatemintgateurls`,  { url } )
         await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/updateinflowgatedurls`, {
             inflowGatedUrl: url,
             balance
@@ -170,8 +133,6 @@ const Artistpic = () => {
         setsuccess((success) => !success);
 
         if (soundCloudLink) {
-            console.log(soundCloudLink, uid);
-
             await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadsoundcloud`, {
                 soundcloud_embed: soundCloudLink,
                 id: uid
@@ -186,90 +147,6 @@ const Artistpic = () => {
             alert('please add a soundcloud embed link');
         }
     };
-
-    const uploadMp3 = async () => {
-        console.log('uploadMp3 fired');
-        if (!mp3File) {
-            alert('please upload a valid .mp3 file');
-        } else if (!mp3Data) {
-            alert('please add a file name');
-        } else {
-
-             //make all data is added
-            setMp3Data(stateData => [...stateData, { mp3Name, mp3File }]);
-
-            const data = new FormData();
-
-            mp3Data.forEach(item => {
-                data.append('mp3_name', item.name);
-                data.append('mp3_file', item.file);
-            })
-
-            data.append('balance', balance);
-            data.append('id', id);
-
-            //console log data
-            for (var pair of data.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
-
-            await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data)
-                .then((res) => {
-                    console.log(res);
-                    setMp3Uploaded(true);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
-    const handleAddTrack = () => {
-        if(mp3Name === ''){
-            alert('please add a name before adding a new track')
-        } else if(mp3File === ''){
-            alert('please upload a file before adding a new track')
-        } else {
-            setAddTrack(true);
-            numberOfTracks.current > 0 ? setMp3Data(stateData => [...stateData, { mp3Name, mp3File }])
-            : setMp3Data([{name : mp3Name, file : mp3File}])
-
-            setMp3Name(''); setMp3Name(''); //set back to default
-            numberOfTracks.current += 1;
-        }
-    }
-
-    const handleRemoveTrack = () => {
-        console.log('handleRemoveTrack fired')
-        const toRemove = mp3Data[numberOfTracks.current - 1]
-        console.log({ toRemove })
-        setMp3Data(mp3Data.filter(item => item !== toRemove))
-    }
-
-    const renderAddTrackField = () => { 
-        //numberOfTracks.current -= 1;       
-            return (
-                <div>
-                    {mp3Data.map((data, index) => 
-                        <AddTrackField
-                        setMp3Name={setMp3Name}
-                        setMp3File={setMp3File}
-                        uploaded={uploaded}
-                        key={index}
-                        />
-                    )}  
-                </div>
-            )
-    }
-
-    const handleImageUpload = (e) => {
-        console.log(e.target.files[0]);
-        setImage(e.target.files[0]);
-        setImageRender(URL.createObjectURL(e.target.files[0]))
-    }
-
-    console.log({ mp3Data });
-
 
     return (
         <div className="dashboard-wrapper-main artist-management">
@@ -448,7 +325,7 @@ const Artistpic = () => {
                             <button
                                 className="btn-gradiant"
                                 onClick={() => {
-                                    setMp3Link((mp3Link) => !mp3Link);
+                                    setShowPlaylistModal(playlistModal => !playlistModal);
                                 }}
                             >
                                 upload mixtape
@@ -522,30 +399,6 @@ const Artistpic = () => {
                     setconnectedwallet((connectedwallet) => !connectedwallet);
                 }}
             ></SweetAlert>
-
-            <Modal
-                show={tokenfrees}
-                className="edit-profile-modal sell"
-                onHide={() => settokenfrees((tokenfrees) => !tokenfrees)}
-            >
-                <Modal.Header closeButton>
-                    <span className="title">Token Fees</span>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <div className="form-group">
-                        <input className="form-control" type="text" placeholder="Amount" />
-                    </div>
-
-                    <div className="form-group">
-                        <input className="form-control" type="text" placeholder="Wallet address" />
-                    </div>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <button className="save-btn btn-gradiant">Cash Out</button>
-                </Modal.Footer>
-            </Modal>
 
             <Modal
                 show={link}
@@ -638,105 +491,10 @@ const Artistpic = () => {
                     </div>
                 </Modal.Body>
             </Modal>
-
-            <Modal
-                show={mp3Link}
-                className="edit-profile-modal success"
-                onHide={() => {
-                    setMp3Link((mp3Link) => !mp3Link);
-                }}
-            >
-                <Modal.Header>
-                    <Grid container style={{ flexGrow: 1 }}>
-                        <Grid item xs={12} style={{ paddingBottom: 30 }}>
-                            <span className="login-title col-12"> create your playlist</span>
-                        </Grid>
-                    </Grid>
-                </Modal.Header>
-                <Modal.Body>
-                <Grid container direction="column">
-                    <Grid item xs={12}>
-                        <label>Playlist Name</label>
-                            <input
-                                id="playlist name"
-                                onChange={(e) => setPlaylistName(e.target.value)}
-                                className="form-control mb-3 mt-4"
-                                type="text"
-                                placeholder="ex. my awesome private playlist"
-                            />
-                    </Grid>
-                </Grid>
-                
-                    <AddTrackField 
-                        setMp3Name={setMp3Name}
-                        setMp3File={setMp3File}
-                        setAddTrack={setAddTrack}
-                        uploaded={uploaded}
-                    />
-                        {addTrack && renderAddTrackField()}
-                        <Grid container item direction="row" justify="flex-end">
-                            <Grid item xs={2} container direction="row" justify="flex-end">
-                                <IconButton color="warning" onClick={() => {
-                                    handleRemoveTrack();
-                                    }}>
-                                    <RemoveCircleOutlineIcon color="warning" fontSize="large"/>
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={1} container direction="row" justify="flex-end" style={{paddingLeft: 40}}>
-                                <IconButton onClick={() => {
-                                    handleAddTrack();
-                                    }}>
-                                    <AddCircleOutlineIcon fontSize="large" style={{color: "green"}}/>
-                                </IconButton>
-                            </Grid>
-                        </Grid>
-                    <Grid container direction="column">
-                        <Grid item xs={12}>
-                            <label>Tokens Required To Access</label>
-                            <input
-                                id="balance"
-                                onChange={(e) => setBalance(e.target.value)}
-                                className="form-control mb-3 mt-4"
-                                type="number"
-                                placeholder="ex. 100"
-                            />
-                        </Grid>
-                        <Grid container direction="row">
-                            <Grid item xs={9} alignItems={"center"} style={{paddingTop:35}}>
-                                <label>Upload Your Playlist Image</label>
-                            </Grid>
-                            <Grid item xs={3}>
-                            <Button
-                                    variant="contained"
-                                    size="large"
-                                    color="secondary"
-                                    style={{ marginLeft: 20, marginTop: 31 }}
-                                    component="label"
-                                    >
-                                    UPLOAD
-                                <Input
-                                    accept="image/*"
-                                    id="image-upload"
-                                    type="file"
-                                    onChange={handleImageUpload}
-                                />     
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        {imageRender && 
-                        <Grid container direction="column" alignItems="center" justify="center">
-                            <Grid item xs={12} style={{margin : 10}}>
-                                <img src={imageRender} alt="playlist image " height="300"/>
-                            </Grid>
-                        </Grid>}
-                    </Grid>
-                    <Modal.Footer>
-                        <button className="btn-gradiant m-1" onClick={uploadMp3}>
-                            CREATE
-                        </button>
-                    </Modal.Footer>
-                </Modal.Body>
-            </Modal>
+            <CreatePlaylist 
+            showPlaylistModal={showPlaylistModal}
+            setShowPlaylistModal={setShowPlaylistModal}
+            id={id} />
         </div>
     );
 };

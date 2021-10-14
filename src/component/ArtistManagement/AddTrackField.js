@@ -1,10 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 
 const AddTrackField = ({ setMp3Name, setMp3File, uploaded }) => {
-
     return (
         <Grid container direction="row">
             <Grid item xs={9}>
@@ -34,7 +33,6 @@ const AddTrackField = ({ setMp3Name, setMp3File, uploaded }) => {
                     </Button>
                 ) : (
                     <label htmlFor="contained-button-file">
-                        
                         <Button
                             variant="contained"
                             size="large"
@@ -46,17 +44,17 @@ const AddTrackField = ({ setMp3Name, setMp3File, uploaded }) => {
                         >
                             UPLOAD
                             <Input
-                            id="contained-button-file"
-                            hidden
-                            type="file"
-                            onChange={(e) => setMp3File(e.target.files[0])}   
-                        />
+                                id="contained-button-file"
+                                hidden
+                                type="file"
+                                onChange={(e) => setMp3File(e.target.files[0])}
+                            />
                         </Button>
                     </label>
                 )}
             </Grid>
         </Grid>
-    )
-}
+    );
+};
 
-export default AddTrackField
+export default AddTrackField;
