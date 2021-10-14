@@ -4,7 +4,7 @@ export const appSlice = createSlice({
     name: 'app',
     initialState: {
         activePage: 'artist',
-        baseUrl: ''
+        baseUrl: '',
     },
     reducers: {
         updateActivePage: (state, action) => {
@@ -12,11 +12,11 @@ export const appSlice = createSlice({
         },
         setBaseUrl: (state, action) => {
             state.baseUrl = action.payload;
-        }
+        },
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { updateActivePage, setBaseUrl } = appSlice.actions;
+export const { updateActivePage, setBaseUrl, updatePlaylist } = appSlice.actions;
 
 export default appSlice.reducer;

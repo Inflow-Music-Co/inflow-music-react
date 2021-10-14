@@ -6,6 +6,7 @@ import passwordSlice from './passwordSlice';
 import authReducer from './authSlice';
 import walletSlice from './walletSlice';
 import appSlice from './appSlice';
+import playlistSlice from './playlistSlice';
 
 
 const persistConfig = {
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     auth: authReducer,
     wallet: walletSlice,
     app: appSlice,
-    password: passwordSlice
+    password: passwordSlice,
+    playlist : playlistSlice
 });
 
 export default persistReducer(persistConfig, rootReducer);

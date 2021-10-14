@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 
-const AddTrackField = ({ setMp3Name, setMp3File, uploaded }) => {
+const AddTrackField = ({ setMp3Name, setMp3File, uploaded, setMp3Data }) => {
     return (
         <Grid container direction="row">
             <Grid item xs={9}>
@@ -40,7 +40,8 @@ const AddTrackField = ({ setMp3Name, setMp3File, uploaded }) => {
                             style={{ marginLeft: 20, marginTop: 31 }}
                             component="span"
                             type="file"
-                            onChange={(e) => setMp3File(e.target.files[0])}
+                            onChange={(e) => 
+                            {setMp3File(e.target.files[0])}}
                         >
                             UPLOAD
                             <Input

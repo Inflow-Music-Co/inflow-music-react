@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -7,10 +7,14 @@ import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddTrackField from './AddTrackField';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMp3s, addImage, clearPlaylist } from '../../store/reducers/playlistSlice';
+import { updateArtistPlaylists } from '../../store/reducers/playlistSlice';
 import Axios from 'axios';
 
 const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
+    const playlist = useSelector((state) => state.playlist)
     const [uploaded, setMp3Fileed] = useState(false);
     const [image, setImage] = useState({});
     const [imageRender, setImageRender] = useState('');
@@ -20,6 +24,11 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const [playlistName, setPlaylistName] = useState('');
     const [balance, setBalance] = useState();
     const numberOfTracks = useRef(0);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(clearPlaylist());
+    },[])
 
     const [mp3Data, setMp3Data] = useState([
         {
@@ -29,9 +38,8 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     ]);
 
     const handleImageUpload = (e) => {
-        console.log(e.target.files[0]);
-        setImage(e.target.files[0]);
         setImageRender(URL.createObjectURL(e.target.files[0]));
+        dispatch(addImage(e.target.files[0]));
     };
 
     const handleAddTrack = () => {
@@ -42,13 +50,8 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
         } else {
             setAddTrack(true);
 
-            //ternary to fix double render on first add
-            numberOfTracks.current > 0
-                ? setMp3Data((stateData) => [...stateData, { mp3Name, mp3File }])
-                : setMp3Data([{ name: mp3Name, file: mp3File }]);
-
-            setMp3Name('');
-            setMp3Name(''); //set back to default
+            dispatch(addMp3s({ name: mp3Name, file: mp3File }));
+                
             numberOfTracks.current += 1;
         }
     };
@@ -68,17 +71,19 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
             alert('please add a file name');
         } else {
             //make sure all data is added
-            setMp3Data((stateData) => [...stateData, { mp3Name, mp3File }]);
+            // setMp3Data((stateData) => [...stateData, { mp3Name, mp3File }]);
+
+            console.log({ playlist });
 
             const data = new FormData();
 
-            mp3Data.forEach((item) => {
-                data.append('playlist_name', playlistName);
-                data.append('playlist_image', image);
-                data.append('mp3_name', item.name);
-                data.append('mp3_file', item.file);
-            });
+            //@TODO loop through redux state and append to data.form for multer upload
+            playlist.data.forEach(entry => {
 
+            })
+
+            data.append('data', playlist.data);
+            data.append('img', playlist.img);
             data.append('balance', balance);
             data.append('id', id);
 
@@ -87,14 +92,7 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
                 console.log(pair[0] + ', ' + pair[1]);
             }
 
-            await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data)
-                .then((res) => {
-                    console.log(res);
-                    setMp3Uploaded(true);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            dispatch(updateArtistPlaylists(data));
         }
     };
 
@@ -105,6 +103,7 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
                     <AddTrackField
                         setMp3Name={setMp3Name}
                         setMp3File={setMp3File}
+                        setMp3Data={setMp3Data}
                         uploaded={uploaded}
                         key={index}
                     />
@@ -147,6 +146,7 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
                         setMp3Name={setMp3Name}
                         setMp3File={setMp3File}
                         setAddTrack={setAddTrack}
+                        setmp3Data={setMp3Data}
                         uploaded={uploaded}
                     />
                     {addTrack && renderAddTrackField()}

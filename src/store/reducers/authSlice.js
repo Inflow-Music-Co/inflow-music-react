@@ -53,6 +53,7 @@ export const authSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { setUserData, _logout, setArtist } = authSlice.actions;
+
 export const loginUser = (user) => async (dispatch) => {
     try {
         const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/user/login`, user);
