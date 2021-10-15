@@ -4,7 +4,10 @@ import axios from 'axios';
 export const playlistSlice = createSlice({
     name: 'playlist',
     initialState: {
-        data: [],
+        data: [{
+            file: {},
+            name : '',
+        }],
         img: {}
     },
     reducers: {

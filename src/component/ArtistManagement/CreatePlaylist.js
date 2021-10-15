@@ -25,11 +25,6 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const [balance, setBalance] = useState();
     const numberOfTracks = useRef(0);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(clearPlaylist());
-    },[])
-
     const [mp3Data, setMp3Data] = useState([
         {
             name: '',
@@ -37,6 +32,11 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
         }
     ]);
 
+    useEffect(() => {
+        dispatch(clearPlaylist());
+    },[])
+
+    
     const handleImageUpload = (e) => {
         setImageRender(URL.createObjectURL(e.target.files[0]));
         dispatch(addImage(e.target.files[0]));
@@ -50,7 +50,7 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
         } else {
             setAddTrack(true);
 
-            dispatch(addMp3s({ name: mp3Name, file: mp3File }));
+            dispatch(addMp3s({ name: mp3Name, file: mp3File, }));
                 
             numberOfTracks.current += 1;
         }
@@ -70,22 +70,20 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
         } else if (!mp3Data) {
             alert('please add a file name');
         } else {
-            //make sure all data is added
-            // setMp3Data((stateData) => [...stateData, { mp3Name, mp3File }]);
-
-            console.log({ playlist });
-
+            //ensures last field is added to store
+            dispatch(addMp3s({ name: mp3Name, file: mp3File }));
+            
             const data = new FormData();
 
-            //@TODO loop through redux state and append to data.form for multer upload
             playlist.data.forEach(entry => {
-
-            })
-
-            data.append('data', playlist.data);
+                data.append('files', entry.file)
+                data.append('track_names', entry.name)
+            });
+            data.append('playlist_name', playlistName);
             data.append('img', playlist.img);
             data.append('balance', balance);
-            data.append('id', id);
+            data.append('artist_id', id);
+            
 
             //console log data
             for (var pair of data.entries()) {
