@@ -14,6 +14,9 @@ export const playlistSlice = createSlice({
         addMp3s : (state, action ) => {
             state.data = [...state.data, action.payload]
         },
+        removeMp3: (state, action) => {
+            state.data = [...state.data.slice(0, action.payload), ...state.data.slice(action.payload + 1)]
+        },
         addImage : (state, action ) => {
             state.img = action.payload
         },
@@ -33,6 +36,6 @@ export const updateArtistPlaylists = (data) => async (dispatch) => {
     }
 }
 
-export const { addMp3s, addImage, clearPlaylist } = playlistSlice.actions;
+export const { addMp3s, addImage, removeMp3, clearPlaylist } = playlistSlice.actions;
 
 export default playlistSlice.reducer;

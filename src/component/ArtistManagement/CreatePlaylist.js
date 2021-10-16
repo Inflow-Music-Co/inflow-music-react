@@ -8,7 +8,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddTrackField from './AddTrackField';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMp3s, addImage, clearPlaylist } from '../../store/reducers/playlistSlice';
+import { addMp3s, addImage, removeMp3, clearPlaylist } from '../../store/reducers/playlistSlice';
 import { updateArtistPlaylists } from '../../store/reducers/playlistSlice';
 import Axios from 'axios';
 
@@ -24,13 +24,8 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const [playlistName, setPlaylistName] = useState('');
     const [balance, setBalance] = useState();
     const numberOfTracks = useRef(0);
+    const [inputFields, setInputFields] = useState([]);
     const dispatch = useDispatch();
-    const [mp3Data, setMp3Data] = useState([
-        {
-            name: '',
-            file: ''
-        }
-    ]);
 
     useEffect(() => {
         dispatch(clearPlaylist());
@@ -53,23 +48,19 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
             dispatch(addMp3s({ name: mp3Name, file: mp3File, }));
                 
             numberOfTracks.current += 1;
+            setInputFields([...inputFields, numberOfTracks.current]);
         }
     };
 
     const handleRemoveTrack = () => {
-        console.log('handleRemoveTrack fired');
-        const toRemove = mp3Data[numberOfTracks.current - 1];
-        console.log({ toRemove });
-        setMp3Data(mp3Data.filter((item) => item !== toRemove));
+        setInputFields(fields => fields.filter((element, index) => index !== fields.length -1 ));
+        dispatch(removeMp3(numberOfTracks.current - 1));
     };
 
     const uploadMp3 = async () => {
-        console.log('uploadMp3 fired');
-        if (!mp3File) {
+        if (!playlist) {
             alert('please upload a valid .mp3 file');
-        } else if (!mp3Data) {
-            alert('please add a file name');
-        } else {
+        }  else {
             //ensures last field is added to store
             dispatch(addMp3s({ name: mp3Name, file: mp3File }));
             
@@ -97,11 +88,10 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const renderAddTrackField = () => {
         return (
             <div>
-                {mp3Data.map((data, index) => (
+                {inputFields.map((data, index) => (
                     <AddTrackField
                         setMp3Name={setMp3Name}
                         setMp3File={setMp3File}
-                        setMp3Data={setMp3Data}
                         uploaded={uploaded}
                         key={index}
                     />
@@ -144,7 +134,6 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
                         setMp3Name={setMp3Name}
                         setMp3File={setMp3File}
                         setAddTrack={setAddTrack}
-                        setmp3Data={setMp3Data}
                         uploaded={uploaded}
                     />
                     {addTrack && renderAddTrackField()}
