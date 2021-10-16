@@ -14,7 +14,8 @@ import { useParams, useHistory } from 'react-router-dom';
 import Axios from 'axios';
 import { Magic } from 'magic-sdk';
 import { POLYGON_USDC } from '../utils/addresses';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getArtist } from '../store/reducers/appSlice'
 import ArtistTransact from './ArtistTransact';
 import ArtistHeader from './ArtistHeader';
 import Swal from 'sweetalert2';
@@ -78,7 +79,15 @@ const Artist = () => {
     const [mp3RequiredBalance, setMp3RequiredBalance] = useState();
     const [mp3Id, setMp3Id] = useState('');
 
+    const dispatch = useDispatch();
+
+    //@dTODO redo useFEffect to rely on redux useSelector for data, reduce amount of state in compnent
+
     useEffect(async () => {
+
+        dispatch(getArtist(id));
+
+        // remove this code and switch for redux selector 
         await Axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/getbyid`, {
             id
         }).then(async (response) => {

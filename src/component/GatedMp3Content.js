@@ -6,6 +6,7 @@ import SocialToken from '../artifacts/contracts/token/social/SocialToken.sol/Soc
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 import AudioStreamer from './AudioStreamer/AudioStreamer';
+import PlaylistStreamer from './AudioStreamer/PlaylistStreamer';
 import SmallLoader from './SmallLoader';
 import { Magic } from 'magic-sdk';
 
@@ -29,16 +30,23 @@ const GatedMp3Content = (props) => {
     const [connectedWallet, setConnectedWallet] = useState(false);
     const [viewable, setViewable] = useState(false);
     const renderCount = useRef(0);
+    const [isPlaylist, setIsPlaylist] = useState(false);
+    const artistData = useSelector((state) => state.app.artistData);
 
     console.log('GATED MP3 CONTENT');
 
     useEffect(async () => {
         const isLoggedIn = await magic.user.isLoggedIn();
-        console.log('isLoggedIn', isLoggedIn);
+    
+        console.log({ props })
+        setIsPlaylist(props.location.isPlaylist)
+        console.log({ isPlaylist })
+        
         if (isLoggedIn) {
             const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
             setProvider(provider);
             setConnectedWallet(true);
+            
         } else {
             setConnectedWallet(false);
         }
@@ -132,7 +140,7 @@ const GatedMp3Content = (props) => {
     return (
         <div className="dashboard-wrapper-main">
             {viewable ? (
-                <AudioStreamer mp3Url={props.location.mp3Url} />
+                 isPlaylist ? <PlaylistStreamer /> : <AudioStreamer audioSrc={artistData.mp3s[0].url}/> 
             ) : (
                 <div className="card-heading">
                     <SmallLoader />

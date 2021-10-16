@@ -91,12 +91,30 @@ const ArtistHeader = ({
                             <Link
                                 to={{
                                     pathname: `/mp3s/${artist._id}/${mp3Id}`,
-                                    requiredBalance: mp3RequiredBalance,
+                                    requiredBalance: mp3RequiredBalance, 
                                     address: socialTokenAddress,
-                                    mp3Url
+                                    mp3Url,
+                                    isPlaylist: false
                                 }}
                             >
-                                <button className="tag-button"> UNRELEASED MUSIC </button>
+                                <button className="tag-button"> UNRELEASED TRACK </button>
+                            </Link>
+                        ) : null}
+                    </div>
+                    </Grid>
+                    <Grid item xs={1}>
+                    <div className="artist-tag">
+                        {requiredBalance ? (
+                            <Link
+                                to={{
+                                    pathname: `/playlists/${artist._id}/${artist.mp3_playlists[0]._id}`,
+                                    requiredBalance: artist.mp3_playlists[0].balance,
+                                    address: socialTokenAddress,
+                                    mp3Url : 'not a single mp3',
+                                    isPlaylist : true
+                                }}
+                            >
+                                <button className="tag-button"> UNRELEASED MIXTAPE </button>
                             </Link>
                         ) : null}
                     </div>

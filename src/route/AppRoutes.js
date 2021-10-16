@@ -67,6 +67,7 @@ export const AppRoutes = () => {
             <PublicRoutes path="/artist/:id" component={Artist} exact />
             <PublicRoutes path="/:inflowGatedUrl" component={GatedContent} exact />
             <PublicRoutes path="/mp3s/:artistId/:mp3Id" component={GatedMp3Content} exact />
+            <PublicRoutes path="/playlists/:artistId/:playlistId" component={GatedMp3Content} exact />
             <PublicRoutes path="/artist" component={Artist} exact />
             {/* <PrivateRoutes path="/demo" component={DemoPage} exact /> */}
             {/* <PrivateRoutes path="/login" component={Login} exact /> */}

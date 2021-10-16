@@ -5,7 +5,7 @@ import AudioControls from "./AudioControls";
 import "./AudioStreamer.css";
 
 
-const PlaylistStreamer = ({ audioSrc }) => {
+const PlaylistStreamer = () => {
     // State
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
@@ -14,6 +14,7 @@ const PlaylistStreamer = ({ audioSrc }) => {
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
+  const [audioSrc, setAudioSrc] = useState('')
   const { artistId } = useParams();
   const artistData = useSelector((state) => state.app.artistData);
 
@@ -23,15 +24,24 @@ const PlaylistStreamer = ({ audioSrc }) => {
     if(artistData){
       setArtist(artistData.first_name);
       setImage(artistData.mp3_playlists[0].image);
-      setTitle(artistData.mp3s[0].track_name);
+      setTracks(artistData.mp3_playlists[0].mp3s);
     }
   },[])
 
   useEffect(() => {
     if(tracks){
       console.log({ tracks });
+      const { Key, color, Location } = tracks[trackIndex];
+      setTitle(Key);
+      setAudioSrc(Location); 
+      console.log(audioSrc) 
     }
   },[trackIndex, tracks])
+
+  // Destructure for conciseness
+  if(tracks){
+    
+  }
   
 
   // Refs
