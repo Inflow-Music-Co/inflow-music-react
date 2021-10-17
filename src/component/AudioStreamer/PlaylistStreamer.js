@@ -6,41 +6,38 @@ import TrackList from './TrackList'
 import "./AudioStreamer.css";
 
 
-const PlaylistStreamer = ({ tracks, audioSrc, setAudioSrc }) => {
+const PlaylistStreamer = ({ tracks, }) => {
     // State
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [audioSrc, setAudioSrc] = useState();
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const { artistId } = useParams();
   const artistData = useSelector((state) => state.app.artistData);
 
-  console.log('PLAYLIST STREAMER')
-
   useEffect(async () => {
     if(artistData){
       setArtist(artistData.first_name);
       setImage(artistData.mp3_playlists[0].image);
+      setAudioSrc(artistData.mp3_playlists[0].mp3s[0].Location)
     }
   },[])
 
   useEffect(() => {
-    if(tracks){
-      console.log({ tracks });
-      const { Key, color, Location } = tracks[trackIndex];
+      console.log({ trackIndex })
+      const { Key, Location } = tracks[trackIndex];
+      console.log({ Key });
+      console.log({ Location });
+      console.log({ tracks })
       setTitle(Key);
       setAudioSrc(Location); 
-      console.log(audioSrc) 
-    }
-  },[trackIndex, tracks])
+      console.log({ audioSrc }); 
+  },[trackIndex])
 
-  // Destructure for conciseness
-  if(tracks){
-    
-  }
-  
+  // Destructure for conciseness  
 
   // Refs
   const audioRef = useRef(new Audio(audioSrc));
@@ -135,7 +132,11 @@ const PlaylistStreamer = ({ tracks, audioSrc, setAudioSrc }) => {
     };
   }, []);
 
+  console.log({ audioSrc })
+
   return (
+    <div>
+    {audioSrc ?
     <div className="audio-player">
       <div className="track-info">
         <img
@@ -163,8 +164,9 @@ const PlaylistStreamer = ({ tracks, audioSrc, setAudioSrc }) => {
           onKeyUp={onScrubEnd}
           style={{ background: trackStyling }}
         />
-        <TrackList />
+        <TrackList tracks={tracks}/>
       </div>
+    </div> : <div>loading audio ... </div>}
     </div>
   );
 }
