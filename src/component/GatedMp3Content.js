@@ -33,6 +33,8 @@ const GatedMp3Content = (props) => {
     const [isPlaylist, setIsPlaylist] = useState(false);
     const artistData = useSelector((state) => state.app.artistData);
 
+    const [audioSrc, setAudioSrc] = useState('')
+
     console.log('GATED MP3 CONTENT');
 
     useEffect(async () => {
@@ -140,7 +142,13 @@ const GatedMp3Content = (props) => {
     return (
         <div className="dashboard-wrapper-main">
             {viewable ? (
-                 isPlaylist ? <PlaylistStreamer tracks={artistData.mp3_playlists[0].mp3s}/> : <AudioStreamer audioSrc={artistData.mp3s[0].url}/> 
+                 isPlaylist ? 
+                 <PlaylistStreamer 
+                    tracks={artistData.mp3_playlists[0].mp3s}
+                    audioSrc={artistData.mp3_playlists[0].mp3s[0].Location}
+                    setAudioSrc={setAudioSrc}    
+                    /> 
+                    : <AudioStreamer audioSrc={artistData.mp3s[0].url}/> 
             ) : (
                 <div className="card-heading">
                     <SmallLoader />

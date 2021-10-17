@@ -6,7 +6,7 @@ import TrackList from './TrackList'
 import "./AudioStreamer.css";
 
 
-const PlaylistStreamer = ({ tracks }) => {
+const PlaylistStreamer = ({ tracks, audioSrc, setAudioSrc }) => {
     // State
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
@@ -14,7 +14,6 @@ const PlaylistStreamer = ({ tracks }) => {
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
-  const [audioSrc, setAudioSrc] = useState('')
   const { artistId } = useParams();
   const artistData = useSelector((state) => state.app.artistData);
 
