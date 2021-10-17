@@ -140,7 +140,7 @@ const GatedMp3Content = (props) => {
     return (
         <div className="dashboard-wrapper-main">
             {viewable ? (
-                 isPlaylist ? <PlaylistStreamer /> : <AudioStreamer audioSrc={artistData.mp3s[0].url}/> 
+                 isPlaylist ? <PlaylistStreamer tracks={artistData.mp3_playlists[0].mp3s}/> : <AudioStreamer audioSrc={artistData.mp3s[0].url}/> 
             ) : (
                 <div className="card-heading">
                     <SmallLoader />

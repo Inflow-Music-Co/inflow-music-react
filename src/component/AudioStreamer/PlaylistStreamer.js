@@ -2,15 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import AudioControls from "./AudioControls";
+import TrackList from './TrackList'
 import "./AudioStreamer.css";
 
 
-const PlaylistStreamer = () => {
+const PlaylistStreamer = ({ tracks }) => {
     // State
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [tracks, setTracks] = useState();
   const [image, setImage] = useState('');
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
@@ -24,7 +24,6 @@ const PlaylistStreamer = () => {
     if(artistData){
       setArtist(artistData.first_name);
       setImage(artistData.mp3_playlists[0].image);
-      setTracks(artistData.mp3_playlists[0].mp3s);
     }
   },[])
 
@@ -165,6 +164,7 @@ const PlaylistStreamer = () => {
           onKeyUp={onScrubEnd}
           style={{ background: trackStyling }}
         />
+        <TrackList />
       </div>
     </div>
   );
