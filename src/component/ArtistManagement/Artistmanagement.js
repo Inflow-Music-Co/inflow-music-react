@@ -18,6 +18,7 @@ import { Magic } from 'magic-sdk';
 import { styled } from '@mui/material/styles';
 import CreatePlaylist from './CreatePlaylist';
 import UploadSong from './UploadSong';
+import NFTCollectionModal from './NFTCollectionModal';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -59,6 +60,7 @@ const Artistpic = () => {
     const [hasActivated, setHasActivated] = useState();
     const [totalFees, setTotalFees] = useState('');
     const [mp3Link, setMp3Link] = useState('');
+    const [NFTCollection, setNFTCollection] = useState(false);
     const [id, setId] = useState('');
     const [showPlaylistModal, setShowPlaylistModal] = useState(false);
 
@@ -302,6 +304,13 @@ const Artistpic = () => {
                             <button
                                 className="btn-gradiant"
                                 type="button"
+                                onClick={() => setNFTCollection((NFTCollection) => !NFTCollection)}
+                            >
+                                NFT collection
+                            </button>
+                            <button
+                                className="btn-gradiant"
+                                type="button"
                                 onClick={() => setnewvote((newvote) => !newvote)}
                             >
                                 soundcloud playlist
@@ -498,6 +507,9 @@ const Artistpic = () => {
                     </div>
                 </Modal.Body>
             </Modal>
+            <NFTCollectionModal 
+                NFTCollection={NFTCollection}
+                setNFTCollection={setNFTCollection}/>
             <UploadSong
                 songUpload={songUpload}
                 setSongUpload={setSongUpload}

@@ -8,13 +8,17 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddTrackField from './AddTrackField';
 import { useDispatch, useSelector } from 'react-redux';
+import { ProgressBar } from 'react-bootstrap';
 import { addMp3s, addImage, removeMp3, clearPlaylist } from '../../store/reducers/playlistSlice';
 import { updateArtistPlaylists } from '../../store/reducers/playlistSlice';
 import Axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
     const playlist = useSelector((state) => state.playlist)
+    const uploadProgress = useSelector((state) => state.playlist.uploadProgress);
     const [uploaded, setMp3Fileed] = useState(false);
     const [image, setImage] = useState({});
     const [imageRender, setImageRender] = useState('');
@@ -25,12 +29,39 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const [balance, setBalance] = useState();
     const numberOfTracks = useRef(0);
     const [inputFields, setInputFields] = useState([]);
+    const [uploadComplete, setUploadComplete] = useState(false);
+    const [progressBar, setProgressBar] = useState();
     const dispatch = useDispatch();
+    const MySwal = withReactContent(Swal);
+
+    useEffect(() => {
+        uploadComplete &&
+            MySwal.fire({
+                title: <p style={{ color: 'white' }}>Audio Uploaded </p>,
+                icon: 'success',
+                html: <span style={{ color: 'white' }}>your gated content is now live</span>,
+                customClass: {
+                    confirmButton: 'btn-gradiant'
+                },
+                buttonsStyling: false,
+                background: '#303030'
+            }).then(() => {
+                setUploadComplete((uploadComplete) => !uploadComplete);
+            });
+    }, [uploadComplete]);
+
+    useEffect(() => {
+        setProgressBar(uploadProgress)
+        if(uploadProgress == 100){
+            console.log('is 100%')
+            setUploadComplete(true);
+        }
+        console.log('useEffect fired')
+    },[uploadProgress])
 
     useEffect(() => {
         dispatch(clearPlaylist());
     },[])
-
     
     const handleImageUpload = (e) => {
         setImageRender(URL.createObjectURL(e.target.files[0]));
@@ -207,9 +238,16 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
                         )}
                     </Grid>
                     <Modal.Footer>
-                        <button className="btn-gradiant m-1" onClick={uploadPlaylist}>
-                            CREATE
-                        </button>
+                        <Grid container direction="column" >
+                        {uploadProgress && <Grid item xs={12}>
+                            <ProgressBar now={uploadProgress} label={`${uploadProgress}%`} />
+                        </Grid>}
+                        <Grid item xs={12} style={{paddingLeft: 75, margin: 10}}>
+                            <button className="btn-gradiant m-1" onClick={uploadPlaylist}>
+                                CREATE
+                            </button>
+                        </Grid>
+                    </Grid>
                     </Modal.Footer>
                 </Modal.Body>
             </Modal>

@@ -8,20 +8,54 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddTrackField from './AddTrackField';
 import { useDispatch, useSelector } from 'react-redux';
 import { addImage, updateArtistSingleMp3 } from '../../store/reducers/playlistSlice';
+import { ProgressBar } from 'react-bootstrap';
 import Axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
 
 const UploadSong = ({ songUpload, setSongUpload, id}) => {
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
-    const playlist = useSelector((state) => state.playlist)
+    const playlist = useSelector((state) => state.playlist);
+    const uploadProgress = useSelector((state) => state.playlist.uploadProgress);
     const [uploaded, setMp3Fileed] = useState(false);
     const [image, setImage] = useState({});
     const [imageRender, setImageRender] = useState('');
     const [mp3Name, setMp3Name] = useState('');
     const [mp3File, setMp3File] = useState('');
     const [addTrack, setAddTrack] = useState(false);
+    const [uploadComplete, setUploadComplete] = useState(false);
     const [playlistName, setPlaylistName] = useState('');
     const [balance, setBalance] = useState();
+    const [progressBar, setProgressBar] = useState();
     const dispatch = useDispatch();
+    const MySwal = withReactContent(Swal);
+
+
+    useEffect(() => {
+        uploadComplete &&
+            MySwal.fire({
+                title: <p style={{ color: 'white' }}>Audio Uploaded </p>,
+                icon: 'success',
+                html: <span style={{ color: 'white' }}>your gated content is now live</span>,
+                customClass: {
+                    confirmButton: 'btn-gradiant'
+                },
+                buttonsStyling: false,
+                background: '#303030'
+            }).then(() => {
+                setUploadComplete((uploadComplete) => !uploadComplete);
+            });
+    }, [uploadComplete]);
+
+    useEffect(() => {
+        setProgressBar(uploadProgress)
+        if(uploadProgress == 100){
+            console.log('is 100%')
+            setUploadComplete(true);
+        }
+        console.log('useEffect fired')
+    },[uploadProgress])
 
     const handleImageUpload = (e) => {
         setImageRender(URL.createObjectURL(e.target.files[0]));
@@ -118,9 +152,16 @@ const UploadSong = ({ songUpload, setSongUpload, id}) => {
                         )}
                     </Grid>
                     <Modal.Footer>
-                        <button className="btn-gradiant m-1" onClick={uploadMp3}>
-                            CREATE
-                        </button>
+                    <Grid container direction="column" >
+                        {uploadProgress && <Grid item xs={12}>
+                            <ProgressBar now={uploadProgress} label={`${uploadProgress}%`} />
+                        </Grid>}
+                        <Grid item xs={12} style={{paddingLeft: 75, margin: 10}}>
+                            <button className="btn-gradiant m-1" onClick={uploadMp3}>
+                                CREATE
+                            </button>
+                        </Grid>
+                    </Grid>
                     </Modal.Footer>
                 </Modal.Body>
             </Modal>

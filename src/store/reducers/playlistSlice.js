@@ -8,7 +8,8 @@ export const playlistSlice = createSlice({
             file: {},
             name : '',
         }],
-        img: {}
+        img: {},
+        uploadProgress : null
     },
     reducers: {
         addMp3s : (state, action ) => {
@@ -23,14 +24,24 @@ export const playlistSlice = createSlice({
         clearPlaylist: (state, action) => {
             state.data = [];
             state.img = {};
+            state.uploadProgress = null;
+        },
+        setUploadProgress: (state, action) => {
+            state.uploadProgress = action.payload
         }
     }
 });
 
 export const updateArtistPlaylists = (data) => async (dispatch) => {
-    console.log('updateArtistPlaylists')
     try {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadplaylist`, data)
+        let percentageCompleted = null;
+        const config = {
+            onUploadProgress: progressEvent => {
+                percentageCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                dispatch(setUploadProgress(percentageCompleted));
+            }
+        }
+        const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadplaylist`, data, config)
         console.log(res);
     } catch (error) {
         throw error;
@@ -38,15 +49,21 @@ export const updateArtistPlaylists = (data) => async (dispatch) => {
 }
 
 export const updateArtistSingleMp3 = (data) => async (dispatch) => {
-    console.log('updateArtistSingleMp3');
-    try {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data);
+    try{
+        let percentageCompleted = null;
+        const config = {
+                onUploadProgress: progressEvent => {
+                    percentageCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    dispatch(setUploadProgress(percentageCompleted));
+                }
+            }
+        const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data, config);
         console.log(res);
     } catch (error) {
         throw error;
     }
 }
 
-export const { addMp3s, addImage, removeMp3, clearPlaylist } = playlistSlice.actions;
+export const { addMp3s, addImage, removeMp3, clearPlaylist, setUploadProgress } = playlistSlice.actions;
 
 export default playlistSlice.reducer;
