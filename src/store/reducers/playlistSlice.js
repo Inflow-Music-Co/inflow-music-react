@@ -28,9 +28,20 @@ export const playlistSlice = createSlice({
 });
 
 export const updateArtistPlaylists = (data) => async (dispatch) => {
+    console.log('updateArtistPlaylists')
     try {
         const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadplaylist`, data)
-        
+        console.log(res);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const updateArtistSingleMp3 = (data) => async (dispatch) => {
+    console.log('updateArtistSingleMp3');
+    try {
+        const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/v1/artist/uploadmp3`, data);
+        console.log(res);
     } catch (error) {
         throw error;
     }

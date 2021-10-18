@@ -3,16 +3,14 @@ import { Modal } from 'react-bootstrap';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
-import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddTrackField from './AddTrackField';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMp3s, addImage, removeMp3, clearPlaylist } from '../../store/reducers/playlistSlice';
-import { updateArtistPlaylists } from '../../store/reducers/playlistSlice';
+import { addImage, updateArtistSingleMp3 } from '../../store/reducers/playlistSlice';
 import Axios from 'axios';
 
-const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
+const UploadSong = ({ songUpload, setSongUpload, id}) => {
     const [mp3Uploaded, setMp3Uploaded] = useState(false);
     const playlist = useSelector((state) => state.playlist)
     const [uploaded, setMp3Fileed] = useState(false);
@@ -23,148 +21,61 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
     const [addTrack, setAddTrack] = useState(false);
     const [playlistName, setPlaylistName] = useState('');
     const [balance, setBalance] = useState();
-    const numberOfTracks = useRef(0);
-    const [inputFields, setInputFields] = useState([]);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(clearPlaylist());
-    },[])
-
-    
     const handleImageUpload = (e) => {
         setImageRender(URL.createObjectURL(e.target.files[0]));
         dispatch(addImage(e.target.files[0]));
     };
 
-    const handleAddTrack = () => {
-        if (mp3Name === '') {
-            alert('please add a name before adding a new track');
-        } else if (mp3File === '') {
-            alert('please upload a file before adding a new track');
-        } else {
-            setAddTrack(true);
-
-            dispatch(addMp3s({ name: mp3Name, file: mp3File, }));
-                
-            numberOfTracks.current += 1;
-            setInputFields([...inputFields, numberOfTracks.current]);
-        }
-    };
-
-    const handleRemoveTrack = () => {
-        setInputFields(fields => fields.filter((element, index) => index !== fields.length -1 ));
-        dispatch(removeMp3(numberOfTracks.current - 1));
-    };
-
-    const uploadPlaylist = async () => {
+    const uploadMp3 = async () => {
+        console.log('upload Mp3 fired');
+        
         if (!playlist) {
             alert('please upload a valid .mp3 file');
         }  else {
-            //ensures last field is added to store
-            dispatch(addMp3s({ name: mp3Name, file: mp3File }));
-            
+            //ensures last field is added to store            
             const data = new FormData();
 
-            playlist.data.forEach(entry => {
-                data.append('files', entry.file)
-                data.append('track_names', entry.name)
-            });
-            data.append('playlist_name', playlistName);
+            data.append('file', mp3File)
             data.append('img', playlist.img);
             data.append('balance', balance);
+            data.append('name', mp3Name);
             data.append('artist_id', id);
-            
 
             //console log data
             for (var pair of data.entries()) {
                 console.log(pair[0] + ', ' + pair[1]);
             }
 
-            dispatch(updateArtistPlaylists(data));
+            dispatch(updateArtistSingleMp3(data));
         }
     };
 
-    const renderAddTrackField = () => {
-        return (
-            <div>
-                {inputFields.map((data, index) => (
-                    <AddTrackField
-                        setMp3Name={setMp3Name}
-                        setMp3File={setMp3File}
-                        uploaded={uploaded}
-                        key={index}
-                    />
-                ))}
-            </div>
-        );
-    };
+    console.log('UPLOAD SONG');
 
     return (
         <div>
             <Modal
-                show={showPlaylistModal}
+                show={songUpload}
                 className="edit-profile-modal success"
                 onHide={() => {
-                    setShowPlaylistModal((showPlaylistModal) => !showPlaylistModal);
+                    setSongUpload((songSupload) => !songUpload);
                 }}
             >
                 <Modal.Header>
                     <Grid container style={{ flexGrow: 1 }}>
                         <Grid item xs={12} style={{ paddingBottom: 30 }}>
-                            <span className="login-title col-12"> create your playlist</span>
+                            <span className="login-title col-12"> upload your track</span>
                         </Grid>
                     </Grid>
                 </Modal.Header>
                 <Modal.Body>
-                    <Grid container direction="column">
-                        <Grid item xs={12}>
-                            <label>Mixtape Name</label>
-                            <input
-                                id="playlist name"
-                                onChange={(e) => setPlaylistName(e.target.value)}
-                                className="form-control mb-3 mt-4"
-                                type="text"
-                                placeholder="ex. my awesome private mixtape"
-                            />
-                        </Grid>
-                    </Grid>
-
                     <AddTrackField
                         setMp3Name={setMp3Name}
                         setMp3File={setMp3File}
-                        setAddTrack={setAddTrack}
                         uploaded={uploaded}
                     />
-                    {addTrack && renderAddTrackField()}
-                    <Grid container item direction="row" justify="flex-end">
-                        <Grid item xs={2} container direction="row" justify="flex-end">
-                            <IconButton
-                                color="warning"
-                                onClick={() => {
-                                    handleRemoveTrack();
-                                }}
-                            >
-                                <RemoveCircleOutlineIcon color="warning" fontSize="large" />
-                            </IconButton>
-                        </Grid>
-                        <Grid
-                            item
-                            xs={1}
-                            container
-                            direction="row"
-                            justify="flex-end"
-                            style={{ paddingLeft: 40 }}
-                        >
-                            <IconButton
-                                onClick={() => {
-                                    handleAddTrack();
-                                }}
-                            >
-                                <AddCircleOutlineIcon fontSize="large" style={{ color: 'green' }} />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
                     <Grid container direction="column">
                         <Grid item xs={12}>
                             <label>Tokens Required To Access</label>
@@ -178,7 +89,7 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
                         </Grid>
                         <Grid container direction="row">
                             <Grid item xs={9} alignItems={'center'} style={{ paddingTop: 35 }}>
-                                <label>Upload Your Playlist Image</label>
+                                <label>Upload Your Track Image</label>
                             </Grid>
                             <Grid item xs={3}>
                                 <Button
@@ -207,14 +118,14 @@ const CreatePlaylist = ({ id, showPlaylistModal, setShowPlaylistModal}) => {
                         )}
                     </Grid>
                     <Modal.Footer>
-                        <button className="btn-gradiant m-1" onClick={uploadPlaylist}>
+                        <button className="btn-gradiant m-1" onClick={uploadMp3}>
                             CREATE
                         </button>
                     </Modal.Footer>
                 </Modal.Body>
             </Modal>
         </div>
-    );
-};
+    )
+}
 
-export default CreatePlaylist;
+export default UploadSong

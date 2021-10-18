@@ -17,6 +17,7 @@ import Button from '@material-ui/core/Button';
 import { Magic } from 'magic-sdk';
 import { styled } from '@mui/material/styles';
 import CreatePlaylist from './CreatePlaylist';
+import UploadSong from './UploadSong';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -41,6 +42,7 @@ const Artistpic = () => {
 
     /*MintGate Integration state*/
     const [link, setLink] = useState(false);
+    const [songUpload, setSongUpload] = useState(false);
     const [url, setURL] = useState('');
     const [linkTitle, setLinkTitle] = useState('');
     const [tokenAddress, setTokenAddress] = useState('');
@@ -320,6 +322,12 @@ const Artistpic = () => {
                                 className="btn-gradiant"
                                 onClick={() => setLink((link) => !link)}
                             >
+                                video link
+                            </button>
+                            <button
+                                className="btn-gradiant"
+                                onClick={() => setSongUpload((songUpload) => !songUpload)}
+                            >
                                 upload song
                             </button>
                             <button
@@ -418,7 +426,7 @@ const Artistpic = () => {
                                 onChange={(e) => setURL(e.target.value)}
                                 className="form-control mb-3"
                                 type="text"
-                                placeholder="Example: https://youtube.com"
+                                placeholder="Example: https://myprivatevideo-youtube.com"
                             />
                             <label>Link Title</label>
                             <input
@@ -462,7 +470,6 @@ const Artistpic = () => {
                     </form>
                 </Modal.Body>
             </Modal>
-
             <Modal show={linkSuccess} className="edit-profile-modal success">
                 <Modal.Header
                     closeButton
@@ -491,10 +498,16 @@ const Artistpic = () => {
                     </div>
                 </Modal.Body>
             </Modal>
+            <UploadSong
+                songUpload={songUpload}
+                setSongUpload={setSongUpload}
+                id={id}    
+                />
             <CreatePlaylist 
-            showPlaylistModal={showPlaylistModal}
-            setShowPlaylistModal={setShowPlaylistModal}
-            id={id} />
+                showPlaylistModal={showPlaylistModal}
+                setShowPlaylistModal={setShowPlaylistModal}
+                id={id} 
+                />
         </div>
     );
 };
