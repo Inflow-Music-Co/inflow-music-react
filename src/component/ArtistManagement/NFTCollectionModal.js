@@ -1,9 +1,22 @@
 import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { updateArtistNfts } from '../../store/reducers/nftSlice';
 import Grid from '@material-ui/core/Grid';
 
-const NFTCollectionModal = ({ NFTCollection, setNFTCollection }) => {
-    const [address, setAddress] = useState('')
+const NFTCollectionModal = ({ NFTCollection, setNFTCollection, id }) => {
+    const [ethAddress, setEthAddress] = useState('');
+    const dispatch = useDispatch();
+
+    console.log({ ethAddress });
+
+    const createCollection = () => {
+        if(id && ethAddress){
+            dispatch(updateArtistNfts(id, ethAddress))
+        } else {
+            alert('please enter a valid ethereum address')
+        }
+    }
 
     return (
         <div>
@@ -28,13 +41,13 @@ const NFTCollectionModal = ({ NFTCollection, setNFTCollection }) => {
                                     placeholder="your ethereum address"
                                     type="text"
                                     name="ethereum address" 
-                                    onChange={(e) => setAddress(e.target.value)}
+                                    onChange={(e) => setEthAddress(e.target.value)}
                                 />
                             </div>
                     <Modal.Footer>
                     <button className="btn-gradiant m-1" 
-                        >
-                                CREATE COLLECTION
+                        onClick={createCollection}>
+                                ADD COLLECTION
                             </button>
                     
                     </Modal.Footer>

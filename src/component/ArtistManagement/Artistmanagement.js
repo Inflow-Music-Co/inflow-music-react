@@ -507,7 +507,8 @@ const Artistpic = () => {
                     </div>
                 </Modal.Body>
             </Modal>
-            <NFTCollectionModal 
+            <NFTCollectionModal
+                id={id} 
                 NFTCollection={NFTCollection}
                 setNFTCollection={setNFTCollection}/>
             <UploadSong
