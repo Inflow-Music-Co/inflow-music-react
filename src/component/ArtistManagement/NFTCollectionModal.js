@@ -44,6 +44,7 @@ const NFTCollectionModal = ({ NFTCollection, setNFTCollection, id }) => {
                                     onChange={(e) => setEthAddress(e.target.value)}
                                 />
                             </div>
+                    <p> enter your ethereum wallet address and we will display all your NFT's on your profile</p>
                     <Modal.Footer>
                     <button className="btn-gradiant m-1" 
                         onClick={createCollection}>

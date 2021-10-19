@@ -20,6 +20,7 @@ import ArtistTransact from './ArtistTransact';
 import ArtistHeader from './ArtistHeader';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import NftGallery from './NftGallery';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -603,8 +604,10 @@ const Artist = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-6">
+                                   
                                     <div className="song-play-list">
-                                        <div className="playlist-header">
+                                        <h3>NFT Collection</h3>
+                                        {/* <div className="playlist-header">
                                             <span className="like">
                                                 <img alt="" src={assetsImages.like} />
                                                 557
@@ -613,20 +616,12 @@ const Artist = () => {
                                                 <img alt="" src={assetsImages.verifed} />
                                                 Limited
                                             </button>
-                                        </div>
+                                        </div> */}
 
                                         <div className="playlist-details">
                                             <div className="playlist-price">
                                             </div>
-                                                <img
-                                                    alt=""
-                                                    width="400"
-                                                    src={
-                                                        artist.profile_image
-                                                            ? `${process.env.REACT_APP_SERVER_URL}/${artist.profile_image}`
-                                                            : null
-                                                    }
-                                                />
+                                                {artist ? <NftGallery artist={artist}/> : <p>loading NFT gallery ... </p>}
                                         </div>
                                     </div>
                                 </div>
