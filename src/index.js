@@ -10,7 +10,7 @@ import store from './store/configureStore';
 import App from './App';
 
 // Style
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '@rvmelkonian/bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import './style.css';
 
