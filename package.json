@@ -58,6 +58,7 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-app-protect": "^1.0.8",
+    "react-app-rewired": "^2.1.8",
     "react-audio-player": "^0.17.0",
     "react-bootstrap": "^1.6.0",
     "react-bootstrap-sweetalert": "^5.2.0",
@@ -91,8 +92,8 @@
     "web3modal": "^1.9.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-app-rewired start",
+    "build": "CI='' react-app-rewired build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
