@@ -74,6 +74,11 @@ a:focus {
 }
 
 .dashboard-wrapper-main {
+    position: relative;
+    z-index: 1;
+}
+
+.dashboard-wrapper-main-home {
     padding: 35px;
     position: relative;
     z-index: 1;
@@ -106,7 +111,7 @@ a:focus {
 
 .first-row-main-dash .left-col,
 .first-row-main-dash .right-col {
-    width: 50%;
+    width: 47%;
 }
 
 .first-row-main-dash .left-col .above-row {
@@ -504,7 +509,7 @@ a:focus {
 }
 
 .Inflow-music-main .inner-music-wrapper {
-    margin-top: 50px;
+    margin-top:10px;
 }
 
 .artist-heading {
@@ -526,6 +531,10 @@ a:focus {
     top: 0;
     bottom: 0;
     margin: auto;
+}
+
+.artist-main {
+    height: 200px;
 }
 
 .grid-for-artist {
@@ -1968,14 +1977,16 @@ input:checked + .slider:before {
     padding: 12px;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 13000px) {
     .main-comman-wrapping {
         margin-left: 70px;
         margin-top: 72px;
     }
 
     .dashboard-wrapper-main {
-        padding: 20px;
+        margin-top: 25vw;
+        bottom: 300px;
+        margin-left: 5vw;
     }
 
     .heading {

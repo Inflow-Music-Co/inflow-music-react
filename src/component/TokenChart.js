@@ -89,7 +89,7 @@ const TokenChart = (props) => {
     };
 
     return (
-        <>{loading ? <SmallLoader /> : <Line data={graphData} options={options} height={275} />}</>
+        <>{loading ? <SmallLoader /> : <Line data={graphData} options={options} />}</>
     );
 };
 

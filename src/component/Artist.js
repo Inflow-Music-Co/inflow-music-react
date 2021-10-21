@@ -21,6 +21,7 @@ import ArtistHeader from './ArtistHeader';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import NftGallery from './NftGallery';
+import Grid from '@material-ui/core/Grid'
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -563,7 +564,7 @@ const Artist = () => {
         <>
             {artist ? (
                 <div className="artist-background">
-                    <ArtistHeader
+                <ArtistHeader
                         artist={artist}
                         requiredBalance={requiredBalance}
                         inflowGatedUrl={inflowGatedUrl}
@@ -603,7 +604,7 @@ const Artist = () => {
                                         
                                     </div>
                                 </div>
-                                <div className="col-lg-6">
+                                <div className="col-lg-5">
                                    
                                     <div className="song-play-list">
                                         <h3>NFT Collection</h3>
@@ -803,7 +804,8 @@ const Artist = () => {
                     </Modal>
                 </div>
             ) : null}
-        </>
+               
+                            </>
     );
 };
 

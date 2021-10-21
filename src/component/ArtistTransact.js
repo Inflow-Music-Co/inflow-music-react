@@ -55,18 +55,13 @@ const ArtistTransact = ({
                     <div className="dollar-price">{displayTokenPrice()}</div>
                     <div className="small-heading">--</div>
                 </div>
-                <div className="btn-filter mt-2"></div>
-            </div>
-            <div className="total-balance-row">
-                <div className="token-info">
-                    <div className="card-heading">Available Balance</div>
-                    <div className="dollar-price">
-                        <div className="dollar-price">{displayBalance()}</div>
+                <div className="card-heading" style={{marginTop: 15, paddingLeft: 700}}>Available Balance: </div>
+                    <div className="dollar-price" style={{marginTop: 10}}>
+                        <div >{displayBalance()}</div>
                     </div>
-                </div>
             </div>
 
-            <div className="total-bal-chart">
+            <div className="total-bal-chart" style={{height: 250}}>
                 <TokenChart artist={artist} historicalData={historicalData} />
             </div>
 

@@ -7,7 +7,7 @@
 .artist-background .artist-main .background img {
     width: 100%;
     object-fit: cover;
-    height: 350px;
+    height: 175px;
 }
 .artist-background .artist-main .background button {
     position: absolute;
@@ -25,10 +25,6 @@
 }
 
 .artist-background .artist-main .background:before {
-    position: absolute;
-    content: '';
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.5);
@@ -39,9 +35,10 @@
 }
 
 .artist-background .artist-main .artist-details {
-    position: absolute;
-    bottom: -80px;
+    position: relative;
+    bottom: 175px;
     width: 95%;
+    height: 110vw;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.5);
@@ -52,17 +49,18 @@
 .artist-background .artist-main-details {
     display: flex;
     align-items: center;
-    padding: 60px;
+    padding: 20px;
 }
 
 .artist-background .artist-main-details img {
     border-radius: 50%;
-    width: 160px;
+    margin-left: 10;
+    width: 130px;
     border: 2px solid rgba(86, 83, 232, 0.66);
 }
 
 .artist-background .artist-main-details .artist-content {
-    padding-left: 60px;
+    padding-left: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -70,7 +68,7 @@
 }
 
 .artist-content .artist-content-details .artist-name {
-    font-size: 34px;
+    font-size: 24px;
     font-weight: 700;
     font-family: Rubik-bold;
     margin-bottom: 10px;
@@ -127,7 +125,7 @@
 .artist-tag {
     /* background-color: #2f3443; */
     background-color: transparent;
-    padding: 50px 50px;
+    padding: 10px 10px 10px 10px;
 }
 
 .artist-tag a {
@@ -137,19 +135,17 @@
 
 .artist-tag button {
     background-color: transparent;
-    border: solid 2px transparent;
+    border: solid 1px transparent;
     background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
         linear-gradient(101deg, rgba(101, 32, 181, 1), rgba(59, 72, 193, 1));
     background-origin: border-box;
     background-clip: content-box, border-box;
     box-shadow: 3px 1000px 1px #000 inset;
-
-    border-radius: 30px;
-    padding: 10px 30px;
+    border-radius: 15px;
+    padding: 8px;
     color: #ffffff;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: 700;
+    
+    font-size: 10px;
     font-family: Rubik-bold;
     letter-spacing: 2px;
 }
@@ -176,18 +172,30 @@
     filter: blur(3rem);
 }
 
-.token-chart {
+.token-chart-dashboard {
     margin-top: 10px;
+    padding-left: 40vw;
     background: rgb(37, 37, 37);
     border-radius: 10px;
     padding: 10px;
+    width: 85vw;
+    height: 10vw;
+}
+
+.token-chart {
+    margin-top: 10px;
+    padding-left: 40vw;
+    background: rgb(37, 37, 37);
+    border-radius: 10px;
+    padding: 10px;
+    width: 85vw;
+    height: 33vw;
 }
 
 .token-chart .chart-header-row {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 20px;
 }
 
 .token-chart .chart-header-row .token-info .card-heading {
@@ -195,7 +203,7 @@
 }
 
 .token-chart .chart-header-row .token-info .dollar-price {
-    font-size: 45px;
+    font-size: 20gpx;
     margin-bottom: 7px;
     line-height: normal;
 }
@@ -365,14 +373,14 @@
 }
 
 .poll-play-song-details {
-    padding-top: 70px;
+    padding-top: 40px;
 }
 
 .poll-play-song-details .poll-details {
     background-color: #1c2232;
     /* padding-top: 10px; */
     border-radius: 15px;
-    height: 100%;
+    height: 30vw;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -687,17 +695,20 @@
     }
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 1800px) {
     .banner-img-main {
-        padding: 60px 40px;
+        max-height: 200px;
+        padding: 0px 40px;
+        margin: 30px;
+        border-radius: 25px;
     }
 
     .banner-img-main .right-col-img img {
-        width: 250px;
+        width: 300px;
     }
 
     .banner-img-main .left-col-heading .headings {
-        font-size: 36px;
+        font-size: 55px;
     }
 
     .banner-img-main .left-col-heading p {
@@ -788,7 +799,7 @@
     }
 
     .artist-background .artist-main .artist-details {
-        bottom: -70px;
+        bottom: 38vw;
     }
 
     .comman-div-for-pro .spiner-bar-row .comman-col .right-side-value {

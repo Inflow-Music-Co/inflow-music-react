@@ -16,7 +16,8 @@ import { WalletProviderContext } from './contexts/walletProviderContext';
 const theme = createTheme({
     palette: {
         secondary: {
-            main: '#863ee3'
+            main: '#863ee3',
+            color: 'white',
         }
     }
 });

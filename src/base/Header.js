@@ -63,9 +63,8 @@ const Header = () => {
             <div className="left-col-main"></div>
             <Button
                     variant="outlined"
-                    size="large"
                     color="secondary"
-                    style={{ marginLeft: 10, borderRadius: 40, color: 'white' }}
+                    style={{ marginLeft: 10, borderRadius: 30, color: 'white'}}
                     onClick={() => window.location.href = 'https://inflowsocial.io/'}
                     >ABOUT
                 </Button>
@@ -73,7 +72,6 @@ const Header = () => {
                 <Button
                     className={classes.button}
                     variant="contained"
-                    size="large"
                     color="secondary"
                     style={{ marginLeft: 10 }}
                     href="/dashboard"
@@ -85,7 +83,6 @@ const Header = () => {
                 <Button
                     className={classes.button}
                     variant="contained"
-                    size="large"
                     color="secondary"
                     style={{ marginLeft: 10 }}
                     onClick={onLogin}

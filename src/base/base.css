@@ -2,9 +2,10 @@
     background: #131313;
     display: flex;
     justify-content: space-between;
-    padding: 15px 30px;
-    max-height: 80px;
+    max-height: 50px;
+    padding-top: 10px;
     padding-left: 0px;
+    padding-bottom: 7px;
     position: fixed;
     left: 0;
     right: 0;
@@ -48,11 +49,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 75px;
+    width: 60px;
     bottom: 0;
-    background: #131313;
+    background: #000d20;
     z-index: 6;
-    margin-top: 80px;
+    margin-top: 50px;
 }
 
 .logo-website-main {
@@ -60,11 +61,10 @@
     align-items: center;
     justify-content: center;
     border-right: 1px solid #444444;
-    max-height: 80px !important;
-    width: 90px;
+    height: 10px;
     background: #131313;
     cursor: pointer;
-    padding: 0px;
+    padding-top: 5px;
 }
 
 .logo-main-image {

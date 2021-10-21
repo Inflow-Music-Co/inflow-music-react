@@ -525,7 +525,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-            <div className="token-chart">
+            <div className="token-chart-dashboard">
                 <div className="card-heading">
                     <Grid container direction="row">
                         {walletProvider ? (
@@ -572,7 +572,7 @@ const Dashboard = () => {
                     </Grid>
                 </div>
             </div>
-            <div className="token-chart">
+            <div className="token-chart-dashboard">
                 <div className="chart-header-row">
                     <Grid container direction="column" alignItems="center" justify="center">
                         <Grid item style={{ paddingBottom: 10 }}>
@@ -598,19 +598,19 @@ const Dashboard = () => {
                 </div>
                 <div className="total-bal-chart">{/* <Totalbalancechart /> */}</div>
                 <div className="deposite-earning-row">
-                    <div className="deposits">
+                    {/* <div className="deposits">
                         <div className="square-lab"></div>
                         <div className="deposite-heaing">
                             <span className="labal-heading">Deposits</span>
                             <span className="percent">+11.7%</span>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="earning">
-                        <div className="square-lab"></div>
+                        {/* <div className="square-lab"></div>
                         <div className="deposite-heaing">
                             <span className="labal-heading">Earnings</span>
                             <span className="percent">+11.7%</span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

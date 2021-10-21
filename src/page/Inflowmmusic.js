@@ -62,7 +62,7 @@ const Inflowmusic = () => {
     return (
         <div className="Inflow-music-main">
             <Banner />
-            <div className="dashboard-wrapper-main inner-music-wrapper">
+            <div className="dashboard-wrapper-main-home inner-music-wrapper">
                 <div className="artist-heading">Featured Artists</div>
                 <div className="grid-for-artist">{artists && displayArtists()}</div>
                 <div className="see-all-artist">

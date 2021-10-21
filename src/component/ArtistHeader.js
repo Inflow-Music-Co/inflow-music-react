@@ -2,6 +2,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid'
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
+    btn: {
+       borderColor: "#7932a8",
+       
+       backgroundColor: "black", 
+       "&:hover": {
+           borderColor: "#b84dff"
+       },
+    },
+
+}));
+
 
 const ArtistHeader = ({
     artist,
@@ -13,6 +32,8 @@ const ArtistHeader = ({
     mp3Url,
     mp3Id
 }) => {
+
+    const classes = useStyles();
         
     return (
         <div className="artist-main">
@@ -29,7 +50,6 @@ const ArtistHeader = ({
             </div>
             <div className="artist-details">
                 <div className="artist-main-details">
-                    <div className="artis-img mb-0">
                         <img
                             alt=""
                             src={
@@ -38,7 +58,6 @@ const ArtistHeader = ({
                                     : null
                             }
                         />
-                    </div>
                     <div className="artist-content">
                         <div className="artist-content-details">
                             <div className="artist-name">{`${
@@ -61,7 +80,7 @@ const ArtistHeader = ({
                                 variant="contained"
                                 color="secondary"
                                 size="large"
-                                style={{ borderRadius: 30, boxShadow: '40px' }}
+                                style={{ borderRadius: 30, boxShadow: '40px'}}
                             >
                                 SUBSCRIBE
                             </Button>
@@ -69,8 +88,8 @@ const ArtistHeader = ({
                     </div>
                 </div>
                 <Grid container direction="row">
+                    <Grid item container xs={6} style={{padding: 10, paddingLeft: 30}}>
                     <Grid item xs={2}>
-                    <div className="artist-tag">
                         {requiredBalance ? (
                             <Link
                                 to={{
@@ -80,13 +99,17 @@ const ArtistHeader = ({
                                     encodedUrl: encodedUrl
                                 }}
                             >
-                                <button className="tag-button"> UNRELEASED VIDEOS </button>
+                                <Button
+                                    className={classes.btn} 
+                                    variant="outlined"
+                                    style={{color: 'white', borderRadius: 15}}
+                                    > 
+                                    VIDEOS 
+                                    </Button>
                             </Link>
                         ) : null}
-                    </div>
                     </Grid>
                     <Grid item xs={2}>
-                    <div className="artist-tag">
                         {requiredBalance ? (
                             <Link
                                 to={{
@@ -97,13 +120,17 @@ const ArtistHeader = ({
                                     isPlaylist: false
                                 }}
                             >
-                                <button className="tag-button"> UNRELEASED TRACK </button>
+                                <Button
+                                    className={classes.btn} 
+                                    variant="outlined"
+                                    color="secondary"
+                                    style={{color: 'white', borderRadius: 15}}> 
+                                    SINGLES 
+                                    </Button>
                             </Link>
                         ) : null}
-                    </div>
                     </Grid>
-                    <Grid item xs={1}>
-                    <div className="artist-tag">
+                    <Grid item xs={2}>
                         {requiredBalance ? (
                             <Link
                                 to={{
@@ -114,10 +141,17 @@ const ArtistHeader = ({
                                     isPlaylist : true
                                 }}
                             >
-                                <button className="tag-button"> UNRELEASED MIXTAPE </button>
+                                <Button
+                                    className={classes.btn} 
+                                    variant="outlined"
+                                    color="secondary"
+                                    style={{color: 'white', borderRadius: 15}}
+                                    > 
+                                    MIXTAPES 
+                                    </Button>
                             </Link>
                         ) : null}
-                    </div>
+                    </Grid>
                     </Grid>
                 </Grid>
             </div>
