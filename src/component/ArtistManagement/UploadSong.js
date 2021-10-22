@@ -1,15 +1,12 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AddTrackField from './AddTrackField';
 import { useDispatch, useSelector } from 'react-redux';
 import { addImage, updateArtistSingleMp3 } from '../../store/reducers/playlistSlice';
 import { ProgressBar } from 'react-bootstrap';
-import Axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -23,9 +20,7 @@ const UploadSong = ({ songUpload, setSongUpload, id}) => {
     const [imageRender, setImageRender] = useState('');
     const [mp3Name, setMp3Name] = useState('');
     const [mp3File, setMp3File] = useState('');
-    const [addTrack, setAddTrack] = useState(false);
     const [uploadComplete, setUploadComplete] = useState(false);
-    const [playlistName, setPlaylistName] = useState('');
     const [balance, setBalance] = useState();
     const [progressBar, setProgressBar] = useState();
     const dispatch = useDispatch();
@@ -65,7 +60,7 @@ const UploadSong = ({ songUpload, setSongUpload, id}) => {
     const uploadMp3 = async () => {
         console.log('upload Mp3 fired');
         
-        if (!playlist) {
+        if (!mp3File) {
             alert('please upload a valid .mp3 file');
         }  else {
             //ensures last field is added to store            
@@ -86,15 +81,13 @@ const UploadSong = ({ songUpload, setSongUpload, id}) => {
         }
     };
 
-    console.log('UPLOAD SONG');
-
     return (
         <div>
             <Modal
                 show={songUpload}
                 className="edit-profile-modal success"
                 onHide={() => {
-                    setSongUpload((songSupload) => !songUpload);
+                    setSongUpload((songUpload) => !songUpload);
                 }}
             >
                 <Modal.Header>

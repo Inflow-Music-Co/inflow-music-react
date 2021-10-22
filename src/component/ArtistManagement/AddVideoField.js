@@ -1,18 +1,20 @@
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
+import { useEffect } from 'react';
 
-const AddTrackField = ({ setMp3Name, setMp3File, uploaded, setMp3Data }) => {
+const AddTrackField = ({ setMp4Name, setMp4File, uploaded }) => {
+
     return (
         <Grid container direction="row">
             <Grid item xs={9}>
-                <label>Track Name </label>
+                <label>Video Name</label>
                 <div className="comman-row-input">
                     <input
-                        placeholder="track name"
+                        placeholder="video name"
                         type="text"
-                        name="twitter url"
-                        onChange={(e) => setMp3Name(e.target.value)}
+                        name="video name"
+                        onChange={(e) => setMp4Name(e.target.value)}
                     />
                 </div>
             </Grid>
@@ -40,14 +42,14 @@ const AddTrackField = ({ setMp3Name, setMp3File, uploaded, setMp3Data }) => {
                             component="span"
                             type="file"
                             onChange={(e) => 
-                            {setMp3File(e.target.files[0])}}
+                            {setMp4File(e.target.files[0])}}
                         >
                             UPLOAD
                             <Input
                                 id="contained-button-file"
                                 hidden
                                 type="file"
-                                onChange={(e) => setMp3File(e.target.files[0])}
+                                onChange={(e) => setMp4File(e.target.files[0])}
                             />
                         </Button>
                     </label>

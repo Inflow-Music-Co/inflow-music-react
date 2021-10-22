@@ -19,6 +19,7 @@ import { styled } from '@mui/material/styles';
 import CreatePlaylist from './CreatePlaylist';
 import UploadSong from './UploadSong';
 import NFTCollectionModal from './NFTCollectionModal';
+import UploadVideo from './UploadVideo';
 
 const customNodeOptions = {
     rpcUrl: 'https://rpc-mainnet.maticvigil.com/', // Polygon RPC URL
@@ -63,6 +64,8 @@ const Artistpic = () => {
     const [NFTCollection, setNFTCollection] = useState(false);
     const [id, setId] = useState('');
     const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+
+    const [videoUpload, setVideoUpload] = useState(false)
 
     console.log({ socialTokenAddress });
 
@@ -335,6 +338,12 @@ const Artistpic = () => {
                             </button>
                             <button
                                 className="btn-gradiant"
+                                onClick={() => setVideoUpload((videoUpload) => !videoUpload)}
+                            >
+                                upload video
+                            </button>
+                            <button
+                                className="btn-gradiant"
                                 onClick={() => setSongUpload((songUpload) => !songUpload)}
                             >
                                 upload song
@@ -514,6 +523,11 @@ const Artistpic = () => {
             <UploadSong
                 songUpload={songUpload}
                 setSongUpload={setSongUpload}
+                id={id}    
+                />
+            <UploadVideo
+                videoUpload={videoUpload}
+                setVideoUpload={setVideoUpload}
                 id={id}    
                 />
             <CreatePlaylist 
